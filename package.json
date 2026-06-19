@@ -1,0 +1,37 @@
+{
+  "name": "qsm-cosmetics",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "seed": "npx tsx scripts/seed.ts"
+  },
+  "dependencies": {
+    "@sanity/client": "^6.19.1",
+    "@sanity/image-url": "^1.0.2",
+    "@sanity/vision": "^3.38.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.379.0",
+    "next": "^14.2.3",
+    "next-sanity": "^9.0.12",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sanity": "^3.38.0",
+    "styled-components": "^6.4.2",
+    "tailwind-merge": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.3",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5"
+  }
+}
