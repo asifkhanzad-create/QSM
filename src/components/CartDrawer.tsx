@@ -57,7 +57,7 @@ export default function CartDrawer() {
                 </p>
                 <button
                   onClick={() => setIsCartOpen(false)}
-                  className="mt-6 px-6 py-2.5 bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition"
+                  className="mt-6 px-6 py-2.5 bg-white hover:bg-neutral-900 hover:text-white text-neutral-900 text-sm font-medium transition border-2 border-neutral-950 rounded-full"
                 >
                   Continue Shopping
                 </button>
@@ -104,7 +104,7 @@ export default function CartDrawer() {
                           onClick={() =>
                             updateQuantity(item.product._id, item.selectedShade?.name || null, item.quantity - 1)
                           }
-                          className="p-1 hover:bg-neutral-50 text-neutral-500"
+                          className="p-1 hover:bg-neutral-50 text-neutral-500 hover:border-neutral-900 border-2 border-neutral-200 rounded-full"
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
@@ -115,7 +115,7 @@ export default function CartDrawer() {
                           onClick={() =>
                             updateQuantity(item.product._id, item.selectedShade?.name || null, item.quantity + 1)
                           }
-                          className="p-1 hover:bg-neutral-50 text-neutral-500"
+                          className="p-1 hover:bg-neutral-50 text-neutral-500 hover:border-neutral-900 border-2 border-neutral-200 rounded-full"
                         >
                           <Plus className="w-3.5 h-3.5" />
                         </button>
@@ -148,7 +148,7 @@ export default function CartDrawer() {
                 <Link
                   href="/checkout"
                   onClick={() => setIsCartOpen(false)}
-                  className="w-full flex items-center justify-center py-3 bg-brand-600 text-white font-medium hover:bg-brand-700 transition"
+                  className="w-full flex items-center justify-center py-3 bg-white hover:bg-neutral-900 hover:text-white font-medium transition border-2 border-neutral-950 rounded-full"
                 >
                   Proceed to Checkout
                 </Link>

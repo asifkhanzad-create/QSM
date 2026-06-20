@@ -59,10 +59,10 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
                     setSelectedShade(null); // Clear shade override to show full gallery
                     setActiveImageIndex(idx);
                   }}
-                  className={`w-20 h-24 rounded-md overflow-hidden bg-neutral-100 border-2 transition ${
+                  className={`w-20 h-24 rounded-full overflow-hidden bg-white border border-neutral-200 transition hover:border-neutral-900 ${
                     activeImageIndex === idx && !selectedShade
-                      ? "border-brand-600 scale-95"
-                      : "border-transparent opacity-80 hover:opacity-100"
+                      ? "border-neutral-900 scale-95"
+                      : ""
                   }`}
                 >
                   <img src={img} alt={`${product.name} gallery ${idx + 1}`} className="w-full h-full object-cover" />
@@ -137,10 +137,10 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
                     onClick={() => {
                       setSelectedShade(shade);
                     }}
-                    className={`relative w-9 h-9 rounded-full border transition flex items-center justify-center p-0.5 hover:scale-105 ${
+                    className={`relative w-9 h-9 rounded-full bg-white border border-neutral-200 transition flex items-center justify-center p-0.5 hover:border-neutral-900 hover:scale-105 ${
                       selectedShade?.name === shade.name
                         ? "border-neutral-900 shadow-md scale-105"
-                        : "border-neutral-200"
+                        : ""
                     }`}
                     title={shade.name}
                   >
@@ -171,17 +171,17 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
             <div className="flex gap-4">
               {/* Quantity selector */}
               {isSelectedShadeInStock && (
-                <div className="flex items-center border border-neutral-300 rounded">
+                <div className="flex items-center border border-neutral-200 rounded-full">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3.5 py-2.5 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50"
+                    className="px-3.5 py-2.5 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50 hover:border-neutral-900 border border-neutral-200 rounded-full"
                   >
                     -
                   </button>
                   <span className="px-4 font-medium text-neutral-900 text-sm">{quantity}</span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="px-3.5 py-2.5 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50"
+                    className="px-3.5 py-2.5 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50 hover:border-neutral-900 border border-neutral-200 rounded-full"
                   >
                     +
                   </button>
@@ -192,10 +192,10 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
               <button
                 onClick={handleAddToCart}
                 disabled={!isSelectedShadeInStock}
-                className={`flex-1 flex items-center justify-center gap-2 py-3.5 font-medium transition shadow-md rounded ${
+                className={`flex-1 flex items-center justify-center gap-2 py-3.5 font-medium transition border rounded-full ${
                   isSelectedShadeInStock
-                    ? "bg-brand-600 hover:bg-brand-700 text-white"
-                    : "bg-neutral-200 text-neutral-400 cursor-not-allowed shadow-none"
+                    ? "bg-neutral-950 hover:bg-neutral-800 text-white border-neutral-950"
+                    : "bg-white text-neutral-400 cursor-not-allowed border-neutral-200 hover:border-neutral-300"
                 }`}
               >
                 <ShoppingBag className="w-5 h-5" />
@@ -208,15 +208,14 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
 
           {/* Informational Tabs (Description, Ingredients, How to Use) */}
           <div className="border border-neutral-100 rounded-lg overflow-hidden bg-white shadow-sm">
-            <div className="flex border-b border-neutral-100 bg-neutral-50/50">
+            <div className="flex gap-2 border-b border-neutral-100 bg-neutral-50/50 p-2">
               {(["description", "ingredients", "howToUse"] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex-1 py-3 text-xs font-semibold tracking-wider uppercase transition border-b-2 text-center ${
+                  className={`flex-1 py-2.5 text-xs font-semibold tracking-wider uppercase transition text-center border rounded-full ${
                     activeTab === tab
-                      ? "border-brand-600 text-brand-600 bg-white"
-                      : "border-transparent text-neutral-500 hover:text-neutral-900"
+                      ? "bg-neutral-950 text-white border-neutral-950" : "bg-white text-neutral-500 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
                   }`}
                 >
                   {tab === "description" ? "Description" : tab === "ingredients" ? "Ingredients" : "How to Use"}
@@ -267,3 +266,4 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
     </div>
   );
 }
+

@@ -1,45 +1,60 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { type Product, type Category } from "@/lib/data";
 import { Star, Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 
 interface ShopPageContentProps {
   initialProducts: Product[];
   categories: Category[];
-  initialCategory?: string;
 }
 
 export default function ShopPageContent({
   initialProducts,
   categories,
-  initialCategory = "",
 }: ShopPageContentProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("featured");
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+
+  // Get current filters from URL
+  const categoryParam = searchParams.get('category');
+  const isNewArrivalParam = searchParams.get('isNewArrival');
+  const isBestSellerParam = searchParams.get('isBestSeller');
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
     let result = [...initialProducts];
 
-    // Filter by Category
-    if (selectedCategory) {
-      result = result.filter(
-        (p) => p.category.toLowerCase() === selectedCategory.toLowerCase()
-      );
-    }
-
-    // Filter by Search Query
+    // Filter by Search Query — when active, search ALL products, ignore other filters
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      result = result.filter(
+      return result.filter(
         (p) =>
           p.name.toLowerCase().includes(query) ||
           p.description.toLowerCase().includes(query)
       );
+    }
+
+    // Filter by Category
+    if (categoryParam) {
+      result = result.filter(
+        (p) => p.category.toLowerCase() === categoryParam.toLowerCase()
+      );
+    }
+
+    // Filter by New Arrival
+    if (isNewArrivalParam === 'true') {
+      result = result.filter((p) => p.isNewArrival === true);
+    }
+
+    // Filter by Best Seller
+    if (isBestSellerParam === 'true') {
+      result = result.filter((p) => p.isBestSeller === true);
     }
 
     // Sorting
@@ -52,7 +67,7 @@ export default function ShopPageContent({
     }
 
     return result;
-  }, [initialProducts, selectedCategory, searchQuery, sortBy]);
+  }, [initialProducts, searchQuery, categoryParam, isNewArrivalParam, isBestSellerParam, sortBy]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
@@ -83,28 +98,28 @@ export default function ShopPageContent({
 
         {/* Categories Fast Filter */}
         <div className="flex flex-wrap gap-2 justify-center w-full md:w-auto">
-          <button
-            onClick={() => setSelectedCategory("")}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition ${
-              !selectedCategory
-                ? "bg-neutral-950 text-white"
-                : "bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50"
+          <Link
+            href="/shop"
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition border-2 ${
+              !searchParams.get('category')
+                ? "bg-neutral-950 text-white border-neutral-950"
+                : "bg-white text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
             }`}
           >
             All Products
-          </button>
+          </Link>
           {categories.map((cat) => (
-            <button
+            <Link
               key={cat._id}
-              onClick={() => setSelectedCategory(cat.slug)}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition ${
-                selectedCategory.toLowerCase() === cat.slug.toLowerCase()
-                  ? "bg-neutral-950 text-white"
-                  : "bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50"
+              href={`/shop?category=${cat.slug}`}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition border-2 ${
+                searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
+                  ? "bg-neutral-950 text-white border-neutral-950"
+                  : "bg-white text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
               }`}
             >
               {cat.name}
-            </button>
+            </Link>
           ))}
         </div>
 
@@ -132,11 +147,10 @@ export default function ShopPageContent({
           <p className="text-base text-neutral-600">No products found matching your criteria.</p>
           <button
             onClick={() => {
-              setSelectedCategory("");
               setSearchQuery("");
               setSortBy("featured");
             }}
-            className="mt-4 px-6 py-2 bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition"
+            className="mt-4 px-6 py-2 bg-white hover:bg-neutral-900 hover:text-white text-neutral-900 text-sm font-medium transition border-2 border-neutral-950 rounded-full"
           >
             Reset Filters
           </button>

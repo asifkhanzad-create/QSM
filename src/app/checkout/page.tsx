@@ -17,13 +17,10 @@ export default function CheckoutPage() {
     firstName: "",
     lastName: "",
     email: "",
+    phone: "", // Added phone number field
     address: "",
     city: "",
     zipCode: "",
-    cardName: "",
-    cardNumber: "",
-    cardExpiry: "",
-    cardCvc: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,19 +34,19 @@ export default function CheckoutPage() {
 
     setIsSubmitting(true);
 
-    // Simulate order placement database submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      // Generate a beautiful, realistic cosmetics order ID
-      setOrderNumber("AURA-" + Math.floor(100000 + Math.random() * 900000));
-      clearCart();
-    }, 2000);
+    const orderDetails = `*New Order from QSM Website*\n\n*Customer Details:*\nName: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\n*Shipping Address:*\n${formData.address}, ${formData.city}, ${formData.zipCode}\n\n*Order Items:*\n${cart.map(item => `- ${item.product.name} (${item.selectedShade?.name || 'N/A'}) x ${item.quantity} = Rs. ${(item.product.price * item.quantity).toFixed(2)}`).join('\n')}\n\n*Order Summary:*\nSubtotal: Rs. ${cartSubtotal.toFixed(2)}\nShipping: Rs. ${shippingCost.toFixed(2)}\n*Total: Rs. ${totalCost.toFixed(2)}*\n\n*Payment Method: Cash on Delivery*\n\n*Please confirm this order. Thank you!*`;
+
+    const whatsappLink = `https://wa.me/923178517190?text=${encodeURIComponent(orderDetails)}`;
+    
+    // Clear cart immediately
+    clearCart();
+    
+    // Redirect current window to WhatsApp (bypasses popup blockers)
+    window.location.href = whatsappLink;
   };
 
-  const shippingCost = cartSubtotal > 50 ? 0 : 5.99;
-  const taxCost = cartSubtotal * 0.08; // 8% sales tax
-  const totalCost = cartSubtotal + shippingCost + taxCost;
+  const shippingCost = 200; // Flat Rs. 200 shipping fee
+  const totalCost = cartSubtotal + shippingCost;
 
   if (isSuccess) {
     return (
@@ -62,17 +59,18 @@ export default function CheckoutPage() {
             </div>
             
             <div className="space-y-2">
-              <span className="text-xs uppercase tracking-widest text-brand-600 font-bold">Order Confirmed</span>
+              <span className="text-xs uppercase tracking-widest text-brand-600 font-bold">Order Initiated</span>
               <h2 className="text-2xl font-light font-serif text-neutral-900">Thank you for your order!</h2>
               <p className="text-sm text-neutral-500 font-light">
-                Your payment was processed successfully. We are preparing your cosmetics for express shipment.
+                Your order has been placed successfully and details have been sent to our team via WhatsApp.
+                We will contact you shortly to confirm your Cash on Delivery order.
               </p>
             </div>
 
             <div className="bg-neutral-50 rounded p-4 text-left border border-neutral-100 space-y-2.5">
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">Order Number:</span>
-                <span className="font-semibold text-neutral-900">{orderNumber}</span>
+                <span className="font-semibold text-neutral-900">QSM-{orderNumber.split('-')[1] || orderNumber}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">Delivery Estimate:</span>
@@ -80,14 +78,14 @@ export default function CheckoutPage() {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">Notification:</span>
-                <span className="font-semibold text-brand-600">SMS / Email sent</span>
+                <span className="font-semibold text-brand-600">WhatsApp sent</span>
               </div>
             </div>
 
             <div className="pt-4">
               <Link
                 href="/shop"
-                className="w-full inline-block py-3 bg-brand-600 hover:bg-brand-700 text-white font-medium transition text-sm rounded shadow"
+                className="w-full inline-block py-3 bg-white hover:bg-neutral-900 hover:text-white font-medium transition text-sm border-2 border-neutral-950 rounded-full"
               >
                 Continue Shopping
               </Link>
@@ -134,8 +132,7 @@ export default function CheckoutPage() {
                         required
                         value={formData.firstName}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-sm bg-neutral-50 border border-neutral-200 rounded focus:outline-none focus:border-brand-500"
-                        placeholder="Sarah"
+                        className="w-full px-5 py-2.5 text-sm bg-neutral-50 border border-neutral-200 rounded-full focus:outline-none focus:border-brand-500"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -146,8 +143,7 @@ export default function CheckoutPage() {
                         required
                         value={formData.lastName}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-sm bg-neutral-50 border border-neutral-200 rounded focus:outline-none focus:border-brand-500"
-                        placeholder="Parker"
+                        className="w-full px-5 py-2.5 text-sm bg-neutral-50 border border-neutral-200 rounded-full focus:outline-none focus:border-brand-500"
                       />
                     </div>
                   </div>
@@ -159,8 +155,18 @@ export default function CheckoutPage() {
                       required
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 text-sm bg-neutral-50 border border-neutral-200 rounded focus:outline-none focus:border-brand-500"
-                      placeholder="sarah.parker@example.com"
+                      className="w-full px-5 py-2.5 text-sm bg-neutral-50 border border-neutral-200 rounded-full focus:outline-none focus:border-brand-500"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Phone Number</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="w-full px-5 py-2.5 text-sm bg-neutral-50 border border-neutral-200 rounded-full focus:outline-none focus:border-brand-500"
                     />
                   </div>
                 </div>
@@ -178,8 +184,7 @@ export default function CheckoutPage() {
                       required
                       value={formData.address}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 text-sm bg-neutral-50 border border-neutral-200 rounded focus:outline-none focus:border-brand-500"
-                      placeholder="123 Luxury Ave, Apt 4B"
+                      className="w-full px-5 py-2.5 text-sm bg-neutral-50 border border-neutral-200 rounded-full focus:outline-none focus:border-brand-500"
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -191,8 +196,7 @@ export default function CheckoutPage() {
                         required
                         value={formData.city}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-sm bg-neutral-50 border border-neutral-200 rounded focus:outline-none focus:border-brand-500"
-                        placeholder="New York"
+                        className="w-full px-5 py-2.5 text-sm bg-neutral-50 border border-neutral-200 rounded-full focus:outline-none focus:border-brand-500"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -203,92 +207,38 @@ export default function CheckoutPage() {
                         required
                         value={formData.zipCode}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-sm bg-neutral-50 border border-neutral-200 rounded focus:outline-none focus:border-brand-500"
-                        placeholder="10001"
+                        className="w-full px-5 py-2.5 text-sm bg-neutral-50 border border-neutral-200 rounded-full focus:outline-none focus:border-brand-500"
                       />
                     </div>
                   </div>
                 </div>
 
-                {/* 3. Secure Payment Details */}
+                {/* 3. Cash on Delivery (COD) Details */}
                 <div className="bg-white rounded-lg border border-neutral-100 shadow-sm p-6 space-y-4">
                   <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
                     <h3 className="text-lg font-medium text-neutral-950 font-serif flex items-center gap-1.5">
-                      <CreditCard className="w-5 h-5 text-brand-600" /> Secure Card Payment
+                      <CreditCard className="w-5 h-5 text-brand-600" /> Cash on Delivery (COD)
                     </h3>
                     <span className="text-[10px] text-green-600 font-bold tracking-widest uppercase flex items-center gap-1">
-                      <ShieldCheck className="w-3.5 h-3.5" /> encrypted
+                      <ShieldCheck className="w-3.5 h-3.5" /> Secure
                     </span>
                   </div>
-                  
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Cardholder Name</label>
-                    <input
-                      type="text"
-                      name="cardName"
-                      required
-                      value={formData.cardName}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 text-sm bg-neutral-50 border border-neutral-200 rounded focus:outline-none focus:border-brand-500"
-                      placeholder="Sarah Parker"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Card Number</label>
-                    <input
-                      type="text"
-                      name="cardNumber"
-                      required
-                      maxLength={19}
-                      value={formData.cardNumber}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 text-sm bg-neutral-50 border border-neutral-200 rounded focus:outline-none focus:border-brand-500"
-                      placeholder="4111 2222 3333 4444"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Expiry Date</label>
-                      <input
-                        type="text"
-                        name="cardExpiry"
-                        required
-                        maxLength={5}
-                        value={formData.cardExpiry}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-sm bg-neutral-50 border border-neutral-200 rounded focus:outline-none focus:border-brand-500"
-                        placeholder="MM/YY"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">CVV / CVC</label>
-                      <input
-                        type="password"
-                        name="cardCvc"
-                        required
-                        maxLength={4}
-                        value={formData.cardCvc}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-sm bg-neutral-50 border border-neutral-200 rounded focus:outline-none focus:border-brand-500"
-                        placeholder="123"
-                      />
-                    </div>
-                  </div>
+                  <p className="text-sm text-neutral-600">
+                    Pay with cash when your order is delivered to your doorstep. Please ensure you have the exact amount ready.
+                  </p>
                 </div>
 
                 {/* Submit button */}
                 <button
                   type="submit"
                   disabled={isSubmitting || cart.length === 0}
-                  className={`w-full py-4 text-sm font-semibold uppercase tracking-wider text-white shadow-lg transition rounded ${
+                  className={`w-full py-4 text-sm font-semibold uppercase tracking-wider text-white shadow-lg transition border-2 rounded-full ${
                     isSubmitting || cart.length === 0
-                      ? "bg-neutral-300 text-neutral-400 cursor-not-allowed shadow-none"
-                      : "bg-brand-600 hover:bg-brand-700 hover:shadow-xl"
+                      ? "bg-neutral-200 text-neutral-400 cursor-not-allowed border-neutral-200"
+                      : "bg-neutral-950 hover:bg-neutral-800 border-neutral-950"
                   }`}
                 >
-                  {isSubmitting ? "Encrypting & Placing Order..." : `Place Order • Rs. ${totalCost.toFixed(2)}`}
+                  {isSubmitting ? "Placing Order..." : `Complete Order • Rs. ${totalCost.toFixed(2)}`}
                 </button>
               </form>
             </div>
@@ -339,12 +289,8 @@ export default function CheckoutPage() {
                 <div className="flex justify-between text-neutral-500">
                   <span>Standard Shipping</span>
                   <span className="font-semibold text-neutral-900">
-                    {shippingCost === 0 ? "FREE" : `Rs. ${shippingCost.toFixed(2)}`}
+                    Rs. {shippingCost.toFixed(2)}
                   </span>
-                </div>
-                <div className="flex justify-between text-neutral-500">
-                  <span>Estimated Tax (8%)</span>
-                  <span className="font-semibold text-neutral-900">Rs. {taxCost.toFixed(2)}</span>
                 </div>
                 <hr className="border-neutral-50 my-1" />
                 <div className="flex justify-between text-base font-semibold text-neutral-950">
@@ -356,7 +302,7 @@ export default function CheckoutPage() {
               <div className="p-3 bg-brand-50 border border-brand-100 rounded text-[11px] text-brand-700 flex items-start gap-1.5">
                 <Sparkles className="w-4 h-4 text-brand-600 flex-shrink-0" />
                 <span>
-                  <strong>Free Express Shipping:</strong> You qualify for free express shipping. Standard delivery occurs within 2-4 business days.
+                  <strong>Express Delivery:</strong> Shipping fee is flat Rs. 200. Standard delivery occurs within 2-4 business days.
                 </span>
               </div>
             </div>

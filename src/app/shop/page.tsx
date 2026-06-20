@@ -26,7 +26,6 @@ export default async function ShopPage({ searchParams }: PageProps) {
         <ShopPageContent
           initialProducts={products}
           categories={categories}
-          initialCategory={initialCategory}
         />
       </main>
       <Footer />
