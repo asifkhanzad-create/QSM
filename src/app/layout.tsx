@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
-// 1. Fixed the import name to include the underscore
-import { Bebas_Neue } from "next/font/google"; 
+import { Oswald, Poppins } from "next/font/google"; 
 import "./globals.css";
 
-// 2. Added the required 'weight' property
-const bebasNeue = Bebas_Neue({
-  weight: "400", 
+const oswald = Oswald({
   subsets: ["latin"],
-  variable: "--font-bebas-neue",
+  variable: "--font-oswald",
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  variable: "--font-poppins",
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -24,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased text-neutral-800 bg-neutral-50 min-h-screen flex flex-col ${bebasNeue.variable}`}>
+      <body className={`antialiased text-neutral-800 bg-neutral-50 min-h-screen flex flex-col ${poppins.variable} ${oswald.variable}`}>
         <CartProvider>
           {children}
         </CartProvider>
