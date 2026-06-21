@@ -53,8 +53,8 @@ export default function CheckoutPage() {
       <>
         <Header />
         <main className="flex-1 bg-stone-50/50 py-16 sm:py-24 px-4 flex items-center justify-center">
-          <div className="max-w-md w-full bg-white border border-neutral-100 rounded-lg shadow-xl p-8 text-center space-y-6">
-            <div className="w-16 h-16 bg-brand-50 rounded-full flex items-center justify-center text-brand-600 mx-auto animate-bounce">
+          <div className="max-w-md w-full bg-white border border-neutral-100 rounded-lg shadow-xl p-8 text-center space-y-6 animate-scale-in">
+            <div className="w-16 h-16 bg-brand-50 rounded-full flex items-center justify-center text-brand-600 mx-auto animate-pop">
               <CheckCircle2 className="w-10 h-10" />
             </div>
             
@@ -85,7 +85,7 @@ export default function CheckoutPage() {
             <div className="pt-4">
               <Link
                 href="/shop"
-                className="w-full inline-block py-3 bg-white hover:bg-neutral-900 hover:text-white font-medium transition text-sm border-2 border-neutral-950 rounded-full"
+                className="btn-pill w-full inline-block py-3 bg-white hover:bg-neutral-900 hover:text-white text-sm border-2 border-neutral-950"
               >
                 Continue Shopping
               </Link>
@@ -232,10 +232,10 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting || cart.length === 0}
-                  className={`w-full py-4 text-sm font-semibold uppercase tracking-wider text-white shadow-lg transition border-2 rounded-full ${
+                className={`btn-pill w-full py-4 text-sm font-semibold uppercase tracking-wider text-white border-2 ${
                     isSubmitting || cart.length === 0
                       ? "bg-neutral-200 text-neutral-400 cursor-not-allowed border-neutral-200"
-                      : "bg-neutral-950 hover:bg-neutral-800 border-neutral-950"
+                      : "bg-neutral-950 hover:bg-neutral-800 border-neutral-950 shadow-lg"
                   }`}
                 >
                   {isSubmitting ? "Placing Order..." : `Complete Order • Rs. ${totalCost.toFixed(2)}`}

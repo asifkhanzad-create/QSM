@@ -77,7 +77,7 @@ export default function Header() {
             <div className="flex items-center gap-6 flex-1">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="text-neutral-500 hover:text-neutral-800 transition"
+                className="icon-btn p-1 text-neutral-500 hover:text-neutral-800"
               >
                 <Menu className="w-6 h-6" />
               </button>
@@ -93,12 +93,15 @@ export default function Header() {
             <div className="flex-1 flex justify-end">
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-neutral-700 hover:text-neutral-950 transition"
+                className="icon-btn relative p-2 text-neutral-700 hover:text-neutral-950"
                 aria-label="Open Cart"
               >
                 <ShoppingBag className="w-5 h-5" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-brand-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pulse">
+                  <span
+                    key={cartCount}
+                    className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-brand-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pop"
+                  >
                     {cartCount}
                   </span>
                 )}

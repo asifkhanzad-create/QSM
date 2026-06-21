@@ -20,14 +20,16 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "ingredients" | "howToUse">("description");
+  const [justAdded, setJustAdded] = useState(false);
 
   const handleAddToCart = () => {
-    // If shades exist and none is selected, don't allow add (though we default to first shade)
     if (product.shades && product.shades.length > 0 && !selectedShade) {
       alert("Please select a shade first.");
       return;
     }
     addToCart(product, selectedShade, quantity);
+    setJustAdded(true);
+    window.setTimeout(() => setJustAdded(false), 1800);
   };
 
   // Determine which main image to display from the product gallery
@@ -43,9 +45,10 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
         <div className="space-y-4">
           <div className="w-full h-[500px] sm:h-[600px] bg-white rounded-lg overflow-hidden relative shadow-sm border border-neutral-100">
             <img
+              key={displayedImage}
               src={displayedImage}
               alt={product.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover animate-fade-in"
             />
           </div>
 
@@ -59,9 +62,9 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
                     setSelectedShade(null); // Clear shade override to show full gallery
                     setActiveImageIndex(idx);
                   }}
-                  className={`w-20 h-24 rounded-full overflow-hidden bg-white border border-neutral-200 transition hover:border-neutral-900 ${
+                  className={`icon-btn w-20 h-24 rounded-full overflow-hidden bg-white border border-neutral-200 transition-all duration-200 hover:border-neutral-900 ${
                     activeImageIndex === idx && !selectedShade
-                      ? "border-neutral-900 scale-95"
+                      ? "border-neutral-900 scale-95 ring-2 ring-neutral-900/20"
                       : ""
                   }`}
                 >
@@ -137,9 +140,9 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
                     onClick={() => {
                       setSelectedShade(shade);
                     }}
-                    className={`relative w-9 h-9 rounded-full bg-white border border-neutral-200 transition flex items-center justify-center p-0.5 hover:border-neutral-900 hover:scale-105 ${
+                    className={`icon-btn relative w-9 h-9 rounded-full bg-white border border-neutral-200 transition-all duration-200 flex items-center justify-center p-0.5 hover:border-neutral-900 hover:scale-105 ${
                       selectedShade?.name === shade.name
-                        ? "border-neutral-900 shadow-md scale-105"
+                        ? "border-neutral-900 shadow-md scale-105 ring-2 ring-neutral-900/15"
                         : ""
                     }`}
                     title={shade.name}
@@ -174,14 +177,14 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
                 <div className="flex items-center border border-neutral-200 rounded-full">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3.5 py-2.5 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50 hover:border-neutral-900 border border-neutral-200 rounded-full"
+                    className="icon-btn px-3.5 py-2.5 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50 border border-neutral-200 rounded-full"
                   >
                     -
                   </button>
                   <span className="px-4 font-medium text-neutral-900 text-sm">{quantity}</span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="px-3.5 py-2.5 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50 hover:border-neutral-900 border border-neutral-200 rounded-full"
+                    className="icon-btn px-3.5 py-2.5 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50 border border-neutral-200 rounded-full"
                   >
                     +
                   </button>
@@ -192,14 +195,25 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
               <button
                 onClick={handleAddToCart}
                 disabled={!isSelectedShadeInStock}
-                className={`flex-1 flex items-center justify-center gap-2 py-3.5 font-medium transition border rounded-full ${
-                  isSelectedShadeInStock
-                    ? "bg-neutral-950 hover:bg-neutral-800 text-white border-neutral-950"
-                    : "bg-white text-neutral-400 cursor-not-allowed border-neutral-200 hover:border-neutral-300"
+                className={`btn-pill flex-1 flex items-center justify-center gap-2 py-3.5 border ${
+                  justAdded
+                    ? "bg-green-600 text-white border-green-600 scale-[1.02]"
+                    : isSelectedShadeInStock
+                      ? "bg-neutral-950 hover:bg-neutral-800 text-white border-neutral-950"
+                      : "bg-white text-neutral-400 cursor-not-allowed border-neutral-200"
                 }`}
               >
-                <ShoppingBag className="w-5 h-5" />
-                {isSelectedShadeInStock ? "Add to Shopping Bag" : "Selected Shade Out of Stock"}
+                {justAdded ? (
+                  <>
+                    <Check className="w-5 h-5 animate-pop" />
+                    Added to Bag
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag className="w-5 h-5" />
+                    {isSelectedShadeInStock ? "Add to Shopping Bag" : "Selected Shade Out of Stock"}
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -213,9 +227,10 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex-1 py-2.5 text-xs font-semibold tracking-wider uppercase transition text-center border rounded-full ${
+                  className={`btn-pill flex-1 py-2.5 text-xs font-semibold tracking-wider uppercase text-center border transition-all duration-200 ${
                     activeTab === tab
-                      ? "bg-neutral-950 text-white border-neutral-950" : "bg-white text-neutral-500 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
+                      ? "bg-neutral-950 text-white border-neutral-950 scale-[1.02]"
+                      : "bg-white text-neutral-500 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
                   }`}
                 >
                   {tab === "description" ? "Description" : tab === "ingredients" ? "Ingredients" : "How to Use"}
@@ -223,7 +238,7 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
               ))}
             </div>
 
-            <div className="p-5 text-sm text-neutral-600 leading-relaxed min-h-[120px]">
+            <div key={activeTab} className="p-5 text-sm text-neutral-600 leading-relaxed min-h-[120px] animate-fade-in-up">
               {activeTab === "description" && <p>{product.description}</p>}
               {activeTab === "ingredients" && (
                 <div className="space-y-2">

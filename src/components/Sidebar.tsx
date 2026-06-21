@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { X } from "lucide-react";
+import { cn } from "@/lib/cn";
+import { useAnimatedPresence } from "@/hooks/useAnimatedPresence";
 
 const categories = [
   { name: "Lipsticks", href: "/shop?category=lipsticks" },
@@ -15,61 +17,55 @@ const categories = [
 ];
 
 export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-
-  React.useEffect(() => {
-    setIsMobileOpen(isOpen);
-  }, [isOpen]);
+  const { mounted, visible } = useAnimatedPresence(isOpen);
 
   const handleCategoryClick = () => {
-    setIsMobileOpen(false);
     onClose();
   };
 
+  if (!mounted) return null;
+
   return (
     <>
-      {/* Mobile Backdrop */}
-      {/* Mobile & Desktop Backdrop */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-          onClick={onClose}
-        />
-      )}
-
-      {/* Mobile & Desktop Sidebar */}
       <div
-        className={`fixed left-0 top-0 z-50 bg-white transform transition-transform duration-300 ease-in-out w-72 h-full flex flex-col shadow-xl ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={cn(
+          "overlay-backdrop z-40",
+          visible ? "opacity-100" : "opacity-0"
+        )}
+        onClick={onClose}
+      />
+
+      <div
+        className={cn(
+          "drawer-panel fixed left-0 top-0 z-50 bg-white w-72 h-full flex flex-col shadow-xl",
+          visible ? "translate-x-0" : "-translate-x-full"
+        )}
       >
         <div className="h-full flex flex-col">
-          {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-neutral-100">
             <h1 className="text-xl font-light tracking-[0.25em] text-neutral-950 font-serif">
               QSM
             </h1>
             <button
               onClick={onClose}
-              className="p-2 text-neutral-500 hover:text-neutral-800 transition rounded-lg"
+              className="icon-btn p-2 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50"
             >
               <X className="w-6 h-6" />
             </button>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto py-4 px-4 space-y-2">
+          <nav className="flex-1 overflow-y-auto py-4 px-4 space-y-2 stagger-fade-in">
             <Link
               href="/"
               onClick={handleCategoryClick}
-              className="block px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition rounded-lg"
+              className="btn-press block px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition-colors rounded-lg"
             >
               Home
             </Link>
             <Link
               href="/shop"
               onClick={handleCategoryClick}
-              className="block px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition rounded-lg"
+              className="btn-press block px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition-colors rounded-lg"
             >
               Shop All Products
             </Link>
@@ -78,7 +74,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
                 key={category.name}
                 href={category.href}
                 onClick={handleCategoryClick}
-                className="block px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition rounded-lg"
+                className="btn-press block px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition-colors rounded-lg"
               >
                 {category.name}
               </Link>

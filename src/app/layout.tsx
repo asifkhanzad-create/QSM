@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import { Oswald, Poppins } from "next/font/google"; 
+import PageTransition from "@/components/PageTransition";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 
-const oswald = Oswald({
+const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-oswald",
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  variable: "--font-poppins",
+  variable: "--font-outfit",
   weight: ["300", "400", "500", "600", "700"],
 });
 
@@ -28,9 +23,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased text-neutral-800 bg-neutral-50 min-h-screen flex flex-col ${poppins.variable} ${oswald.variable}`}>
+      <body className={`font-sans antialiased text-neutral-800 bg-neutral-50 min-h-screen flex flex-col ${outfit.variable}`}>
         <CartProvider>
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
         </CartProvider>
       </body>
     </html>

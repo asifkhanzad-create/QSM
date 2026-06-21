@@ -15,7 +15,7 @@ export default function HeroBanners() {
       title: (
         <>
           Elevate Your <br />
-          <span className="font-normal italic">Beauty Experience</span>
+          Beauty Experience
         </>
       ),
       description: "Discover premium cosmetics crafted with care and elegance. QSM brings you the best in beauty with quality you can trust.",
@@ -29,7 +29,7 @@ export default function HeroBanners() {
       title: (
         <>
           Unveiling the <br />
-          <span className="font-normal italic">Latest Trends</span>
+          Latest Trends
         </>
       ),
       description: "Stay ahead with our newest collection, featuring innovative formulas and captivating shades.",
@@ -83,7 +83,7 @@ export default function HeroBanners() {
                 <div className="pt-4">
                   <Link
                     href={banner.linkHref}
-                    className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-stone-900 font-medium hover:bg-brand-100 transition rounded shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform duration-200"
+                    className="btn-pill inline-flex items-center gap-2 px-8 py-3 bg-white text-neutral-900 font-medium hover:bg-neutral-100 transition-colors"
                   >
                     {banner.linkText} <ArrowRight className="w-4 h-4" />
                   </Link>

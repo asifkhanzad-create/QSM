@@ -4,6 +4,8 @@ import React from "react";
 import { useCart } from "@/context/CartContext";
 import { X, Plus, Minus, ShoppingBag, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/cn";
+import { useAnimatedPresence } from "@/hooks/useAnimatedPresence";
 
 export default function CartDrawer() {
   const {
@@ -16,20 +18,29 @@ export default function CartDrawer() {
     cartCount,
   } = useCart();
 
-  if (!isCartOpen) return null;
+  const { mounted, visible } = useAnimatedPresence(isCartOpen);
+
+  if (!mounted) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Overlay */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
+        className={cn(
+          "overlay-backdrop",
+          visible ? "opacity-100" : "opacity-0"
+        )}
         onClick={() => setIsCartOpen(false)}
       />
 
-      <div className="absolute inset-y-0 right-0 max-w-full flex">
-        <div className="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+      <div className="absolute inset-y-0 right-0 max-w-full flex pointer-events-none">
+        <div
+          className={cn(
+            "drawer-panel w-screen max-w-md bg-white shadow-2xl flex flex-col pointer-events-auto",
+            visible ? "translate-x-0" : "translate-x-full"
+          )}
+        >
           {/* Header */}
-          <div className="px-6 py-5 border-b border-neutral-100 flex items-center justify-between">
+          <div className="px-6 py-5 border-b border-neutral-100 flex items-center justify-between animate-fade-in">
             <div className="flex items-center gap-2">
               <ShoppingBag className="w-5 h-5 text-brand-600" />
               <h2 className="text-lg font-medium text-neutral-900 font-serif">
@@ -38,7 +49,7 @@ export default function CartDrawer() {
             </div>
             <button
               onClick={() => setIsCartOpen(false)}
-              className="p-1 text-neutral-400 hover:text-neutral-600 rounded-full hover:bg-neutral-50 transition"
+              className="icon-btn p-1 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-50"
             >
               <X className="w-5 h-5" />
             </button>
@@ -47,7 +58,7 @@ export default function CartDrawer() {
           {/* Items List */}
           <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
             {cart.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center py-12">
+              <div className="h-full flex flex-col items-center justify-center text-center py-12 animate-scale-in">
                 <div className="w-16 h-16 bg-neutral-50 rounded-full flex items-center justify-center mb-4">
                   <ShoppingBag className="w-8 h-8 text-neutral-300" />
                 </div>
@@ -57,7 +68,7 @@ export default function CartDrawer() {
                 </p>
                 <button
                   onClick={() => setIsCartOpen(false)}
-                  className="mt-6 px-6 py-2.5 bg-white hover:bg-neutral-900 hover:text-white text-neutral-900 text-sm font-medium transition border-2 border-neutral-950 rounded-full"
+                  className="btn-pill mt-6 px-6 py-2.5 bg-white hover:bg-neutral-900 hover:text-white text-neutral-900 text-sm border-2 border-neutral-950"
                 >
                   Continue Shopping
                 </button>
@@ -66,7 +77,8 @@ export default function CartDrawer() {
               cart.map((item, idx) => (
                 <div
                   key={`${item.product._id}-${item.selectedShade?.name || "none"}-${idx}`}
-                  className="flex gap-4 py-4 border-b border-neutral-50 last:border-b-0"
+                  className="flex gap-4 py-4 border-b border-neutral-50 last:border-b-0 animate-fade-in-up"
+                  style={{ animationDelay: `${idx * 60}ms` }}
                 >
                   <div className="w-20 h-24 bg-neutral-100 rounded-md overflow-hidden relative flex-shrink-0">
                     <img
@@ -78,7 +90,7 @@ export default function CartDrawer() {
 
                   <div className="flex-1 flex flex-col">
                     <div className="flex justify-between text-sm">
-                      <h4 className="font-medium text-neutral-950 hover:text-brand-600">
+                      <h4 className="font-medium text-neutral-950 hover:text-brand-600 transition-colors">
                         <Link href={`/product/${item.product.slug}`} onClick={() => setIsCartOpen(false)}>
                           {item.product.name}
                         </Link>
@@ -104,7 +116,7 @@ export default function CartDrawer() {
                           onClick={() =>
                             updateQuantity(item.product._id, item.selectedShade?.name || null, item.quantity - 1)
                           }
-                          className="p-1 hover:bg-neutral-50 text-neutral-500 hover:border-neutral-900 border-2 border-neutral-200 rounded-full"
+                          className="icon-btn p-1 hover:bg-neutral-50 text-neutral-500 border-2 border-neutral-200"
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
@@ -115,7 +127,7 @@ export default function CartDrawer() {
                           onClick={() =>
                             updateQuantity(item.product._id, item.selectedShade?.name || null, item.quantity + 1)
                           }
-                          className="p-1 hover:bg-neutral-50 text-neutral-500 hover:border-neutral-900 border-2 border-neutral-200 rounded-full"
+                          className="icon-btn p-1 hover:bg-neutral-50 text-neutral-500 border-2 border-neutral-200"
                         >
                           <Plus className="w-3.5 h-3.5" />
                         </button>
@@ -123,7 +135,7 @@ export default function CartDrawer() {
 
                       <button
                         onClick={() => removeFromCart(item.product._id, item.selectedShade?.name || null)}
-                        className="text-neutral-400 hover:text-red-500 transition p-1"
+                        className="icon-btn text-neutral-400 hover:text-red-500 p-1"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -136,7 +148,7 @@ export default function CartDrawer() {
 
           {/* Footer Subtotal */}
           {cart.length > 0 && (
-            <div className="border-t border-neutral-100 px-6 py-6 bg-neutral-50">
+            <div className="border-t border-neutral-100 px-6 py-6 bg-neutral-50 animate-fade-in-up">
               <div className="flex justify-between text-base font-medium text-neutral-900 mb-2">
                 <span>Subtotal</span>
                 <span className="font-semibold">Rs. {cartSubtotal.toFixed(2)}</span>
@@ -148,13 +160,13 @@ export default function CartDrawer() {
                 <Link
                   href="/checkout"
                   onClick={() => setIsCartOpen(false)}
-                  className="w-full flex items-center justify-center py-3 bg-white hover:bg-neutral-900 hover:text-white font-medium transition border-2 border-neutral-950 rounded-full"
+                  className="btn-pill w-full flex items-center justify-center py-3 bg-white hover:bg-neutral-900 hover:text-white border-2 border-neutral-950"
                 >
                   Proceed to Checkout
                 </Link>
                 <button
                   onClick={() => setIsCartOpen(false)}
-                  className="w-full flex items-center justify-center py-2.5 text-sm text-neutral-600 hover:text-neutral-900 font-medium transition"
+                  className="btn-press w-full flex items-center justify-center py-2.5 text-sm text-neutral-600 hover:text-neutral-900 font-medium transition-colors"
                 >
                   Continue Shopping
                 </button>

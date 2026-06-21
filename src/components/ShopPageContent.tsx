@@ -72,7 +72,7 @@ export default function ShopPageContent({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {/* Page Header */}
-      <div className="text-center max-w-xl mx-auto mb-10">
+      <div className="text-center max-w-xl mx-auto mb-10 animate-fade-in-up">
         <h2 className="text-3xl sm:text-4xl font-light font-serif text-neutral-950 tracking-tight">
           Beauty Catalog
         </h2>
@@ -100,9 +100,9 @@ export default function ShopPageContent({
         <div className="flex flex-wrap gap-2 justify-center w-full md:w-auto">
           <Link
             href="/shop"
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition border-2 ${
+            className={`btn-pill px-4 py-1.5 text-xs font-semibold tracking-wider uppercase border-2 transition-all duration-200 ${
               !searchParams.get('category')
-                ? "bg-neutral-950 text-white border-neutral-950"
+                ? "bg-neutral-950 text-white border-neutral-950 scale-[1.02]"
                 : "bg-white text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
             }`}
           >
@@ -112,9 +112,9 @@ export default function ShopPageContent({
             <Link
               key={cat._id}
               href={`/shop?category=${cat.slug}`}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition border-2 ${
+              className={`btn-pill px-4 py-1.5 text-xs font-semibold tracking-wider uppercase border-2 transition-all duration-200 ${
                 searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
-                  ? "bg-neutral-950 text-white border-neutral-950"
+                  ? "bg-neutral-950 text-white border-neutral-950 scale-[1.02]"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
               }`}
             >
@@ -143,26 +143,30 @@ export default function ShopPageContent({
 
       {/* Grid Content */}
       {filteredProducts.length === 0 ? (
-        <div className="text-center py-24 bg-white rounded-lg border border-neutral-100 shadow-sm">
+        <div className="text-center py-24 bg-white rounded-lg border border-neutral-100 shadow-sm animate-scale-in">
           <p className="text-base text-neutral-600">No products found matching your criteria.</p>
           <button
             onClick={() => {
               setSearchQuery("");
               setSortBy("featured");
             }}
-            className="mt-4 px-6 py-2 bg-white hover:bg-neutral-900 hover:text-white text-neutral-900 text-sm font-medium transition border-2 border-neutral-950 rounded-full"
+            className="btn-pill mt-4 px-6 py-2 bg-white hover:bg-neutral-900 hover:text-white text-neutral-900 text-sm border-2 border-neutral-950"
           >
             Reset Filters
           </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {filteredProducts.map((product) => (
-            <div key={product._id} className="group relative flex flex-col">
+          {filteredProducts.map((product, index) => (
+            <div
+              key={product._id}
+              className="group relative flex flex-col animate-fade-in-up"
+              style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
+            >
               {/* Product Card Image Container */}
               <Link
                 href={`/product/${product.slug}`}
-                className="w-full h-[380px] bg-neutral-100 rounded-md overflow-hidden relative block"
+                className="w-full h-[380px] bg-neutral-100 rounded-md overflow-hidden relative block transition-transform duration-300 group-hover:shadow-md"
               >
                 <img
                   src={product.images[0]}

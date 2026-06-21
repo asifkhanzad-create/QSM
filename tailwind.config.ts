@@ -9,8 +9,44 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-poppins)", "sans-serif"],
-        serif: ["var(--font-oswald)", "serif"],
+        sans: ["var(--font-outfit)", "sans-serif"],
+        serif: ["var(--font-outfit)", "sans-serif"],
+      },
+      transitionTimingFunction: {
+        'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+      },
+      keyframes: {
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "fade-in-up": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "slide-in-right": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        pop: {
+          "0%": { transform: "scale(1)" },
+          "40%": { transform: "scale(1.2)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "scale-in": {
+          "0%": { opacity: "0", transform: "scale(0.96)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+      },
+      animation: {
+        "fade-in": "fade-in 0.3s ease-out forwards",
+        "fade-in-up": "fade-in-up 0.45s ease-out forwards",
+        "slide-in-right": "slide-in-right 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        pop: "pop 0.35s ease-out",
+        "scale-in": "scale-in 0.25s ease-out forwards",
+      },
+      transitionTimingFunction: {
+        "out-expo": "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       colors: {
         brand: {
