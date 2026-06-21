@@ -83,7 +83,7 @@ export default function HeroBanners() {
                 <div className="pt-4">
                   <Link
                     href={banner.linkHref}
-                    className="btn-pill inline-flex items-center gap-2 px-8 py-3 bg-white text-neutral-900 font-medium hover:bg-neutral-100 transition-colors"
+                    className="btn-pill inline-flex items-center gap-2 px-8 py-3 bg-accentPink-400 text-white font-medium hover:bg-accentPink-500 transition-colors"
                   >
                     {banner.linkText} <ArrowRight className="w-4 h-4" />
                   </Link>

@@ -45,9 +45,6 @@ const config: Config = {
         pop: "pop 0.35s ease-out",
         "scale-in": "scale-in 0.25s ease-out forwards",
       },
-      transitionTimingFunction: {
-        "out-expo": "cubic-bezier(0.16, 1, 0.3, 1)",
-      },
       colors: {
         brand: {
           50: "#FDFDFD",
@@ -61,6 +58,19 @@ const config: Config = {
           800: "#383838",
           900: "#282828",
           950: "#1C1C1C",
+        },
+        accentPink: {
+          50: "#F9F2F4",
+          100: "#F0E0E4",
+          200: "#E1C1C9",
+          300: "#D1A2AE",
+          400: "#C58B95",
+          500: "#B07680",
+          600: "#9C626D",
+          700: "#834E5A",
+          800: "#6A3B47",
+          900: "#512834",
+          950: "#381521",
         },
         // Gold accent for minimalist feel (optional, but often used for premium)
         accentGold: {

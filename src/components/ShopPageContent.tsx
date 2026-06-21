@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { type Product, type Category } from "@/lib/data";
 import { Star, Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 
@@ -17,9 +17,16 @@ export default function ShopPageContent({
 }: ShopPageContentProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("featured");
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+
+  // Initialize searchQuery from URL params
+  useEffect(() => {
+    const searchFromUrl = searchParams.get('search') || '';
+    setSearchQuery(searchFromUrl);
+  }, [searchParams]);
 
   // Get current filters from URL
   const categoryParam = searchParams.get('category');
@@ -30,10 +37,10 @@ export default function ShopPageContent({
   const filteredProducts = useMemo(() => {
     let result = [...initialProducts];
 
-    // Filter by Search Query — when active, search ALL products, ignore other filters
+    // Filter by Search Query — when active, search ALL products
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      return result.filter(
+      result = result.filter(
         (p) =>
           p.name.toLowerCase().includes(query) ||
           p.description.toLowerCase().includes(query)
@@ -83,7 +90,7 @@ export default function ShopPageContent({
 
       {/* Control Bar (Search, Category Filter Tabs, Sorting) */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between pb-8 border-b border-neutral-100 mb-8">
-        
+
         {/* Search Input */}
         <div className="relative w-full md:w-80">
           <input
@@ -91,6 +98,17 @@ export default function ShopPageContent({
             placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                const params = new URLSearchParams(searchParams.toString());
+                if (searchQuery) {
+                  params.set('search', searchQuery);
+                } else {
+                  params.delete('search');
+                }
+                router.push(`?${params.toString()}`, { scroll: false });
+              }
+            }}
             className="w-full pl-10 pr-4 py-2 text-sm bg-white border border-neutral-200 rounded-md focus:outline-none focus:border-brand-500"
           />
           <Search className="absolute left-3.5 top-2.5 w-4.5 h-4.5 text-neutral-400" />
@@ -102,7 +120,7 @@ export default function ShopPageContent({
             href="/shop"
             className={`btn-pill px-4 py-1.5 text-xs font-semibold tracking-wider uppercase border-2 transition-all duration-200 ${
               !searchParams.get('category')
-                ? "bg-neutral-950 text-white border-neutral-950 scale-[1.02]"
+                ? "bg-accentPink-400 text-white border-accentPink-400 scale-[1.02]"
                 : "bg-white text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
             }`}
           >
@@ -114,7 +132,7 @@ export default function ShopPageContent({
               href={`/shop?category=${cat.slug}`}
               className={`btn-pill px-4 py-1.5 text-xs font-semibold tracking-wider uppercase border-2 transition-all duration-200 ${
                 searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
-                  ? "bg-neutral-950 text-white border-neutral-950 scale-[1.02]"
+                  ? "bg-accentPink-400 text-white border-accentPink-400 scale-[1.02]"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
               }`}
             >
@@ -144,13 +162,23 @@ export default function ShopPageContent({
       {/* Grid Content */}
       {filteredProducts.length === 0 ? (
         <div className="text-center py-24 bg-white rounded-lg border border-neutral-100 shadow-sm animate-scale-in">
-          <p className="text-base text-neutral-600">No products found matching your criteria.</p>
+          <p className="text-base text-neutral-600">
+            {searchQuery
+              ? `No products found matching "${searchQuery}"`
+              : 'No products found matching your criteria.'
+            }
+          </p>
           <button
             onClick={() => {
-              setSearchQuery("");
+              const params = new URLSearchParams(searchParams.toString());
+              params.delete('category');
+              params.delete('isNewArrival');
+              params.delete('isBestSeller');
+              params.delete('search');
+              router.push(`?${params.toString()}`, { scroll: false });
               setSortBy("featured");
             }}
-            className="btn-pill mt-4 px-6 py-2 bg-white hover:bg-neutral-900 hover:text-white text-neutral-900 text-sm border-2 border-neutral-950"
+            className="btn-pill mt-4 px-6 py-2 bg-accentPink-400 hover:bg-accentPink-500 text-white text-sm border-2 border-accentPink-400"
           >
             Reset Filters
           </button>
