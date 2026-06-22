@@ -59,6 +59,14 @@ const config: Config = {
           900: "#282828",
           950: "#1C1C1C",
         },
+        customPink: {
+          DEFAULT: "#F77FBE",
+          hover: "#f564b0",
+        },
+        customPurple: {
+          DEFAULT: "#D8B4FE",
+          hover: "#C084FC",
+        },
         accentPink: {
           50: "#F9F2F4",
           100: "#F0E0E4",

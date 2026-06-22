@@ -91,36 +91,13 @@ export default function ShopPageContent({
       {/* Control Bar (Search, Category Filter Tabs, Sorting) */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between pb-8 border-b border-neutral-100 mb-8">
 
-        {/* Search Input */}
-        <div className="relative w-full md:w-80">
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                const params = new URLSearchParams(searchParams.toString());
-                if (searchQuery) {
-                  params.set('search', searchQuery);
-                } else {
-                  params.delete('search');
-                }
-                router.push(`?${params.toString()}`, { scroll: false });
-              }
-            }}
-            className="w-full pl-10 pr-4 py-2 text-sm bg-white border border-neutral-200 rounded-md focus:outline-none focus:border-brand-500"
-          />
-          <Search className="absolute left-3.5 top-2.5 w-4.5 h-4.5 text-neutral-400" />
-        </div>
-
         {/* Categories Fast Filter */}
         <div className="flex flex-wrap gap-2 justify-center w-full md:w-auto">
           <Link
             href="/shop"
-            className={`btn-pill px-4 py-1.5 text-xs font-semibold tracking-wider uppercase border-2 transition-all duration-200 ${
+            className={`btn-pill px-4 py-1.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 ${
               !searchParams.get('category')
-                ? "bg-accentPink-400 text-white border-accentPink-400 scale-[1.02]"
+                ? "bg-gradient-to-r from-customPurple to-customPink text-white border-customPink scale-[1.02]"
                 : "bg-white text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
             }`}
           >
@@ -130,9 +107,9 @@ export default function ShopPageContent({
             <Link
               key={cat._id}
               href={`/shop?category=${cat.slug}`}
-              className={`btn-pill px-4 py-1.5 text-xs font-semibold tracking-wider uppercase border-2 transition-all duration-200 ${
+              className={`btn-pill px-4 py-1.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 ${
                 searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
-                  ? "bg-accentPink-400 text-white border-accentPink-400 scale-[1.02]"
+                  ? "bg-gradient-to-r from-customPurple to-customPink text-white border-customPink scale-[1.02]"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
               }`}
             >
@@ -178,7 +155,7 @@ export default function ShopPageContent({
               router.push(`?${params.toString()}`, { scroll: false });
               setSortBy("featured");
             }}
-            className="btn-pill mt-4 px-6 py-2 bg-accentPink-400 hover:bg-accentPink-500 text-white text-sm border-2 border-accentPink-400"
+            className="btn-pill mt-4 px-6 py-2 bg-gradient-to-r from-customPurple to-customPink hover:from-customPurple-hover hover:to-customPink-hover text-white text-sm border border-customPink"
           >
             Reset Filters
           </button>

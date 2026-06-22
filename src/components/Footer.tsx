@@ -97,7 +97,7 @@ export default function Footer() {
               />
               <button
                 type="submit"
-                className="bg-accentPink-400 hover:bg-accentPink-500 text-white text-sm px-4 py-2 font-medium transition border-2 border-accentPink-400 rounded-full"
+                className="bg-gradient-to-r from-customPurple to-customPink hover:from-customPurple-hover hover:to-customPink-hover text-white text-sm px-4 py-2 font-medium transition border border-customPink rounded-full"
               >
                 Join
               </button>
