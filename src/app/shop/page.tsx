@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
@@ -23,10 +23,12 @@ export default async function ShopPage({ searchParams }: PageProps) {
       <Header />
       <CartDrawer />
       <main className="flex-1 bg-stone-50/50">
-        <ShopPageContent
-          initialProducts={products}
-          categories={categories}
-        />
+        <Suspense fallback={<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center text-neutral-500 font-light">Loading catalog...</div>}>
+          <ShopPageContent
+            initialProducts={products}
+            categories={categories}
+          />
+        </Suspense>
       </main>
       <Footer />
     </>

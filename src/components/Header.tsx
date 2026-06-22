@@ -107,7 +107,9 @@ export default function Header() {
               >
                 <Menu className="w-6 h-6" />
               </button>
-              <SearchBar />
+              <Suspense fallback={null}>
+                <SearchBar />
+              </Suspense>
               <Suspense fallback={null}>
                 <NavLinks />
               </Suspense>
