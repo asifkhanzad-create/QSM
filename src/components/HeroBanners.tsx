@@ -46,7 +46,7 @@ export default function HeroBanners() {
   }, [banners.length]);
 
   return (
-    <section className="relative h-[85vh] bg-stone-100 overflow-hidden mt-6">
+    <section className="relative h-[85vh] bg-stone-100 overflow-hidden mt-6 rounded-2xl">
       {banners.map((banner, index) => {
         const isActive = index === currentBannerIndex;
         return (
@@ -83,7 +83,7 @@ export default function HeroBanners() {
                 <div className="pt-4">
                   <Link
                     href={banner.linkHref}
-                    className="btn-pill inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-customPurple to-customPink hover:from-customPurple-hover hover:to-customPink-hover text-white font-medium transition-colors focus:outline-none"
+                    className="btn-pill inline-flex items-center gap-2 px-8 py-3 bg-customPurple hover:bg-customPurple-hover text-white font-medium transition-colors focus:outline-none"
                   >
                     {banner.linkText} <ArrowRight className="w-4 h-4" />
                   </Link>

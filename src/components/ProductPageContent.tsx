@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { type Product, type Shade } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
 import { Star, ShoppingBag, Check, Shield, RotateCcw, Truck, Sparkles } from "lucide-react";
@@ -21,6 +21,21 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "ingredients" | "howToUse">("description");
   const [justAdded, setJustAdded] = useState(false);
+
+  // Hover zoom state
+  const [isHovering, setIsHovering] = useState(false);
+  const [mousePercent, setMousePercent] = useState({ x: 50, y: 50 });
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+  const zoom = 1.8;
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const container = imageContainerRef.current;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setMousePercent({ x, y });
+  }, []);
 
   const handleAddToCart = () => {
     if (product.shades && product.shades.length > 0 && !selectedShade) {
@@ -43,12 +58,22 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
         
         {/* Left Column: Image Gallery */}
         <div className="space-y-4">
-          <div className="w-full h-[500px] sm:h-[600px] bg-white rounded-lg overflow-hidden relative shadow-sm border border-neutral-100">
+          <div
+            ref={imageContainerRef}
+            className="w-full h-[500px] sm:h-[600px] bg-white rounded-xl overflow-hidden relative shadow-sm border border-neutral-100"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            onMouseMove={handleMouseMove}
+          >
             <img
               key={displayedImage}
               src={displayedImage}
               alt={product.name}
-              className="w-full h-full object-cover animate-fade-in"
+              className="w-full h-full object-cover animate-fade-in transition-transform duration-300 ease-out"
+              style={{
+                transform: isHovering ? `scale(${zoom})` : "scale(1)",
+                transformOrigin: `${mousePercent.x}% ${mousePercent.y}%`,
+              }}
             />
           </div>
 
@@ -84,7 +109,7 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
               {product.category}
             </span>
             {product.isBestSeller && (
-              <span className="text-[10px] uppercase tracking-wider text-white font-bold bg-neutral-900 px-2.5 py-1 rounded">
+              <span className="text-[10px] uppercase tracking-wider text-white font-bold bg-neutral-900 px-2.5 py-1 rounded-full">
                 Bestseller
               </span>
             )}
@@ -199,7 +224,7 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
                   justAdded
                     ? "bg-green-600 text-white border-green-600 scale-[1.02]"
                     : isSelectedShadeInStock
-                      ? "bg-gradient-to-r from-customPurple to-customPink hover:from-customPurple-hover hover:to-customPink-hover text-white border-transparent focus:outline-none"
+                      ? "bg-customPurple hover:bg-customPurple-hover text-white border-transparent focus:outline-none"
                       : "bg-white text-neutral-400 cursor-not-allowed border-neutral-200"
                 }`}
               >
@@ -221,7 +246,7 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
           <hr className="border-neutral-100" />
 
           {/* Informational Tabs (Description, Ingredients, How to Use) */}
-          <div className="border border-neutral-100 rounded-lg overflow-hidden bg-white shadow-sm">
+          <div className="border border-neutral-100 rounded-xl overflow-hidden bg-white shadow-sm">
             <div className="flex gap-2 border-b border-neutral-100 bg-neutral-50/50 p-2">
               {(["description", "ingredients", "howToUse"] as const).map((tab) => (
                 <button
@@ -229,7 +254,7 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
                   onClick={() => setActiveTab(tab)}
                   className={`btn-pill flex-1 py-2.5 text-xs font-semibold tracking-wider uppercase text-center border transition-all duration-200 focus:outline-none ${
                     activeTab === tab
-                      ? "bg-gradient-to-r from-customPurple to-customPink text-white border-transparent scale-[1.02]"
+                      ? "bg-customPurple text-white border-transparent scale-[1.02]"
                       : "bg-white text-neutral-500 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
                   }`}
                 >
@@ -261,7 +286,7 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
           </div>
 
           {/* Quick trust metrics */}
-          <div className="grid grid-cols-3 gap-4 pt-4 border-t border-neutral-50 text-center text-[11px] text-neutral-500 font-medium">
+          <div className="grid grid-cols-3 gap-4 pt-4 border-t border-neutral-50 text-center text-[11px] text-neutral-500 font-medium bg-neutral-50 rounded-xl p-4">
             <div className="flex flex-col items-center gap-1">
               <Truck className="w-5 h-5 text-brand-600" />
               <span>Free Express Delivery</span>

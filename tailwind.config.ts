@@ -64,8 +64,8 @@ const config: Config = {
           hover: "#f564b0",
         },
         customPurple: {
-          DEFAULT: "#D8B4FE",
-          hover: "#C084FC",
+          DEFAULT: "#6F2DA8",
+          hover: "#5A2490",
         },
         accentPink: {
           50: "#F9F2F4",

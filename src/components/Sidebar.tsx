@@ -37,7 +37,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
 
       <div
         className={cn(
-          "drawer-panel fixed left-0 top-0 z-50 bg-white w-72 h-full flex flex-col shadow-xl",
+          "drawer-panel fixed left-0 top-0 z-50 bg-white w-72 h-full flex flex-col shadow-xl rounded-r-2xl",
           visible ? "translate-x-0" : "-translate-x-full"
         )}
       >

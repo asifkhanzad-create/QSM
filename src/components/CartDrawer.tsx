@@ -35,7 +35,7 @@ export default function CartDrawer() {
       <div className="absolute inset-y-0 right-0 max-w-full flex pointer-events-none">
         <div
           className={cn(
-            "drawer-panel w-screen max-w-md bg-white shadow-2xl flex flex-col pointer-events-auto",
+            "drawer-panel w-screen max-w-md bg-white shadow-2xl flex flex-col pointer-events-auto rounded-l-2xl",
             visible ? "translate-x-0" : "translate-x-full"
           )}
         >
@@ -68,7 +68,7 @@ export default function CartDrawer() {
                 </p>
                 <button
                   onClick={() => setIsCartOpen(false)}
-                  className="btn-pill mt-6 px-6 py-2.5 bg-gradient-to-r from-customPurple to-customPink hover:from-customPurple-hover hover:to-customPink-hover text-white text-sm border border-transparent focus:outline-none"
+                  className="btn-pill mt-6 px-6 py-2.5 bg-customPurple hover:bg-customPurple-hover text-white text-sm border border-transparent focus:outline-none"
                 >
                   Continue Shopping
                 </button>
@@ -80,7 +80,7 @@ export default function CartDrawer() {
                   className="flex gap-4 py-4 border-b border-neutral-50 last:border-b-0 animate-fade-in-up"
                   style={{ animationDelay: `${idx * 60}ms` }}
                 >
-                  <div className="w-20 h-24 bg-neutral-100 rounded-md overflow-hidden relative flex-shrink-0">
+                  <div className="w-20 h-24 bg-neutral-100 rounded-lg overflow-hidden relative flex-shrink-0">
                     <img
                       src={item.product.images[0]}
                       alt={item.product.name}
@@ -111,12 +111,12 @@ export default function CartDrawer() {
                     )}
 
                     <div className="flex-1 flex items-end justify-between mt-2">
-                      <div className="flex items-center border border-neutral-200 rounded">
+                      <div className="flex items-center border border-neutral-200 rounded-full">
                         <button
                           onClick={() =>
                             updateQuantity(item.product._id, item.selectedShade?.name || null, item.quantity - 1)
                           }
-                          className="icon-btn p-1 hover:bg-neutral-50 text-neutral-500 border-2 border-neutral-200"
+                          className="icon-btn p-1 hover:bg-neutral-50 text-neutral-500 border-2 border-neutral-200 rounded-full"
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
@@ -127,7 +127,7 @@ export default function CartDrawer() {
                           onClick={() =>
                             updateQuantity(item.product._id, item.selectedShade?.name || null, item.quantity + 1)
                           }
-                          className="icon-btn p-1 hover:bg-neutral-50 text-neutral-500 border-2 border-neutral-200"
+                          className="icon-btn p-1 hover:bg-neutral-50 text-neutral-500 border-2 border-neutral-200 rounded-full"
                         >
                           <Plus className="w-3.5 h-3.5" />
                         </button>
@@ -160,7 +160,7 @@ export default function CartDrawer() {
                 <Link
                   href="/checkout"
                   onClick={() => setIsCartOpen(false)}
-                  className="btn-pill w-full flex items-center justify-center py-3 bg-gradient-to-r from-customPurple to-customPink hover:from-customPurple-hover hover:to-customPink-hover text-white border border-transparent focus:outline-none"
+                  className="btn-pill w-full flex items-center justify-center py-3 bg-customPurple hover:bg-customPurple-hover text-white border border-transparent focus:outline-none"
                 >
                   Proceed to Checkout
                 </Link>

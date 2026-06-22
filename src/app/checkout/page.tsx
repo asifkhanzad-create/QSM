@@ -53,7 +53,7 @@ export default function CheckoutPage() {
       <>
         <Header />
         <main className="flex-1 bg-stone-50/50 py-16 sm:py-24 px-4 flex items-center justify-center">
-          <div className="max-w-md w-full bg-white border border-neutral-100 rounded-lg shadow-xl p-8 text-center space-y-6 animate-scale-in">
+          <div className="max-w-md w-full bg-white border border-neutral-100 rounded-2xl shadow-xl p-8 text-center space-y-6 animate-scale-in">
             <div className="w-16 h-16 bg-brand-50 rounded-full flex items-center justify-center text-brand-600 mx-auto animate-pop">
               <CheckCircle2 className="w-10 h-10" />
             </div>
@@ -67,7 +67,7 @@ export default function CheckoutPage() {
               </p>
             </div>
 
-            <div className="bg-neutral-50 rounded p-4 text-left border border-neutral-100 space-y-2.5">
+            <div className="bg-neutral-50 rounded-xl p-4 text-left border border-neutral-100 space-y-2.5">
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">Order Number:</span>
                 <span className="font-semibold text-neutral-900">QSM-{orderNumber.split('-')[1] || orderNumber}</span>
@@ -261,7 +261,7 @@ export default function CheckoutPage() {
                   {cart.map((item, idx) => (
                     <div key={idx} className="flex gap-3 justify-between items-start">
                       <div className="flex gap-3">
-                        <div className="w-12 h-14 bg-stone-100 rounded overflow-hidden relative flex-shrink-0">
+                        <div className="w-12 h-14 bg-stone-100 rounded-lg overflow-hidden relative flex-shrink-0">
                           <img src={item.product.images[0]} alt={item.product.name} className="w-full h-full object-cover" />
                         </div>
                         <div>
@@ -299,7 +299,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <div className="p-3 bg-brand-50 border border-brand-100 rounded text-[11px] text-brand-700 flex items-start gap-1.5">
+              <div className="p-3 bg-brand-50 border border-brand-100 rounded-lg text-[11px] text-brand-700 flex items-start gap-1.5">
                 <Sparkles className="w-4 h-4 text-brand-600 flex-shrink-0" />
                 <span>
                   <strong>Express Delivery:</strong> Shipping fee is flat Rs. 200. Standard delivery occurs within 2-4 business days.

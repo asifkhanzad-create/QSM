@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
-import { ShoppingBag, Menu, Search } from "lucide-react";
+import { ShoppingBag, Search } from "lucide-react";
 import Sidebar from "./Sidebar";
 
 function NavLinks() {
@@ -28,14 +28,14 @@ function NavLinks() {
   };
 
   const linkClass = (href: string) =>
-    `text-xs font-semibold tracking-wider uppercase transition ${
+    `text-xs font-medium tracking-wide uppercase transition ${
       isActive(href)
         ? "text-neutral-900"
         : "text-neutral-500 hover:text-neutral-800"
     }`;
 
   return (
-    <nav className="hidden md:flex items-center gap-5">
+    <nav className="hidden md:flex items-center gap-4 whitespace-nowrap flex-1 justify-center">
       <Link href="/" className={linkClass("/")}>Home</Link>
       <Link href="/shop?isNewArrival=true" className={linkClass("/shop?isNewArrival=true")}>New Arrival</Link>
       <Link href="/shop?isBestSeller=true" className={linkClass("/shop?isBestSeller=true")}>Best Seller</Link>
@@ -61,7 +61,7 @@ function SearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search products..."
-        className="w-64 pl-10 pr-4 py-2 bg-neutral-100 rounded-full text-sm font-medium text-neutral-900 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all duration-200"
+        className="w-96 pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-full text-sm font-medium text-neutral-900 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#6F2DA8]/40 focus:border-[#6F2DA8] focus:bg-white hover:border-[#6F2DA8]/40 hover:shadow-[0_0_12px_rgba(111,45,168,0.15)] transition-all duration-200"
       />
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
     </form>
@@ -99,17 +99,25 @@ export default function Header() {
       <header className="bg-white/80 backdrop-blur-md border-b border-neutral-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-32">
-            {/* Left: Menu + Nav Buttons */}
-            <div className="flex items-center gap-4 flex-1">
+            {/* Left: Menu + Search */}
+            <div className="flex items-center gap-4">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="icon-btn p-1 text-neutral-500 hover:text-neutral-800"
+                className="icon-btn p-1.5 text-neutral-500 hover:text-neutral-800 transition-colors duration-200"
               >
-                <Menu className="w-6 h-6" />
+                <svg width="22" height="18" viewBox="0 0 22 18" fill="none">
+                  <rect x="1" y="1" width="20" height="3" rx="1.5" fill="currentColor" />
+                  <rect x="5" y="7.5" width="12" height="3" rx="1.5" fill="currentColor" />
+                  <rect x="1" y="14" width="20" height="3" rx="1.5" fill="currentColor" />
+                </svg>
               </button>
               <Suspense fallback={null}>
                 <SearchBar />
               </Suspense>
+            </div>
+
+            {/* Nav Links (centered between search and logo) */}
+            <div className="flex-1 flex justify-center">
               <Suspense fallback={null}>
                 <NavLinks />
               </Suspense>
