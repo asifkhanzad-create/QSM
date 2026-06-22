@@ -21,6 +21,8 @@ export default function ShopPageContent({
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("featured");
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 12;
 
   // Initialize searchQuery from URL params
   useEffect(() => {
@@ -76,28 +78,49 @@ export default function ShopPageContent({
     return result;
   }, [initialProducts, searchQuery, categoryParam, isNewArrivalParam, isBestSellerParam, sortBy]);
 
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    return filteredProducts.slice(startIndex, endIndex);
+  }, [filteredProducts, currentPage]);
+
+  // Reset page to 1 when filters or sorting change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, categoryParam, isNewArrivalParam, isBestSellerParam, sortBy]);
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {/* Page Header */}
-      <div className="text-center max-w-xl mx-auto mb-10 animate-fade-in-up">
-        <h2 className="text-3xl sm:text-4xl font-light font-serif text-neutral-950 tracking-tight">
+      <div className="text-center max-w-xl mx-auto mb-8 sm:mb-10 animate-fade-in-up">
+        <h2 className="text-2xl sm:text-4xl font-light font-serif text-neutral-950 tracking-tight">
           Beauty Catalog
         </h2>
-        <p className="text-sm text-neutral-500 mt-2 font-light">
+        <p className="text-xs sm:text-sm text-neutral-500 mt-2 font-light">
           Find the perfect products for your unique beauty routine. Organic formulations, premium pigments.
         </p>
       </div>
 
       {/* Control Bar (Search, Category Filter Tabs, Sorting) */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between pb-8 border-b border-neutral-100 mb-8">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between pb-6 sm:pb-8 border-b border-neutral-100 mb-6 sm:mb-8">
 
         {/* Categories Fast Filter */}
-        <div className="flex flex-wrap gap-2 justify-center w-full md:w-auto">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center w-full md:w-auto">
           <Link
             href="/shop"
-            className={`btn-pill px-4 py-1.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 ${
+            className={`btn-pill px-3 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
               !searchParams.get('category')
-                ? "bg-gradient-to-r from-customPurple to-customPink text-white border-customPink scale-[1.02]"
+                ? "bg-gradient-to-r from-customPurple to-customPink text-white border-transparent scale-[1.02]"
                 : "bg-white text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
             }`}
           >
@@ -107,9 +130,9 @@ export default function ShopPageContent({
             <Link
               key={cat._id}
               href={`/shop?category=${cat.slug}`}
-              className={`btn-pill px-4 py-1.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 ${
+              className={`btn-pill px-3 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
                 searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
-                  ? "bg-gradient-to-r from-customPurple to-customPink text-white border-customPink scale-[1.02]"
+                  ? "bg-gradient-to-r from-customPurple to-customPink text-white border-transparent scale-[1.02]"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
               }`}
             >
@@ -137,9 +160,9 @@ export default function ShopPageContent({
       </div>
 
       {/* Grid Content */}
-      {filteredProducts.length === 0 ? (
-        <div className="text-center py-24 bg-white rounded-lg border border-neutral-100 shadow-sm animate-scale-in">
-          <p className="text-base text-neutral-600">
+      {paginatedProducts.length === 0 ? (
+        <div className="text-center py-16 sm:py-24 bg-white rounded-lg border border-neutral-100 shadow-sm animate-scale-in">
+          <p className="text-sm sm:text-base text-neutral-600">
             {searchQuery
               ? `No products found matching "${searchQuery}"`
               : 'No products found matching your criteria.'
@@ -155,76 +178,101 @@ export default function ShopPageContent({
               router.push(`?${params.toString()}`, { scroll: false });
               setSortBy("featured");
             }}
-            className="btn-pill mt-4 px-6 py-2 bg-gradient-to-r from-customPurple to-customPink hover:from-customPurple-hover hover:to-customPink-hover text-white text-sm border border-customPink"
+            className="btn-pill mt-4 px-5 sm:px-6 py-2 bg-gradient-to-r from-customPurple to-customPink hover:from-customPurple-hover hover:to-customPink-hover text-white text-xs sm:text-sm border border-transparent focus:outline-none"
           >
             Reset Filters
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {filteredProducts.map((product, index) => (
-            <div
-              key={product._id}
-              className="group relative flex flex-col animate-fade-in-up"
-              style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
-            >
-              {/* Product Card Image Container */}
-              <Link
-                href={`/product/${product.slug}`}
-                className="w-full h-[380px] bg-neutral-100 rounded-md overflow-hidden relative block transition-transform duration-300 group-hover:shadow-md"
+        <>
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
+            {paginatedProducts.map((product, index) => (
+              <div
+                key={product._id}
+                className="group relative flex flex-col animate-fade-in-up"
+                style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
               >
-                <img
-                  src={product.images[0]}
-                  alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                />
-                
-                {/* Sale Tag */}
-                {product.originalPrice && (
-                  <span className="absolute top-4 left-4 bg-brand-600 text-white text-[10px] font-semibold px-2.5 py-1 uppercase tracking-wider rounded-sm">
-                    Sale
-                  </span>
-                )}
+                {/* Product Card Image Container */}
+                <Link
+                  href={`/product/${product.slug}`}
+                  className="w-full h-[220px] sm:h-[380px] bg-neutral-100 rounded-md overflow-hidden relative block transition-transform duration-300 group-hover:shadow-md"
+                >
+                  <img
+                    src={product.images[0]}
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                  
+                  {/* Sale Tag */}
+                  {product.originalPrice && (
+                    <span className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-brand-600 text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-sm">
+                      Sale
+                    </span>
+                  )}
 
-                {/* Number of Shades Badge */}
-                {product.shades && product.shades.length > 0 && (
-                  <span className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm text-neutral-800 text-[10px] font-semibold px-2 py-0.5 rounded shadow-sm border border-neutral-100">
-                    {product.shades.length} Shades
-                  </span>
-                )}
-              </Link>
+                  {/* Number of Shades Badge */}
+                  {product.shades && product.shades.length > 0 && (
+                    <span className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm text-neutral-800 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded shadow-sm border border-neutral-100">
+                      {product.shades.length} Shades
+                    </span>
+                  )}
+                </Link>
 
-              {/* Card Details */}
-              <div className="mt-4 flex-1 flex flex-col justify-between">
-                <div>
-                  {/* Rating */}
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <div className="flex items-center text-amber-400">
-                      <Star className="w-3.5 h-3.5 fill-current" />
+                {/* Card Details */}
+                <div className="mt-3 sm:mt-4 flex-1 flex flex-col justify-between">
+                  <div>
+                    {/* Rating */}
+                    <div className="flex items-center gap-1 sm:gap-1.5 mb-1 sm:mb-1.5">
+                      <div className="flex items-center text-amber-400">
+                        <Star className="w-3 sm:w-3.5 h-3 sm:h-3.5 fill-current" />
+                      </div>
+                      <span className="text-[10px] sm:text-xs font-bold text-neutral-800">{product.rating}</span>
+                      <span className="text-[10px] sm:text-xs text-neutral-400">({product.reviewsCount})</span>
                     </div>
-                    <span className="text-xs font-bold text-neutral-800">{product.rating}</span>
-                    <span className="text-xs text-neutral-400">({product.reviewsCount})</span>
+
+                    {/* Title */}
+                    <h3 className="text-xs sm:text-base font-medium text-neutral-900 group-hover:text-brand-600 transition">
+                      <Link href={`/product/${product.slug}`}>{product.name}</Link>
+                    </h3>
                   </div>
 
-                  {/* Title */}
-                  <h3 className="text-sm sm:text-base font-medium text-neutral-900 group-hover:text-brand-600 transition">
-                    <Link href={`/product/${product.slug}`}>{product.name}</Link>
-                  </h3>
-                </div>
-
-                {/* Price Display */}
-                <div className="mt-2 flex items-center gap-2">
-                <span className="font-semibold text-neutral-950">Rs. {product.price.toFixed(2)}</span>
-                {product.originalPrice && (
-                  <span className="text-xs sm:text-sm text-neutral-400 line-through">
-                    Rs. {product.originalPrice.toFixed(2)}
-                  </span>
-                )}
+                  {/* Price Display */}
+                  <div className="mt-1 sm:mt-2 flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <span className="text-xs sm:text-base font-semibold text-neutral-950">Rs. {product.price.toFixed(2)}</span>
+                    {product.originalPrice && (
+                      <span className="text-[10px] sm:text-sm text-neutral-400 line-through">
+                        Rs. {product.originalPrice.toFixed(2)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-4 sm:gap-6 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-neutral-100">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className="px-3 sm:px-4 py-1.5 sm:py-2 border border-neutral-200 rounded-md text-xs sm:text-sm font-medium text-neutral-700 bg-white hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                Previous
+              </button>
+              <span className="text-xs sm:text-sm text-neutral-600 font-medium">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className="px-3 sm:px-4 py-1.5 sm:py-2 border border-neutral-200 rounded-md text-xs sm:text-sm font-medium text-neutral-700 bg-white hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                Next
+              </button>
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </div>
   );

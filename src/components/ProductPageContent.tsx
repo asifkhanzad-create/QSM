@@ -199,7 +199,7 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
                   justAdded
                     ? "bg-green-600 text-white border-green-600 scale-[1.02]"
                     : isSelectedShadeInStock
-                      ? "bg-gradient-to-r from-customPurple to-customPink hover:from-customPurple-hover hover:to-customPink-hover text-white border-customPink"
+                      ? "bg-gradient-to-r from-customPurple to-customPink hover:from-customPurple-hover hover:to-customPink-hover text-white border-transparent focus:outline-none"
                       : "bg-white text-neutral-400 cursor-not-allowed border-neutral-200"
                 }`}
               >
@@ -227,9 +227,9 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`btn-pill flex-1 py-2.5 text-xs font-semibold tracking-wider uppercase text-center border transition-all duration-200 ${
+                  className={`btn-pill flex-1 py-2.5 text-xs font-semibold tracking-wider uppercase text-center border transition-all duration-200 focus:outline-none ${
                     activeTab === tab
-                      ? "bg-gradient-to-r from-customPurple to-customPink text-white border-customPink scale-[1.02]"
+                      ? "bg-gradient-to-r from-customPurple to-customPink text-white border-transparent scale-[1.02]"
                       : "bg-white text-neutral-500 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
                   }`}
                 >
