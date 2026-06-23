@@ -102,11 +102,11 @@ export default function ShopPageContent({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {/* Page Header */}
-      <div className="text-center max-w-xl mx-auto mb-8 sm:mb-10 animate-fade-in-up">
-        <h2 className="text-2xl sm:text-4xl font-light font-serif text-neutral-950 tracking-tight">
+      <div className="text-center max-w-xl mx-auto mb-10 sm:mb-10 animate-fade-in-up">
+        <h2 className="text-3xl sm:text-4xl font-light font-serif text-neutral-950 tracking-tight">
           Beauty Catalog
         </h2>
-        <p className="text-xs sm:text-sm text-neutral-500 mt-2 font-light">
+        <p className="text-sm sm:text-sm text-neutral-500 mt-2 font-light">
           Find the perfect products for your unique beauty routine. Organic formulations, premium pigments.
         </p>
       </div>
@@ -115,10 +115,10 @@ export default function ShopPageContent({
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between pb-6 sm:pb-8 border-b border-neutral-100 mb-6 sm:mb-8">
 
         {/* Categories Fast Filter */}
-        <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center w-full md:w-auto">
+        <div className="flex flex-wrap gap-2 sm:gap-2 justify-center w-full md:w-auto">
           <Link
             href="/shop"
-            className={`btn-pill rounded-full px-5 sm:px-6 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
+            className={`btn-pill rounded-full px-6 sm:px-6 py-2 sm:py-1.5 text-xs sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
               !searchParams.get('category')
                 ? "bg-customPurple text-white border-transparent scale-[1.02] shadow-md shadow-purple-500/20"
                 : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
@@ -130,7 +130,7 @@ export default function ShopPageContent({
             <Link
               key={cat._id}
               href={`/shop?category=${cat.slug}`}
-              className={`btn-pill rounded-full px-5 sm:px-6 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
+              className={`btn-pill rounded-full px-6 sm:px-6 py-2 sm:py-1.5 text-xs sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
                 searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
                   ? "bg-customPurple text-white border-transparent scale-[1.02] shadow-md shadow-purple-500/20"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
@@ -143,13 +143,13 @@ export default function ShopPageContent({
 
         {/* Sorting Dropdown */}
         <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-          <span className="text-xs text-neutral-400 flex items-center gap-1.5 font-medium">
+          <span className="text-xs sm:text-xs text-neutral-400 flex items-center gap-1.5 font-medium">
             <ArrowUpDown className="w-3.5 h-3.5" /> Sort by:
           </span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-white border border-neutral-200 text-xs rounded-full px-3 py-1.5 font-medium text-neutral-700 focus:outline-none focus:border-brand-500"
+            className="bg-white border border-neutral-200 text-xs sm:text-xs rounded-full px-4 sm:px-3 py-2 sm:py-1.5 font-medium text-neutral-700 focus:outline-none focus:border-brand-500"
           >
             <option value="featured">Featured</option>
             <option value="price-low">Price: Low to High</option>
