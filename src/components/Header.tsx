@@ -37,7 +37,7 @@ function NavLinks() {
 
   const linkClass = (href: string) => {
     const active = isActive(href);
-    return `text-xs font-semibold tracking-wider uppercase px-4 py-2.5 rounded-full transition-all duration-200 ${
+    return `text-xs font-normal tracking-wider uppercase px-4 py-2.5 rounded-full transition-all duration-200 ${
       active
         ? "bg-customPurple text-white shadow-sm"
         : "text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50"
@@ -72,7 +72,7 @@ function SearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search products..."
-        className="w-full sm:w-96 pl-10 pr-4 py-3 sm:py-2.5 bg-white sm:bg-neutral-50 border border-neutral-200/60 rounded-full text-sm font-medium text-neutral-900 placeholder-neutral-500 shadow-[0_2px_12px_rgba(0,0,0,0.03)] sm:shadow-[0_2px_12px_rgba(0,0,0,0.03)] focus:outline-none focus:border-[#6F2DA8]/50 focus:bg-white hover:border-[#6F2DA8]/40 hover:shadow-[0_4px_16px_rgba(111,45,168,0.12)] focus:shadow-[0_0_0_4px_rgba(111,45,168,0.15)] transition-all duration-200"
+        className="w-full sm:w-96 pl-10 pr-4 py-3 sm:py-2.5 bg-white sm:bg-neutral-50 border border-neutral-200/60 rounded-full text-sm font-light text-neutral-900 placeholder-neutral-500 placeholder:font-light shadow-[0_2px_12px_rgba(0,0,0,0.03)] sm:shadow-[0_2px_12px_rgba(0,0,0,0.03)] focus:outline-none focus:border-[#6F2DA8]/50 focus:bg-white hover:border-[#6F2DA8]/40 hover:shadow-[0_4px_16px_rgba(111,45,168,0.12)] focus:shadow-[0_0_0_4px_rgba(111,45,168,0.15)] transition-all duration-200"
       />
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
     </form>

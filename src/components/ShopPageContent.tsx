@@ -189,13 +189,13 @@ export default function ShopPageContent({
             {paginatedProducts.map((product, index) => (
               <div
                 key={product._id}
-                className="group relative flex flex-col bg-white rounded-2xl shadow-sm border border-neutral-100 p-3 sm:p-4 animate-fade-in-up"
+                className="group relative flex flex-col bg-white rounded-[2rem] shadow-[0_2px_20px_rgba(0,0,0,0.04)] overflow-hidden animate-fade-in-up"
                 style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
               >
                 {/* Product Card Image Container */}
                 <Link
                   href={`/product/${product.slug}`}
-                  className="w-full h-[220px] sm:h-[380px] bg-neutral-100 rounded-xl overflow-hidden relative block transition-transform duration-300 group-hover:shadow-md"
+                  className="w-full h-[220px] sm:h-[380px] bg-neutral-100 overflow-hidden relative block transition-transform duration-300 group-hover:shadow-md"
                 >
                   <img
                     src={product.images[0]}
@@ -219,7 +219,7 @@ export default function ShopPageContent({
                 </Link>
 
                 {/* Card Details */}
-                <div className="mt-3 sm:mt-4 flex-1 flex flex-col justify-between">
+                <div className="px-4 sm:px-5 py-3 sm:py-4 flex-1 flex flex-col justify-between">
                   <div>
                     {/* Rating */}
                     <div className="flex items-center gap-1 sm:gap-1.5 mb-1 sm:mb-1.5">
@@ -231,7 +231,7 @@ export default function ShopPageContent({
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-xs sm:text-base font-medium text-neutral-900 group-hover:text-brand-600 transition">
+                    <h3 className="text-xs sm:text-base font-normal tracking-wide text-neutral-900 group-hover:text-brand-600 transition">
                       <Link href={`/product/${product.slug}`}>{product.name}</Link>
                     </h3>
                   </div>

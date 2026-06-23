@@ -25,7 +25,7 @@ export default function Footer() {
           {/* Shop categories */}
           <div className="space-y-3 md:justify-self-center">
             <h4 className="text-white text-sm font-medium tracking-wider uppercase">Shop</h4>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2.5 text-sm font-normal tracking-wide">
               <li>
                 <Link href="/shop" className="hover:text-white transition">
                   All Products
