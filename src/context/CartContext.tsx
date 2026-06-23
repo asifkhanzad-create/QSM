@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { type Product, type Shade } from "@/lib/data";
+import { calculateShipping, amountUntilFreeShipping, FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
 
 export interface CartItem {
   product: Product;
@@ -17,6 +18,10 @@ interface CartContextType {
   clearCart: () => void;
   cartCount: number;
   cartSubtotal: number;
+  shippingCost: number;
+  isFreeShipping: boolean;
+  amountUntilFreeShipping: number;
+  freeShippingThreshold: number;
   isCartOpen: boolean;
   setIsCartOpen: (isOpen: boolean) => void;
 }
@@ -105,6 +110,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const cartSubtotal = cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
+  const shippingCost = calculateShipping(cartSubtotal);
+  const isFreeShipping = shippingCost === 0;
+  const amountUntilFree = amountUntilFreeShipping(cartSubtotal);
+
   return (
     <CartContext.Provider
       value={{
@@ -115,6 +124,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         cartCount,
         cartSubtotal,
+        shippingCost,
+        isFreeShipping,
+        amountUntilFreeShipping: amountUntilFree,
+        freeShippingThreshold: FREE_SHIPPING_THRESHOLD,
         isCartOpen,
         setIsCartOpen,
       }}

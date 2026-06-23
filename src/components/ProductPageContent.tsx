@@ -3,7 +3,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import { type Product, type Shade } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
-import { Star, ShoppingBag, Check, Shield, RotateCcw, Truck, Sparkles } from "lucide-react";
+import { Star, ShoppingBag, Check, Truck, Sparkles, BadgeCheck, Wallet } from "lucide-react";
 
 interface ProductPageContentProps {
   product: Product;
@@ -289,15 +289,15 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
           <div className="grid grid-cols-3 gap-4 pt-4 border-t border-neutral-50 text-center text-[11px] text-neutral-500 font-medium bg-neutral-50 rounded-xl p-4">
             <div className="flex flex-col items-center gap-1">
               <Truck className="w-5 h-5 text-brand-600" />
-              <span>Free Express Delivery</span>
+              <span>Free Shipping Over 2500</span>
             </div>
             <div className="flex flex-col items-center gap-1">
-              <RotateCcw className="w-5 h-5 text-brand-600" />
-              <span>30-Day Free Returns</span>
+              <BadgeCheck className="w-5 h-5 text-brand-600" />
+              <span>Quality Guaranteed</span>
             </div>
             <div className="flex flex-col items-center gap-1">
-              <Shield className="w-5 h-5 text-brand-600" />
-              <span>100% Secure Checkout</span>
+              <Wallet className="w-5 h-5 text-brand-600" />
+              <span>Cash on Delivery</span>
             </div>
           </div>
 

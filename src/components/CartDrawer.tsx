@@ -16,6 +16,9 @@ export default function CartDrawer() {
     removeFromCart,
     cartSubtotal,
     cartCount,
+    isFreeShipping,
+    amountUntilFreeShipping: amountUntilFree,
+    freeShippingThreshold,
   } = useCart();
 
   const { mounted, visible } = useAnimatedPresence(isCartOpen);
@@ -175,6 +178,24 @@ export default function CartDrawer() {
                 <span>Subtotal</span>
                 <span className="font-semibold">Rs. {cartSubtotal.toFixed(2)}</span>
               </div>
+              {!isFreeShipping && amountUntilFree > 0 && (
+                <div className="mb-3">
+                  <p className="text-xs text-brand-600 font-medium mb-1.5">
+                    Add Rs. {amountUntilFree.toFixed(2)} more for FREE shipping!
+                  </p>
+                  <div className="w-full h-1.5 bg-brand-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-brand-500 rounded-full transition-all duration-500 ease-out"
+                      style={{ width: `${Math.min(100, (cartSubtotal / freeShippingThreshold) * 100)}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+              {isFreeShipping && (
+                <div className="mb-3 flex items-center gap-1.5 text-xs text-green-600 font-medium">
+                  <span>You've unlocked FREE shipping!</span>
+                </div>
+              )}
               <p className="text-xs text-neutral-500 mb-4">
                 Shipping and taxes calculated at checkout.
               </p>

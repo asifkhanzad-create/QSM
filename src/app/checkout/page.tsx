@@ -5,10 +5,10 @@ import { useCart } from "@/context/CartContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
-import { ShieldCheck, ArrowLeft, ShoppingBag, CreditCard, Sparkles, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, ArrowLeft, ShoppingBag, CreditCard, Sparkles, CheckCircle2, Truck, PartyPopper } from "lucide-react";
 
 export default function CheckoutPage() {
-  const { cart, cartSubtotal, cartCount, clearCart } = useCart();
+  const { cart, cartSubtotal, cartCount, clearCart, shippingCost, isFreeShipping, amountUntilFreeShipping: amountUntilFree } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
@@ -34,7 +34,7 @@ export default function CheckoutPage() {
 
     setIsSubmitting(true);
 
-    const orderDetails = `*New Order from QSM Website*\n\n*Customer Details:*\nName: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\n*Shipping Address:*\n${formData.address}, ${formData.city}, ${formData.zipCode}\n\n*Order Items:*\n${cart.map(item => `- ${item.product.name} (${item.selectedShade?.name || 'N/A'}) x ${item.quantity} = Rs. ${(item.product.price * item.quantity).toFixed(2)}`).join('\n')}\n\n*Order Summary:*\nSubtotal: Rs. ${cartSubtotal.toFixed(2)}\nShipping: Rs. ${shippingCost.toFixed(2)}\n*Total: Rs. ${totalCost.toFixed(2)}*\n\n*Payment Method: Cash on Delivery*\n\n*Please confirm this order. Thank you!*`;
+    const orderDetails = `*New Order from QSM Website*\n\n*Customer Details:*\nName: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\n*Shipping Address:*\n${formData.address}, ${formData.city}, ${formData.zipCode}\n\n*Order Items:*\n${cart.map(item => `- ${item.product.name} (${item.selectedShade?.name || 'N/A'}) x ${item.quantity} = Rs. ${(item.product.price * item.quantity).toFixed(2)}`).join('\n')}\n\n*Order Summary:*\nSubtotal: Rs. ${cartSubtotal.toFixed(2)}\nShipping: ${isFreeShipping ? 'FREE' : `Rs. ${shippingCost.toFixed(2)}`}\n*Total: Rs. ${totalCost.toFixed(2)}*\n\n*Payment Method: Cash on Delivery*\n\n*Please confirm this order. Thank you!*`;
 
     const whatsappLink = `https://wa.me/923178517190?text=${encodeURIComponent(orderDetails)}`;
     
@@ -45,7 +45,6 @@ export default function CheckoutPage() {
     window.location.href = whatsappLink;
   };
 
-  const shippingCost = 200; // Flat Rs. 200 shipping fee
   const totalCost = cartSubtotal + shippingCost;
 
   if (isSuccess) {
@@ -288,10 +287,22 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between text-neutral-500">
                   <span>Standard Shipping</span>
-                  <span className="font-semibold text-neutral-900">
-                    Rs. {shippingCost.toFixed(2)}
+                  <span className={`font-semibold ${isFreeShipping ? 'text-green-600' : 'text-neutral-900'}`}>
+                    {isFreeShipping ? 'FREE' : `Rs. ${shippingCost.toFixed(2)}`}
                   </span>
                 </div>
+                {!isFreeShipping && amountUntilFree > 0 && (
+                  <div className="flex items-center gap-1.5 text-[11px] text-brand-600 font-medium bg-brand-50 rounded-lg px-3 py-2">
+                    <Truck className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span>Add Rs. {amountUntilFree.toFixed(2)} more to get FREE shipping!</span>
+                  </div>
+                )}
+                {isFreeShipping && (
+                  <div className="flex items-center gap-1.5 text-[11px] text-green-700 font-medium bg-green-50 rounded-lg px-3 py-2">
+                    <PartyPopper className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span>You've unlocked FREE shipping!</span>
+                  </div>
+                )}
                 <hr className="border-neutral-50 my-1" />
                 <div className="flex justify-between text-base font-semibold text-neutral-950">
                   <span>Grand Total</span>
@@ -302,7 +313,7 @@ export default function CheckoutPage() {
               <div className="p-3 bg-brand-50 border border-brand-100 rounded-lg text-[11px] text-brand-700 flex items-start gap-1.5">
                 <Sparkles className="w-4 h-4 text-brand-600 flex-shrink-0" />
                 <span>
-                  <strong>Express Delivery:</strong> Shipping fee is flat Rs. 200. Standard delivery occurs within 2-4 business days.
+                  <strong>Express Delivery:</strong> Orders under Rs. 2,500 have a flat Rs. 200 shipping fee. Orders of Rs. 2,500+ ship FREE! Delivery within 2-4 business days.
                 </span>
               </div>
             </div>

@@ -45,7 +45,7 @@ function NavLinks() {
   };
 
   return (
-    <nav className="hidden md:flex items-center gap-4 whitespace-nowrap flex-1 justify-center">
+    <nav className="hidden md:flex items-center gap-4 whitespace-nowrap flex-1 justify-center ml-8">
       <Link href="/" className={linkClass("/")}>Home</Link>
       <Link href="/shop?isNewArrival=true" className={linkClass("/shop?isNewArrival=true")}>New Arrival</Link>
       <Link href="/shop?isBestSeller=true" className={linkClass("/shop?isBestSeller=true")}>Best Seller</Link>
