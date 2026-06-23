@@ -28,6 +28,25 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const zoom = 1.8;
 
+  // Touch swipe state
+  const touchStartX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || product.images.length <= 1) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) < 50) return; // minimum swipe distance
+    if (diff > 0 && activeImageIndex < product.images.length - 1) {
+      setActiveImageIndex(activeImageIndex + 1);
+    } else if (diff < 0 && activeImageIndex > 0) {
+      setActiveImageIndex(activeImageIndex - 1);
+    }
+    touchStartX.current = null;
+  };
+
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const container = imageContainerRef.current;
     if (!container) return;
@@ -60,10 +79,12 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
         <div className="space-y-4">
           <div
             ref={imageContainerRef}
-            className="w-full h-[500px] sm:h-[600px] bg-white rounded-xl overflow-hidden relative shadow-sm border border-neutral-100"
+            className="w-full h-[500px] sm:h-[600px] bg-white rounded-xl overflow-hidden relative shadow-sm border border-neutral-100 touch-pan-y"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             onMouseMove={handleMouseMove}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
             <img
               key={displayedImage}
