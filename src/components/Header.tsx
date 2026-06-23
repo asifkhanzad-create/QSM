@@ -17,28 +17,39 @@ function NavLinks() {
     if (href === "/") return pathname === "/";
     const [p, qs] = href.split("?");
     if (pathname !== p) return false;
-    if (!qs) return true;
-    const params = new URLSearchParams(qs);
-    const keys = Array.from(params.keys());
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      if (searchParams.get(key) !== params.get(key)) return false;
+    
+    if (qs) {
+      const params = new URLSearchParams(qs);
+      const keys = Array.from(params.keys());
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (searchParams.get(key) !== params.get(key)) return false;
+      }
+      return true;
     }
+
+    if (href === "/shop") {
+      return !searchParams.get('isNewArrival') && !searchParams.get('isBestSeller');
+    }
+
     return true;
   };
 
-  const linkClass = (href: string) =>
-    `text-xs font-medium tracking-wide uppercase transition ${
-      isActive(href)
-        ? "text-neutral-900"
-        : "text-neutral-500 hover:text-neutral-800"
+  const linkClass = (href: string) => {
+    const active = isActive(href);
+    return `text-xs font-semibold tracking-wider uppercase px-4 py-2.5 rounded-full transition-all duration-200 ${
+      active
+        ? "bg-customPurple text-white shadow-sm"
+        : "text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50"
     }`;
+  };
 
   return (
     <nav className="hidden md:flex items-center gap-4 whitespace-nowrap flex-1 justify-center">
       <Link href="/" className={linkClass("/")}>Home</Link>
       <Link href="/shop?isNewArrival=true" className={linkClass("/shop?isNewArrival=true")}>New Arrival</Link>
       <Link href="/shop?isBestSeller=true" className={linkClass("/shop?isBestSeller=true")}>Best Seller</Link>
+      <Link href="/shop" className={linkClass("/shop")}>Categories</Link>
     </nav>
   );
 }
@@ -61,7 +72,7 @@ function SearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search products..."
-        className="w-full sm:w-96 pl-10 pr-4 py-3 sm:py-2.5 bg-white sm:bg-neutral-50 border border-neutral-200 rounded-full text-sm font-medium text-neutral-900 placeholder-neutral-500 shadow-sm shadow-neutral-900/5 sm:shadow-none focus:outline-none focus:ring-2 focus:ring-[#6F2DA8]/40 focus:border-[#6F2DA8] focus:bg-white hover:border-[#6F2DA8]/40 hover:shadow-[0_0_12px_rgba(111,45,168,0.15)] transition-all duration-200"
+        className="w-full sm:w-96 pl-10 pr-4 py-3 sm:py-2.5 bg-white sm:bg-neutral-50 border border-neutral-200/60 rounded-full text-sm font-medium text-neutral-900 placeholder-neutral-500 shadow-[0_2px_12px_rgba(0,0,0,0.03)] sm:shadow-[0_2px_12px_rgba(0,0,0,0.03)] focus:outline-none focus:border-[#6F2DA8]/50 focus:bg-white hover:border-[#6F2DA8]/40 hover:shadow-[0_4px_16px_rgba(111,45,168,0.12)] focus:shadow-[0_0_0_4px_rgba(111,45,168,0.15)] transition-all duration-200"
       />
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
     </form>
@@ -70,17 +81,17 @@ function SearchBar() {
 
 function LogoSection() {
   return (
-    <div className="hidden sm:flex sm:flex-1 sm:justify-center">
+    <div className="hidden sm:flex sm:flex-1 sm:justify-center sm:items-center">
       <button
         onClick={() => window.location.reload()}
-        className="relative w-[64px] h-[64px] sm:w-[120px] sm:h-[120px]"
+        className="shrink-0 flex items-center"
       >
         <Image
           src="/logo.png"
           alt="Qasim Shopping Mall Logo"
-          fill
-          className="object-contain"
-          sizes="150px"
+          width={120}
+          height={48}
+          className="h-10 sm:h-12 w-auto object-contain"
           priority
         />
       </button>
@@ -96,14 +107,14 @@ export default function Header() {
     <>
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-      <header className="bg-white/80 backdrop-blur-md border-b border-neutral-100">
+      <header className="bg-white/80 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20 sm:h-32">
             {/* Left: Menu + Search */}
             <div className="flex items-center gap-3 sm:gap-4 flex-1 sm:flex-none min-w-0">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="icon-btn p-1.5 text-neutral-500 hover:text-neutral-800 transition-colors duration-200 shrink-0"
+                className="icon-btn p-2 rounded-full text-neutral-500 hover:text-neutral-800 hover:bg-neutral-100 transition-all duration-200 shrink-0"
               >
                 <svg width="22" height="18" viewBox="0 0 22 18" fill="none">
                   <rect x="1" y="1" width="20" height="3" rx="1.5" fill="currentColor" />
@@ -124,17 +135,17 @@ export default function Header() {
             </div>
 
             {/* Center: Logo (hidden on mobile, restored from sm breakpoint up) */}
-            <div className="hidden sm:flex sm:flex-1 sm:justify-center">
+            <div className="hidden sm:flex sm:flex-1 sm:justify-center sm:items-center">
               <button
                 onClick={() => window.location.reload()}
-                className="relative w-[64px] h-[64px] sm:w-[120px] sm:h-[120px] shrink-0"
+                className="shrink-0 flex items-center"
               >
                 <Image
                   src="/logo.png"
                   alt="Qasim Shopping Mall Logo"
-                  fill
-                  className="object-contain"
-                  sizes="150px"
+                  width={120}
+                  height={48}
+                  className="h-10 sm:h-12 w-auto object-contain"
                   priority
                 />
               </button>
@@ -143,10 +154,21 @@ export default function Header() {
             {/* Far Right: Cart */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="icon-btn relative p-2 text-neutral-700 hover:text-neutral-950 shrink-0"
+              className="icon-btn relative p-2 rounded-full text-neutral-700 hover:text-neutral-950 hover:bg-neutral-100 transition-all duration-200 shrink-0"
               aria-label="Open Cart"
             >
-              <ShoppingBag className="w-5 h-5" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-7 h-7"
+              >
+                <path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
               {cartCount > 0 && (
                 <span
                   key={cartCount}

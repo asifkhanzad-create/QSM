@@ -42,7 +42,18 @@ export default function CartDrawer() {
           {/* Header */}
           <div className="px-6 py-5 border-b border-neutral-100 flex items-center justify-between animate-fade-in">
             <div className="flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 text-brand-600" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-5 h-5 text-brand-600"
+              >
+                <path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
               <h2 className="text-lg font-medium text-neutral-900 font-serif">
                 Shopping Bag ({cartCount})
               </h2>
@@ -60,7 +71,18 @@ export default function CartDrawer() {
             {cart.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center py-12 animate-scale-in">
                 <div className="w-16 h-16 bg-neutral-50 rounded-full flex items-center justify-center mb-4">
-                  <ShoppingBag className="w-8 h-8 text-neutral-300" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-8 h-8 text-neutral-300"
+                  >
+                    <path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
                 </div>
                 <h3 className="text-base font-medium text-neutral-900">Your bag is empty</h3>
                 <p className="mt-1 text-sm text-neutral-500">

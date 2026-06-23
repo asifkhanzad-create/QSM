@@ -118,10 +118,10 @@ export default function ShopPageContent({
         <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center w-full md:w-auto">
           <Link
             href="/shop"
-            className={`btn-pill px-3 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
+            className={`btn-pill rounded-full px-5 sm:px-6 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
               !searchParams.get('category')
-                ? "bg-customPurple text-white border-transparent scale-[1.02]"
-                : "bg-white text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
+                ? "bg-customPurple text-white border-transparent scale-[1.02] shadow-md shadow-purple-500/20"
+                : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
             }`}
           >
             All Products
@@ -130,10 +130,10 @@ export default function ShopPageContent({
             <Link
               key={cat._id}
               href={`/shop?category=${cat.slug}`}
-              className={`btn-pill px-3 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
+              className={`btn-pill rounded-full px-5 sm:px-6 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
                 searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
-                  ? "bg-customPurple text-white border-transparent scale-[1.02]"
-                  : "bg-white text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
+                  ? "bg-customPurple text-white border-transparent scale-[1.02] shadow-md shadow-purple-500/20"
+                  : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
               }`}
             >
               {cat.name}
