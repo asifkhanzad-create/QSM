@@ -55,13 +55,13 @@ function SearchBar() {
   };
 
   return (
-    <form onSubmit={handleSearch} className="relative">
+    <form onSubmit={handleSearch} className="relative flex-1 min-w-0 sm:flex-none">
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search products..."
-        className="w-96 pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-full text-sm font-medium text-neutral-900 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#6F2DA8]/40 focus:border-[#6F2DA8] focus:bg-white hover:border-[#6F2DA8]/40 hover:shadow-[0_0_12px_rgba(111,45,168,0.15)] transition-all duration-200"
+        className="w-full sm:w-96 pl-10 pr-4 py-3 sm:py-2.5 bg-white sm:bg-neutral-50 border border-neutral-200 rounded-full text-sm font-medium text-neutral-900 placeholder-neutral-500 shadow-sm shadow-neutral-900/5 sm:shadow-none focus:outline-none focus:ring-2 focus:ring-[#6F2DA8]/40 focus:border-[#6F2DA8] focus:bg-white hover:border-[#6F2DA8]/40 hover:shadow-[0_0_12px_rgba(111,45,168,0.15)] transition-all duration-200"
       />
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
     </form>
@@ -73,7 +73,7 @@ function LogoSection() {
     <div className="flex-1 flex justify-center">
       <button
         onClick={() => window.location.reload()}
-        className="relative w-[120px] h-[120px]"
+        className="relative w-[64px] h-[64px] sm:w-[120px] sm:h-[120px]"
       >
         <Image
           src="/logo.png"
@@ -98,12 +98,12 @@ export default function Header() {
 
       <header className="bg-white/80 backdrop-blur-md border-b border-neutral-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-32">
+          <div className="flex items-center justify-between h-20 sm:h-32">
             {/* Left: Menu + Search */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 flex-1 sm:flex-none min-w-0">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="icon-btn p-1.5 text-neutral-500 hover:text-neutral-800 transition-colors duration-200"
+                className="icon-btn p-1.5 text-neutral-500 hover:text-neutral-800 transition-colors duration-200 shrink-0"
               >
                 <svg width="22" height="18" viewBox="0 0 22 18" fill="none">
                   <rect x="1" y="1" width="20" height="3" rx="1.5" fill="currentColor" />
@@ -117,7 +117,7 @@ export default function Header() {
             </div>
 
             {/* Nav Links (centered between search and logo) */}
-            <div className="flex-1 flex justify-center">
+            <div className="hidden md:flex md:flex-1 md:justify-center">
               <Suspense fallback={null}>
                 <NavLinks />
               </Suspense>
@@ -127,7 +127,7 @@ export default function Header() {
             <div className="flex-1 flex justify-center">
               <button
                 onClick={() => window.location.reload()}
-                className="relative w-[120px] h-[120px]"
+                className="relative w-[64px] h-[64px] sm:w-[120px] sm:h-[120px] shrink-0"
               >
                 <Image
                   src="/logo.png"
@@ -143,7 +143,7 @@ export default function Header() {
             {/* Far Right: Cart */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="icon-btn relative p-2 text-neutral-700 hover:text-neutral-950"
+              className="icon-btn relative p-2 text-neutral-700 hover:text-neutral-950 shrink-0"
               aria-label="Open Cart"
             >
               <ShoppingBag className="w-5 h-5" />
