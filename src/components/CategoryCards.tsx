@@ -36,7 +36,7 @@ export default function CategoryCards({ categories }: CategoryCardsProps) {
           <Link
             key={category._id}
             href={`/shop?category=${category.slug}`}
-            className={`group relative overflow-hidden rounded-2xl ${
+            className={`group relative overflow-hidden rounded-3xl shadow-md shadow-neutral-300/40 hover:shadow-xl hover:shadow-neutral-300/50 transition-shadow duration-300 ${
               index === 0 ? "col-span-2 sm:col-span-1" : ""
             } animate-fade-in-up`}
             style={{ animationDelay: `${Math.min(index * 80, 500)}ms` }}
