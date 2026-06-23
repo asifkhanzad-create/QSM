@@ -73,7 +73,7 @@ function LogoSection() {
     <div className="hidden sm:flex sm:flex-1 sm:justify-center">
       <button
         onClick={() => window.location.reload()}
-        className="relative w-[120px] h-[120px]"
+        className="relative w-[64px] h-[64px] sm:w-[120px] sm:h-[120px]"
       >
         <Image
           src="/logo.png"
@@ -127,7 +127,7 @@ export default function Header() {
             <div className="hidden sm:flex sm:flex-1 sm:justify-center">
               <button
                 onClick={() => window.location.reload()}
-                className="relative w-[120px] h-[120px]"
+                className="relative w-[64px] h-[64px] sm:w-[120px] sm:h-[120px] shrink-0"
               >
                 <Image
                   src="/logo.png"
