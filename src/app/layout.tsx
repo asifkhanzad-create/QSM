@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PageTransition from "@/components/PageTransition";
+import BottomNav from "@/components/BottomNav";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 
@@ -23,11 +24,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans antialiased text-neutral-800 bg-neutral-50 min-h-screen flex flex-col ${outfit.variable}`}>
+      <body className={`font-sans antialiased text-neutral-800 bg-neutral-50 min-h-screen flex flex-col pb-14 md:pb-0 ${outfit.variable}`}>
         <CartProvider>
           <PageTransition>
             {children}
           </PageTransition>
+          <BottomNav />
         </CartProvider>
       </body>
     </html>

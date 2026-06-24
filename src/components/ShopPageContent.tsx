@@ -120,7 +120,7 @@ export default function ShopPageContent({
             href="/shop"
             className={`btn-pill rounded-full px-6 sm:px-6 py-2 sm:py-1.5 text-xs sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
               !searchParams.get('category')
-                ? "bg-customPurple text-white border-transparent scale-[1.02] shadow-md shadow-purple-500/20"
+                ? "bg-customPurple text-white border-transparent scale-[1.02] shadow-md shadow-red-400/20"
                 : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
             }`}
           >
@@ -132,7 +132,7 @@ export default function ShopPageContent({
               href={`/shop?category=${cat.slug}`}
               className={`btn-pill rounded-full px-6 sm:px-6 py-2 sm:py-1.5 text-xs sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
                 searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
-                  ? "bg-customPurple text-white border-transparent scale-[1.02] shadow-md shadow-purple-500/20"
+                  ? "bg-customPurple text-white border-transparent scale-[1.02] shadow-md shadow-red-400/20"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
               }`}
             >

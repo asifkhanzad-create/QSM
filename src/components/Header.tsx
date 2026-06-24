@@ -72,7 +72,7 @@ function SearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search products..."
-        className="w-full sm:w-96 pl-10 pr-4 py-3.5 sm:py-3 bg-white sm:bg-neutral-50 border border-transparent rounded-full text-sm font-light text-neutral-900 placeholder-neutral-500 placeholder:font-light shadow-[0_1px_2px_0_rgba(60,64,67,0.12),0_2px_10px_2px_rgba(60,64,67,0.10)] focus:outline-none focus:border-transparent focus:bg-white hover:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12)] focus:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12),0_0_0_4px_rgba(111,45,168,0.15)] transition-shadow duration-200"
+        className="w-full sm:w-96 pl-10 pr-4 py-3.5 sm:py-3 bg-white sm:bg-neutral-50 border border-transparent rounded-full text-sm font-light text-neutral-900 placeholder-neutral-500 placeholder:font-light shadow-[0_1px_2px_0_rgba(60,64,67,0.12),0_2px_10px_2px_rgba(60,64,67,0.10)] focus:outline-none focus:border-transparent focus:bg-white hover:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12)] focus:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12),0_0_0_4px_rgba(255,56,92,0.15)] transition-shadow duration-200"
       />
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-900" />
     </form>
