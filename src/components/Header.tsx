@@ -74,7 +74,7 @@ function SearchBar() {
         placeholder="Search products..."
         className="w-full sm:w-96 pl-10 pr-4 py-3.5 sm:py-3 bg-white sm:bg-neutral-50 border border-transparent rounded-full text-sm font-light text-neutral-900 placeholder-neutral-500 placeholder:font-light shadow-[0_1px_2px_0_rgba(60,64,67,0.12),0_2px_10px_2px_rgba(60,64,67,0.10)] focus:outline-none focus:border-transparent focus:bg-white hover:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12)] focus:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12),0_0_0_4px_rgba(111,45,168,0.15)] transition-shadow duration-200"
       />
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-900" />
     </form>
   );
 }
@@ -94,12 +94,12 @@ export default function Header() {
             <div className="flex items-center gap-3 sm:gap-4 flex-1 sm:flex-none min-w-0">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="icon-btn p-2 rounded-full text-neutral-500 hover:text-neutral-800 hover:bg-neutral-100 transition-all duration-200 shrink-0"
+                className="icon-btn p-2 rounded-full text-neutral-900 hover:text-neutral-950 hover:bg-neutral-100 transition-all duration-200 shrink-0"
               >
-                <svg width="22" height="18" viewBox="0 0 22 18" fill="none">
-                  <rect x="1" y="1" width="20" height="3" rx="1.5" fill="currentColor" />
-                  <rect x="5" y="7.5" width="12" height="3" rx="1.5" fill="currentColor" />
-                  <rect x="1" y="14" width="20" height="3" rx="1.5" fill="currentColor" />
+                <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                  <line x1="1" y1="1" x2="19" y2="1" />
+                  <line x1="1" y1="7" x2="19" y2="7" />
+                  <line x1="1" y1="13" x2="19" y2="13" />
                 </svg>
               </button>
               <Suspense fallback={null}>
@@ -117,7 +117,7 @@ export default function Header() {
             {/* Far Right: Cart */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="icon-btn relative p-2 rounded-full text-neutral-700 hover:text-neutral-950 hover:bg-neutral-100 transition-all duration-200 shrink-0"
+              className="icon-btn relative p-2 rounded-full text-neutral-900 hover:text-neutral-950 hover:bg-neutral-100 transition-all duration-200 shrink-0"
               aria-label="Open Cart"
             >
               <svg

@@ -6,6 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
+  --btn-font-weight: 300;
 }
 
 body {
@@ -13,13 +14,21 @@ body {
   background: #ffffff;
 }
 
+@layer base {
+  button {
+    font-weight: var(--btn-font-weight) !important;
+  }
+}
+
 @layer components {
   .btn-press {
     @apply transition-all duration-200 ease-out active:scale-[0.97];
+    font-weight: var(--btn-font-weight) !important;
   }
 
   .btn-pill {
-    @apply btn-press rounded-full font-medium transition-colors duration-200;
+    @apply btn-press rounded-full transition-colors duration-200;
+    font-weight: var(--btn-font-weight) !important;
   }
 
   .icon-btn {
