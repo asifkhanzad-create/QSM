@@ -106,14 +106,14 @@ export default function Header() {
                 </svg>
               </button>
 
-              {/* Logo center */}
+              {/* Logo center — increase h-14 to h-16/h-20 if you want it even bigger */}
               <Link href="/" className="absolute left-1/2 -translate-x-1/2">
                 <Image
                   src="/logo.png"
                   alt="Logo"
-                  width={100}
-                  height={36}
-                  className="h-9 w-auto object-contain"
+                  width={820}
+                  height={288}
+                  className="h-72 w-auto object-contain"
                   priority
                 />
               </Link>
