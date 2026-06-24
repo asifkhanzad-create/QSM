@@ -11,6 +11,7 @@ export default function BottomNav() {
   const { cartCount, setIsCartOpen } = useCart();
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +30,25 @@ export default function BottomNav() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  useEffect(() => {
+    const getSearchInput = () =>
+      document.querySelector(
+        'input[placeholder="Search products..."]'
+      ) as HTMLInputElement | null;
+
+    const handleFocus = () => setIsSearchFocused(true);
+    const handleBlur = () => setIsSearchFocused(false);
+
+    const input = getSearchInput();
+    input?.addEventListener("focus", handleFocus);
+    input?.addEventListener("blur", handleBlur);
+
+    return () => {
+      input?.removeEventListener("focus", handleFocus);
+      input?.removeEventListener("blur", handleBlur);
+    };
+  }, [pathname]);
+
   const handleSearchTap = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     setTimeout(() => {
@@ -46,13 +66,13 @@ export default function BottomNav() {
       label: "Home",
       icon: Home,
       href: "/",
-      isActive: pathname === "/",
+      isActive: pathname === "/" && !isSearchFocused,
     },
     {
       label: "Search",
       icon: Search,
       onClick: handleSearchTap,
-      isActive: false,
+      isActive: isSearchFocused,
     },
     {
       label: "Shop",
@@ -90,7 +110,7 @@ export default function BottomNav() {
                 onClick={tab.onClick}
                 className="relative flex flex-col items-center justify-center gap-0.5 w-16 py-1"
               >
-                <div className="relative">
+                <div className="relative flex items-center justify-center">
                   <Icon
                     className={`w-5 h-5 transition-colors duration-200 ${
                       isTabActive ? "text-[#FF385C]" : "text-neutral-400"
@@ -120,12 +140,14 @@ export default function BottomNav() {
               href={tab.href!}
               className="relative flex flex-col items-center justify-center gap-0.5 w-16 py-1"
             >
-              <Icon
-                className={`w-5 h-5 transition-colors duration-200 ${
-                  isTabActive ? "text-[#FF385C]" : "text-neutral-400"
-                }`}
-                strokeWidth={isTabActive ? 2 : 1.75}
-              />
+              <div className="relative flex items-center justify-center">
+                <Icon
+                  className={`w-5 h-5 transition-colors duration-200 ${
+                    isTabActive ? "text-[#FF385C]" : "text-neutral-400"
+                  }`}
+                  strokeWidth={isTabActive ? 2 : 1.75}
+                />
+              </div>
               <span
                 className={`text-[10px] font-normal transition-colors duration-200 ${
                   isTabActive ? "text-[#FF385C]" : "text-neutral-400"
