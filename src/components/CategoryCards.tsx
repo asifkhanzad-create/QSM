@@ -21,7 +21,7 @@ interface CategoryCardsProps {
 
 export default function CategoryCards({ categories }: CategoryCardsProps) {
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <section className="hidden sm:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="text-center max-w-xl mx-auto mb-8 sm:mb-10 animate-fade-in-up">
         <h2 className="text-2xl sm:text-4xl font-light font-serif text-neutral-950 tracking-tight">
           Shop by Category

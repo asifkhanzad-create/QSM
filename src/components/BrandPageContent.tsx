@@ -88,7 +88,7 @@ export default function BrandPageContent({
             href="/shop-by-brand"
             className={`btn-pill rounded-full px-6 sm:px-6 py-2 sm:py-1.5 text-xs sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
               !brandParam
-                ? "bg-neutral-900 text-white border-transparent scale-[1.02] shadow-md shadow-neutral-900/20"
+                ? "bg-[#FF385C] text-white border-transparent scale-[1.02] shadow-md shadow-[#FF385C]/20"
                 : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
             }`}
           >
@@ -100,7 +100,7 @@ export default function BrandPageContent({
               href={`/shop-by-brand?brand=${brand.slug}`}
               className={`btn-pill rounded-full px-6 sm:px-6 py-2 sm:py-1.5 text-xs sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
                 brandParam?.toLowerCase() === brand.slug.toLowerCase()
-                  ? "bg-neutral-900 text-white border-transparent scale-[1.02] shadow-md shadow-neutral-900/20"
+                  ? "bg-[#FF385C] text-white border-transparent scale-[1.02] shadow-md shadow-[#FF385C]/20"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
               }`}
             >
@@ -140,7 +140,7 @@ export default function BrandPageContent({
               router.push("/shop-by-brand", { scroll: false });
               setSortBy("featured");
             }}
-            className="btn-pill mt-4 px-5 sm:px-6 py-2 bg-customPurple hover:bg-customPurple-hover text-white text-xs sm:text-sm border border-transparent focus:outline-none"
+            className="btn-pill mt-4 px-5 sm:px-6 py-2 bg-[#FF385C] hover:bg-[#FF385C]/90 text-white text-xs sm:text-sm border border-transparent focus:outline-none"
           >
             Reset Filters
           </button>
