@@ -1,7 +1,6 @@
 "use client";
 
 import React, { Suspense, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -50,6 +49,7 @@ function NavLinks() {
       <Link href="/shop?isNewArrival=true" className={linkClass("/shop?isNewArrival=true")}>New Arrival</Link>
       <Link href="/shop?isBestSeller=true" className={linkClass("/shop?isBestSeller=true")}>Best Seller</Link>
       <Link href="/shop" className={linkClass("/shop")}>Categories</Link>
+      <Link href="/shop-by-brand" className={linkClass("/shop-by-brand")}>Shop by Brand</Link>
     </nav>
   );
 }
@@ -76,26 +76,6 @@ function SearchBar() {
       />
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
     </form>
-  );
-}
-
-function LogoSection() {
-  return (
-    <div className="hidden sm:flex sm:flex-1 sm:justify-center sm:items-center">
-      <button
-        onClick={() => window.location.reload()}
-        className="shrink-0 flex items-center"
-      >
-        <Image
-          src="/logo.png"
-          alt="Qasim Shopping Mall Logo"
-          width={120}
-          height={48}
-          className="h-10 sm:h-12 w-auto object-contain"
-          priority
-        />
-      </button>
-    </div>
   );
 }
 
@@ -132,23 +112,6 @@ export default function Header() {
               <Suspense fallback={null}>
                 <NavLinks />
               </Suspense>
-            </div>
-
-            {/* Center: Logo (hidden on mobile, restored from sm breakpoint up) */}
-            <div className="hidden sm:flex sm:flex-1 sm:justify-center sm:items-center">
-              <button
-                onClick={() => window.location.reload()}
-                className="shrink-0 flex items-center"
-              >
-                <Image
-                  src="/logo.png"
-                  alt="Qasim Shopping Mall Logo"
-                  width={120}
-                  height={48}
-                  className="h-10 sm:h-12 w-auto object-contain"
-                  priority
-                />
-              </button>
             </div>
 
             {/* Far Right: Cart */}

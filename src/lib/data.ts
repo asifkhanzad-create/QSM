@@ -12,6 +12,13 @@ export interface Category {
   image?: string;
 }
 
+export interface Brand {
+  _id: string;
+  name: string;
+  slug: string;
+  logo?: string;
+}
+
 export interface Product {
   _id: string;
   name: string;
@@ -27,7 +34,8 @@ export interface Product {
   isNewArrival?: boolean;
   ingredients?: string[];
   howToUse?: string;
-  category: string; // matches Category slug or id
+  category: string;
+  brand?: string;
 }
 
 export const CATEGORIES: Category[] = [
@@ -81,3 +89,5 @@ export const CATEGORIES: Category[] = [
     image: "/category-eye-cosmetics.png",
   },
 ];
+
+export const BRANDS: Brand[] = [];
