@@ -164,7 +164,7 @@ export default function HeroBanners() {
 
       {/* ── Mobile Hero Slider ── */}
       <section
-        className="block md:hidden mt-6 rounded-2xl overflow-hidden bg-stone-100"
+        className="block md:hidden mt-0 overflow-hidden bg-stone-100"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
