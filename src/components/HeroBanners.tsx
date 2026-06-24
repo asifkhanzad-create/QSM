@@ -169,7 +169,7 @@ export default function HeroBanners() {
         onTouchEnd={handleTouchEnd}
       >
         {/* Image Slides */}
-        <div className="relative w-full aspect-[4/5] overflow-hidden">
+        <div className="relative w-full aspect-video overflow-hidden">
           <div
             className="flex h-full transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${mobileSlide * 100}%)` }}
@@ -179,7 +179,7 @@ export default function HeroBanners() {
                 <img
                   src={slide.image}
                   alt={slide.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-center"
                 />
               </div>
             ))}
