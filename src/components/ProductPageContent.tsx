@@ -3,13 +3,15 @@
 import React, { useState, useRef, useCallback } from "react";
 import { type Product, type Shade } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
+import Link from "next/link";
 import { Star, ShoppingBag, Check, Truck, Sparkles, BadgeCheck, Wallet } from "lucide-react";
 
 interface ProductPageContentProps {
   product: Product;
+  relatedProducts?: Product[];
 }
 
-export default function ProductPageContent({ product }: ProductPageContentProps) {
+export default function ProductPageContent({ product, relatedProducts = [] }: ProductPageContentProps) {
   const { addToCart } = useCart();
   
   // Set initial shade if shades are available
@@ -324,6 +326,70 @@ export default function ProductPageContent({ product }: ProductPageContentProps)
 
         </div>
       </div>
+
+      {/* You May Also Like */}
+      {relatedProducts.length > 0 && (
+        <section className="pt-12 sm:pt-20">
+          <div className="text-center max-w-xl mx-auto mb-8 sm:mb-10 animate-fade-in-up">
+            <h2 className="text-2xl sm:text-4xl font-light font-serif text-neutral-950 tracking-tight">
+              You May Also Like
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
+            {relatedProducts.map((relatedProduct, index) => (
+              <div
+                key={relatedProduct._id}
+                className="group relative flex flex-col bg-white rounded-[2rem] shadow-[0_2px_20px_rgba(0,0,0,0.04)] overflow-hidden animate-fade-in-up"
+                style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
+              >
+                <Link
+                  href={`/product/${relatedProduct.slug}`}
+                  className="w-full h-[220px] sm:h-[380px] bg-neutral-100 overflow-hidden relative block transition-transform duration-300 group-hover:shadow-md"
+                >
+                  <img
+                    src={relatedProduct.images[0]}
+                    alt={relatedProduct.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                  {relatedProduct.originalPrice && (
+                    <span className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-brand-600 text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
+                      Sale
+                    </span>
+                  )}
+                  {relatedProduct.shades && relatedProduct.shades.length > 0 && (
+                    <span className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm text-neutral-800 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm border border-neutral-100">
+                      {relatedProduct.shades.length} Shades
+                    </span>
+                  )}
+                </Link>
+                <div className="px-4 sm:px-5 py-3 sm:py-4 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-1 sm:gap-1.5 mb-1 sm:mb-1.5">
+                      <div className="flex items-center text-amber-400">
+                        <Star className="w-3 sm:w-3.5 h-3 sm:h-3.5 fill-current" />
+                      </div>
+                      <span className="text-[10px] sm:text-xs font-bold text-neutral-800">{relatedProduct.rating}</span>
+                      <span className="text-[10px] sm:text-xs text-neutral-400">({relatedProduct.reviewsCount})</span>
+                    </div>
+                    <h3 className="text-xs sm:text-base font-normal tracking-wide text-neutral-900 group-hover:text-brand-600 transition">
+                      <Link href={`/product/${relatedProduct.slug}`}>{relatedProduct.name}</Link>
+                    </h3>
+                  </div>
+                  <div className="mt-1 sm:mt-2 flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <span className="text-xs sm:text-base font-semibold text-neutral-950">Rs. {relatedProduct.price.toFixed(2)}</span>
+                    {relatedProduct.originalPrice && (
+                      <span className="text-[10px] sm:text-sm text-neutral-400 line-through">
+                        Rs. {relatedProduct.originalPrice.toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
     </div>
   );
 }

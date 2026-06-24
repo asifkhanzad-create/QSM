@@ -62,6 +62,29 @@ export async function getProducts(categorySlug?: string): Promise<Product[]> {
   return await client.fetch(query, categorySlug ? { categorySlug } : {});
 }
 
+export async function getRelatedProducts(
+  currentProductSlug: string,
+  categorySlug: string
+): Promise<Product[]> {
+  if (!client) return [];
+  const query = `*[_type == "product" && category->slug.current == $categorySlug && slug.current != $currentSlug] | order(rating desc) [0...4]{
+    _id,
+    name,
+    "slug": slug.current,
+    price,
+    originalPrice,
+    "images": images[].asset->url,
+    shades[]{ name, colorCode, inStock },
+    description,
+    rating,
+    reviewsCount,
+    isBestSeller,
+    isNewArrival,
+    "category": category->slug.current
+  }`;
+  return await client.fetch(query, { categorySlug, currentSlug: currentProductSlug });
+}
+
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   if (!client) {
     return null;

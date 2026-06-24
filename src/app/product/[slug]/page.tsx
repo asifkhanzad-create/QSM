@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import ProductPageContent from "@/components/ProductPageContent";
-import { getProductBySlug } from "@/sanity/client";
+import { getProductBySlug, getRelatedProducts } from "@/sanity/client";
 import Link from "next/link";
 
 interface PageProps {
@@ -16,6 +16,9 @@ export const revalidate = 60; // Revalidate every minute
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const product = await getProductBySlug(params.slug);
+  const relatedProducts = product
+    ? await getRelatedProducts(product.slug, product.category)
+    : [];
 
   if (!product) {
     return (
@@ -44,7 +47,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <Header />
       <CartDrawer />
       <main className="flex-1 bg-stone-50/50">
-        <ProductPageContent product={product} />
+        <ProductPageContent product={product} relatedProducts={relatedProducts} />
       </main>
       <Footer />
     </>
