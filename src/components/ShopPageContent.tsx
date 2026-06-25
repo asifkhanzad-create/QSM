@@ -214,7 +214,7 @@ export default function ShopPageContent({
             {paginatedProducts.map((product, index) => (
               <div
                 key={product._id}
-                className="group relative flex flex-col bg-white rounded-[2rem] shadow-[0_2px_20px_rgba(0,0,0,0.04)] overflow-hidden animate-fade-in-up"
+                className="group relative flex flex-col bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.04)] overflow-hidden animate-fade-in-up"
                 style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
               >
                 {/* Product Card Image Container */}

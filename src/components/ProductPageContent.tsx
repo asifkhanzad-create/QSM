@@ -81,7 +81,7 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
         <div className="space-y-4">
           <div
             ref={imageContainerRef}
-            className="w-full h-[500px] sm:h-[600px] bg-white rounded-xl overflow-hidden relative shadow-sm border border-neutral-100 touch-pan-y"
+            className="w-full h-[500px] sm:h-[600px] bg-white rounded-[2rem] overflow-hidden relative shadow-sm border border-neutral-100 touch-pan-y"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             onMouseMove={handleMouseMove}
