@@ -42,6 +42,10 @@ body {
   .drawer-panel {
     @apply transition-transform duration-300 ease-out-expo;
   }
+
+  .btn-gradient {
+    background: linear-gradient(to right, #FF385C, #E31C5F);
+  }
 }
 
 @keyframes fade-in-up {

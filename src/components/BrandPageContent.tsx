@@ -92,7 +92,7 @@ export default function BrandPageContent({
             href="/shop-by-brand"
             className={`btn-pill shrink-0 rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
               !brandParam
-                ? "bg-[#FF385C] text-white border-transparent"
+                ? "btn-gradient text-white border-transparent"
                 : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
             }`}
           >
@@ -110,7 +110,7 @@ export default function BrandPageContent({
                   brand.logo ? "px-3 py-2" : "px-5 py-2.5"
                 } ${
                   isActive
-                    ? "bg-[#FF385C] text-white border-transparent"
+                    ? "btn-gradient text-white border-transparent"
                     : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
                 }`}
               >
