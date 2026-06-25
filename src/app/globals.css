@@ -70,6 +70,17 @@ body {
   }
 }
 
+@keyframes btn-pulse-glow-mobile {
+  0%, 100% {
+    opacity: 0.1;
+    box-shadow: 0 0 0px 0px rgba(255, 255, 255, 0);
+  }
+  50% {
+    opacity: 0.9;
+    box-shadow: 0 0 24px 8px rgba(255, 255, 255, 0.3);
+  }
+}
+
 .btn-shimmer-sweep {
   position: relative;
   overflow: visible;
@@ -88,6 +99,18 @@ body {
   animation: btn-pulse-glow 3.5s ease-in-out infinite;
   pointer-events: none;
   will-change: opacity;
+}
+
+@media (max-width: 767px) {
+  .btn-shimmer-sweep::after {
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(255, 255, 255, 0.2) 40%,
+      transparent 70%
+    );
+    animation: btn-pulse-glow-mobile 3.5s ease-in-out infinite;
+  }
 }
 
 @layer utilities {
