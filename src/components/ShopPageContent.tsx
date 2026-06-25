@@ -115,10 +115,10 @@ export default function ShopPageContent({
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between pb-6 sm:pb-8 border-b border-neutral-100 mb-6 sm:mb-8">
 
         {/* Categories Fast Filter */}
-        <div className="flex flex-wrap gap-2 sm:gap-2 justify-center w-full md:w-auto">
+        <div className="flex flex-nowrap gap-2 sm:gap-2 overflow-x-auto w-full md:w-auto md:flex-wrap scrollbar-hide pl-3 sm:pl-0">
           <Link
             href="/shop"
-            className={`btn-pill rounded-full px-6 sm:px-6 py-2 sm:py-1.5 text-xs sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
+            className={`btn-pill whitespace-nowrap rounded-full px-6 sm:px-6 py-1.5 sm:py-1.5 text-xs sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
               !searchParams.get('category')
                 ? "bg-customPurple text-white border-transparent scale-[1.02] shadow-md shadow-red-400/20"
                 : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
@@ -130,7 +130,7 @@ export default function ShopPageContent({
             <Link
               key={cat._id}
               href={`/shop?category=${cat.slug}`}
-              className={`btn-pill rounded-full px-6 sm:px-6 py-2 sm:py-1.5 text-xs sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
+              className={`btn-pill whitespace-nowrap rounded-full px-6 sm:px-6 py-1.5 sm:py-1.5 text-xs sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
                 searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
                   ? "bg-customPurple text-white border-transparent scale-[1.02] shadow-md shadow-red-400/20"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
