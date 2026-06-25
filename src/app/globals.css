@@ -59,6 +59,37 @@ body {
   }
 }
 
+@keyframes btn-pulse-glow {
+  0%, 100% {
+    opacity: 0.15;
+    box-shadow: 0 0 0px 0px rgba(255, 255, 255, 0);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 18px 6px rgba(255, 255, 255, 0.35);
+  }
+}
+
+.btn-shimmer-sweep {
+  position: relative;
+  overflow: visible;
+}
+.btn-shimmer-sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 75%
+  );
+  animation: btn-pulse-glow 3.5s ease-in-out infinite;
+  pointer-events: none;
+  will-change: opacity;
+}
+
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -83,6 +114,7 @@ body {
   .stagger-fade-in > *:nth-child(7) { animation-delay: 300ms; }
   .stagger-fade-in > *:nth-child(8) { animation-delay: 350ms; }
   .stagger-fade-in > *:nth-child(n+9) { animation-delay: 400ms; }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -94,6 +126,8 @@ body {
     animation: none !important;
     transition: none !important;
   }
+
+  
 
   .stagger-fade-in > * {
     animation: none !important;
