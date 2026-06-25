@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import { type Product, type Brand } from "@/lib/data";
 import { Star, ArrowUpDown } from "lucide-react";
@@ -82,42 +83,71 @@ export default function BrandPageContent({
 
       {/* Control Bar */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between pb-6 sm:pb-8 border-b border-neutral-100 mb-6 sm:mb-8">
-        {/* Brand Filter Tabs */}
-        <div className="flex flex-wrap gap-2 sm:gap-2 justify-center w-full md:w-auto">
+
+        {/* Brand Filter — horizontal scroll on mobile, wrap on desktop */}
+        <div className="flex overflow-x-auto md:flex-wrap gap-2 w-full md:w-auto py-2 md:py-1 scrollbar-hide px-1">
+
+          {/* All Brands pill */}
           <Link
             href="/shop-by-brand"
-            className={`btn-pill rounded-full px-6 sm:px-6 py-2 sm:py-1.5 text-xs sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
+            className={`btn-pill shrink-0 rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
               !brandParam
-                ? "bg-[#FF385C] text-white border-transparent scale-[1.02] shadow-md shadow-[#FF385C]/20"
+                ? "bg-[#FF385C] text-white border-transparent"
                 : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
             }`}
           >
             All Brands
           </Link>
-          {brands.map((brand) => (
-            <Link
-              key={brand._id}
-              href={`/shop-by-brand?brand=${brand.slug}`}
-              className={`btn-pill rounded-full px-6 sm:px-6 py-2 sm:py-1.5 text-xs sm:text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none ${
-                brandParam?.toLowerCase() === brand.slug.toLowerCase()
-                  ? "bg-[#FF385C] text-white border-transparent scale-[1.02] shadow-md shadow-[#FF385C]/20"
-                  : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
-              }`}
-            >
-              {brand.name}
-            </Link>
-          ))}
+
+          {/* Brand pills — show logo if available, fallback to name */}
+          {brands.map((brand) => {
+            const isActive = brandParam?.toLowerCase() === brand.slug.toLowerCase();
+            return (
+              <Link
+                key={brand._id}
+                href={`/shop-by-brand?brand=${brand.slug}`}
+                className={`btn-pill shrink-0 flex items-center gap-2 rounded-full border transition-all duration-200 focus:outline-none shadow-none ${
+                  brand.logo ? "px-3 py-2" : "px-5 py-2.5"
+                } ${
+                  isActive
+                    ? "bg-[#FF385C] text-white border-transparent"
+                    : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
+                }`}
+              >
+                {brand.logo ? (
+                  <>
+                    <div className={`w-7 h-7 rounded-full overflow-hidden flex items-center justify-center shrink-0 ${isActive ? "bg-white/20" : "bg-neutral-100"}`}>
+                      <Image
+                        src={brand.logo}
+                        alt={brand.name}
+                        width={28}
+                        height={28}
+                        className="w-full h-full object-contain p-0.5"
+                      />
+                    </div>
+                    <span className="text-xs font-semibold tracking-wider uppercase">
+                      {brand.name}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-xs font-semibold tracking-wider uppercase">
+                    {brand.name}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Sorting Dropdown */}
-        <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-          <span className="text-xs sm:text-xs text-neutral-400 flex items-center gap-1.5 font-medium">
+        <div className="flex items-center gap-2 w-full md:w-auto justify-end shrink-0">
+          <span className="text-xs text-neutral-400 flex items-center gap-1.5 font-medium">
             <ArrowUpDown className="w-3.5 h-3.5" /> Sort by:
           </span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-white border border-neutral-200 text-xs sm:text-xs rounded-full px-4 sm:px-3 py-2 sm:py-1.5 font-medium text-neutral-700 focus:outline-none focus:border-brand-500"
+            className="bg-white border border-neutral-200 text-xs rounded-full px-4 sm:px-3 py-2 sm:py-1.5 font-medium text-neutral-700 focus:outline-none focus:border-brand-500"
           >
             <option value="featured">Featured</option>
             <option value="price-low">Price: Low to High</option>
