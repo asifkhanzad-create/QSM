@@ -125,12 +125,12 @@ export default function BrandPageContent({
                         className="w-full h-full object-contain p-0.5"
                       />
                     </div>
-                    <span className="text-xs font-semibold tracking-wider uppercase">
+                    <span className="text-xs tracking-wider uppercase">
                       {brand.name}
                     </span>
                   </>
                 ) : (
-                  <span className="text-xs font-semibold tracking-wider uppercase">
+                  <span className="text-xs tracking-wider uppercase">
                     {brand.name}
                   </span>
                 )}
