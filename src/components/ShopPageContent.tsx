@@ -115,7 +115,7 @@ export default function ShopPageContent({
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between pb-6 sm:pb-8 border-b border-neutral-100 mb-6 sm:mb-8">
 
         {/* Categories Fast Filter */}
-        <div className="flex flex-nowrap gap-2 sm:gap-2 overflow-x-auto w-full md:w-auto md:flex-wrap scrollbar-hide pl-4 sm:pl-0">
+        <div className="flex flex-nowrap gap-2 sm:gap-2 overflow-x-auto w-full md:w-auto md:flex-wrap scrollbar-hide pl-4 sm:pl-0 py-2 md:py-1">
           <Link
             href="/shop"
             className={`btn-pill shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
