@@ -247,7 +247,7 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
                   justAdded
                     ? "bg-green-600 text-white border-green-600 scale-[1.02]"
                     : isSelectedShadeInStock
-                      ? "bg-customPurple hover:bg-customPurple-hover text-white border-transparent focus:outline-none"
+                      ? "btn-gradient focus:outline-none"
                       : "bg-white text-neutral-400 cursor-not-allowed border-neutral-200"
                 }`}
               >
@@ -277,7 +277,7 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
                   onClick={() => setActiveTab(tab)}
                   className={`btn-pill flex-1 py-2.5 text-xs font-semibold tracking-wider uppercase text-center border transition-all duration-200 focus:outline-none ${
                     activeTab === tab
-                      ? "bg-customPurple text-white border-transparent scale-[1.02]"
+                      ? "btn-gradient scale-[1.02]"
                       : "bg-white text-neutral-500 hover:text-neutral-900 hover:border-neutral-900 border-neutral-200"
                   }`}
                 >
@@ -393,4 +393,3 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
     </div>
   );
 }
-

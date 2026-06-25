@@ -93,7 +93,7 @@ export default function CartDrawer() {
                 </p>
                 <button
                   onClick={() => setIsCartOpen(false)}
-                  className="btn-pill mt-6 px-6 py-2.5 bg-customPurple hover:bg-customPurple-hover text-white text-sm border border-transparent focus:outline-none"
+                  className="btn-pill btn-gradient mt-6 px-6 py-2.5 text-sm focus:outline-none"
                 >
                   Continue Shopping
                 </button>
@@ -203,7 +203,7 @@ export default function CartDrawer() {
                 <Link
                   href="/checkout"
                   onClick={() => setIsCartOpen(false)}
-                  className="btn-pill w-full flex items-center justify-center py-3 bg-customPurple hover:bg-customPurple-hover text-white border border-transparent focus:outline-none"
+                  className="btn-pill btn-gradient w-full flex items-center justify-center py-3 focus:outline-none"
                 >
                   Proceed to Checkout
                 </Link>

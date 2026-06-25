@@ -120,7 +120,7 @@ export default function ShopPageContent({
             href="/shop"
             className={`btn-pill shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
               !searchParams.get('category')
-                ? "bg-customPurple text-white border-transparent"
+                ? "btn-gradient"
                 : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
             }`}
           >
@@ -132,7 +132,7 @@ export default function ShopPageContent({
               href={`/shop?category=${cat.slug}`}
               className={`btn-pill shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
                 searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
-                  ? "bg-customPurple text-white border-transparent"
+                  ? "btn-gradient"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
               }`}
             >
@@ -178,7 +178,7 @@ export default function ShopPageContent({
               router.push(`?${params.toString()}`, { scroll: false });
               setSortBy("featured");
             }}
-            className="btn-pill mt-4 px-5 sm:px-6 py-2 bg-customPurple hover:bg-customPurple-hover text-white text-xs sm:text-sm border border-transparent focus:outline-none"
+            className="btn-pill btn-gradient mt-4 px-5 sm:px-6 py-2 text-xs sm:text-sm focus:outline-none"
           >
             Reset Filters
           </button>
@@ -256,7 +256,7 @@ export default function ShopPageContent({
               <button
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}
-                className="px-3 sm:px-4 py-1.5 sm:py-2 border border-neutral-200 rounded-lg text-xs sm:text-sm font-medium text-neutral-700 bg-white hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 border border-transparent rounded-lg text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-[#FF385C] to-[#E31C5F] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-200"
               >
                 Previous
               </button>
@@ -266,7 +266,7 @@ export default function ShopPageContent({
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className="px-3 sm:px-4 py-1.5 sm:py-2 border border-neutral-200 rounded-lg text-xs sm:text-sm font-medium text-neutral-700 bg-white hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 border border-transparent rounded-lg text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-[#FF385C] to-[#E31C5F] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-200"
               >
                 Next
               </button>
