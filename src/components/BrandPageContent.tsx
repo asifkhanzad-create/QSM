@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -22,6 +22,24 @@ export default function BrandPageContent({
   const [sortBy, setSortBy] = useState<string>("featured");
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
+
+  const brandScrollRef = useRef<HTMLDivElement>(null);
+
+  // Scroll hint on mount — mobile only
+  useEffect(() => {
+    const el = brandScrollRef.current;
+    if (!el) return;
+    if (window.innerWidth >= 768) return;
+
+    const timer = setTimeout(() => {
+      el.scrollTo({ left: 60, behavior: "smooth" });
+      setTimeout(() => {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      }, 600);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const searchFromUrl = searchParams.get("search") || "";
@@ -85,58 +103,65 @@ export default function BrandPageContent({
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between pb-6 sm:pb-8 border-b border-neutral-100 mb-6 sm:mb-8">
 
         {/* Brand Filter — horizontal scroll on mobile, wrap on desktop */}
-        <div className="flex overflow-x-auto md:flex-wrap gap-2 w-full md:w-auto py-2 md:py-1 scrollbar-hide px-1">
-
-          {/* All Brands pill */}
-          <Link
-            href="/shop-by-brand"
-            className={`btn-pill shrink-0 rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
-              !brandParam
-                ? "bg-gradient-to-r from-[#FF385C] to-[#E31C5F] text-white border-transparent"
-                : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
-            }`}
+        <div className="relative w-full md:w-auto">
+          <div
+            ref={brandScrollRef}
+            className="flex overflow-x-auto md:flex-wrap gap-2 w-full md:w-auto py-2 md:py-1 scrollbar-hide px-1"
           >
-            All Brands
-          </Link>
 
-          {/* Brand pills — show logo if available, fallback to name */}
-          {brands.map((brand) => {
-            const isActive = brandParam?.toLowerCase() === brand.slug.toLowerCase();
-            return (
-              <Link
-                key={brand._id}
-                href={`/shop-by-brand?brand=${brand.slug}`}
-                className={`btn-pill shrink-0 flex items-center gap-2 rounded-full border transition-all duration-200 focus:outline-none shadow-none ${
-                  brand.logo ? "px-3 py-2" : "px-5 py-2.5"
-                } ${
-                  isActive
-                    ? "bg-gradient-to-r from-[#FF385C] to-[#E31C5F] text-white border-transparent"
-                    : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
-                }`}
-              >
-                {brand.logo ? (
-                  <>
-                    <div className={`w-7 h-7 rounded-full overflow-hidden flex items-center justify-center shrink-0 ${isActive ? "bg-white/20" : "bg-neutral-100"}`}>
-                      <Image
-                        src={brand.logo}
-                        alt={brand.name}
-                        width={28}
-                        height={28}
-                        className="w-full h-full object-contain p-0.5"
-                      />
-                    </div>
+            {/* All Brands pill */}
+            <Link
+              href="/shop-by-brand"
+              className={`btn-pill shrink-0 rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
+                !brandParam
+                  ? "bg-gradient-to-r from-[#FF385C] to-[#E31C5F] text-white border-transparent"
+                  : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
+              }`}
+            >
+              All Brands
+            </Link>
+
+            {/* Brand pills — show logo if available, fallback to name */}
+            {brands.map((brand) => {
+              const isActive = brandParam?.toLowerCase() === brand.slug.toLowerCase();
+              return (
+                <Link
+                  key={brand._id}
+                  href={`/shop-by-brand?brand=${brand.slug}`}
+                  className={`btn-pill shrink-0 flex items-center gap-2 rounded-full border transition-all duration-200 focus:outline-none shadow-none ${
+                    brand.logo ? "px-3 py-2" : "px-5 py-2.5"
+                  } ${
+                    isActive
+                      ? "bg-gradient-to-r from-[#FF385C] to-[#E31C5F] text-white border-transparent"
+                      : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
+                  }`}
+                >
+                  {brand.logo ? (
+                    <>
+                      <div className={`w-7 h-7 rounded-full overflow-hidden flex items-center justify-center shrink-0 ${isActive ? "bg-white/20" : "bg-neutral-100"}`}>
+                        <Image
+                          src={brand.logo}
+                          alt={brand.name}
+                          width={28}
+                          height={28}
+                          className="w-full h-full object-contain p-0.5"
+                        />
+                      </div>
+                      <span className="text-xs tracking-wider uppercase">
+                        {brand.name}
+                      </span>
+                    </>
+                  ) : (
                     <span className="text-xs tracking-wider uppercase">
                       {brand.name}
                     </span>
-                  </>
-                ) : (
-                  <span className="text-xs tracking-wider uppercase">
-                    {brand.name}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+          {/* Right fade gradient — mobile only */}
+          <div className="pointer-events-none absolute top-0 right-0 h-full w-10 bg-gradient-to-r from-transparent to-white md:hidden" />
         </div>
 
         {/* Sorting Dropdown */}

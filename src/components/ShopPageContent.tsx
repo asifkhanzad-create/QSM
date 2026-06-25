@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { type Product, type Category } from "@/lib/data";
@@ -23,6 +23,24 @@ export default function ShopPageContent({
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
+
+  const categoryScrollRef = useRef<HTMLDivElement>(null);
+
+  // Scroll hint on mount — mobile only
+  useEffect(() => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    if (window.innerWidth >= 768) return;
+
+    const timer = setTimeout(() => {
+      el.scrollTo({ left: 60, behavior: "smooth" });
+      setTimeout(() => {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      }, 600);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Initialize searchQuery from URL params
   useEffect(() => {
@@ -115,30 +133,37 @@ export default function ShopPageContent({
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between pb-6 sm:pb-8 border-b border-neutral-100 mb-6 sm:mb-8">
 
         {/* Categories Fast Filter */}
-        <div className="flex flex-nowrap gap-2 sm:gap-2 overflow-x-auto w-full md:w-auto md:flex-wrap scrollbar-hide pl-4 sm:pl-0 py-2 md:py-1">
-          <Link
-            href="/shop"
-            className={`btn-pill shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
-              !searchParams.get('category')
-                ? "btn-gradient"
-                : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
-            }`}
+        <div className="relative w-full md:w-auto">
+          <div
+            ref={categoryScrollRef}
+            className="flex flex-nowrap gap-2 sm:gap-2 overflow-x-auto md:flex-wrap scrollbar-hide pl-4 sm:pl-0 py-2 md:py-1"
           >
-            All Products
-          </Link>
-          {categories.map((cat) => (
             <Link
-              key={cat._id}
-              href={`/shop?category=${cat.slug}`}
+              href="/shop"
               className={`btn-pill shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
-                searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
+                !searchParams.get('category')
                   ? "btn-gradient"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
               }`}
             >
-              {cat.name}
+              All Products
             </Link>
-          ))}
+            {categories.map((cat) => (
+              <Link
+                key={cat._id}
+                href={`/shop?category=${cat.slug}`}
+                className={`btn-pill shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
+                  searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
+                    ? "btn-gradient"
+                    : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
+                }`}
+              >
+                {cat.name}
+              </Link>
+            ))}
+          </div>
+          {/* Right fade gradient — mobile only */}
+          <div className="pointer-events-none absolute top-0 right-0 h-full w-10 bg-gradient-to-r from-transparent to-white md:hidden" />
         </div>
 
         {/* Sorting Dropdown */}
