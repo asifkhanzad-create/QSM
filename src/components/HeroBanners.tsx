@@ -11,30 +11,40 @@ export default function HeroBanners() {
     {
       imageSrc: "/hero-banner-1.png",
       altText: "First Hero Banner",
-      tagline: "QSM - Quality, Style, Modernity",
+      tagline: "",
       title: (
         <>
-          Elevate Your <br />
-          Beauty Experience
+          Inner <br />
+          Radiance
         </>
       ),
-      description: "Discover premium cosmetics crafted with care and elegance. QSM brings you the best in beauty with quality you can trust.",
+      description: (
+        <>
+          Illuminate your visage from within<br />
+          Let your natural vibrancy speak first
+        </>
+      ),
       linkHref: "/shop",
       linkText: "Explore the Collection",
     },
     {
       imageSrc: "/hero-banner-2.png",
       altText: "Second Hero Banner",
-      tagline: "New Arrivals",
+      tagline: "",
       title: (
         <>
-          Unveiling the <br />
-          Latest Trends
+          Velvet <br />
+          Touch
         </>
       ),
-      description: "Stay ahead with our newest collection, featuring innovative formulas and captivating shades.",
-      linkHref: "/shop",
-      linkText: "Shop New Arrivals",
+      description: (
+        <>
+          Smooth your canvas to flawless perfection<br />
+          Embrace a soft, weightless skin feeling
+        </>
+      ),
+      linkHref: "/shop-by-brand",
+      linkText: "Shop by Brand",
     },
   ];
 
@@ -124,9 +134,11 @@ export default function HeroBanners() {
 
               <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                 <div className="max-w-xl text-white space-y-6">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/25 text-xs tracking-wider uppercase font-medium text-accentGold-200">
-                    <Sparkles className="w-3.5 h-3.5 text-accentGold-300" /> {banner.tagline}
-                  </span>
+                  {banner.tagline && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/25 text-xs tracking-wider uppercase font-medium text-accentGold-200">
+                      <Sparkles className="w-3.5 h-3.5 text-accentGold-300" /> {banner.tagline}
+                    </span>
+                  )}
                   <h2 className="text-4xl sm:text-6xl font-light tracking-tight leading-tight font-serif">
                     {banner.title}
                   </h2>
@@ -136,7 +148,7 @@ export default function HeroBanners() {
                   <div className="pt-4">
                     <Link
                       href={banner.linkHref}
-                      className="btn-pill inline-flex items-center gap-2 px-8 py-3 bg-customPurple hover:bg-customPurple-hover text-white transition-colors focus:outline-none"
+                      className="btn-pill btn-shimmer inline-flex items-center gap-2 px-8 py-3 bg-customPurple hover:bg-customPurple-hover text-white transition-colors focus:outline-none"
                     >
                       {banner.linkText} <ArrowRight className="w-4 h-4" />
                     </Link>

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { type Category } from "@/lib/data";
 import { ArrowRight } from "lucide-react";
@@ -20,6 +20,12 @@ interface CategoryCardsProps {
 }
 
 export default function CategoryCards({ categories }: CategoryCardsProps) {
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
+  const handleImageError = (slug: string) => {
+    setFailedImages((prev) => new Set(prev).add(slug));
+  };
+
   return (
     <section className="hidden sm:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="text-center max-w-xl mx-auto mb-8 sm:mb-10 animate-fade-in-up">
@@ -44,8 +50,9 @@ export default function CategoryCards({ categories }: CategoryCardsProps) {
             {/* Image */}
             <div className="aspect-[4/5] bg-neutral-100 overflow-hidden">
               <img
-                src={category.image || localImages[category.slug] || "/placeholder-category.png"}
+                src={failedImages.has(category.slug) ? (localImages[category.slug] || "/placeholder-category.png") : (category.image || localImages[category.slug] || "/placeholder-category.png")}
                 alt=""
+                onError={() => handleImageError(category.slug)}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
               />
             </div>

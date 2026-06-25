@@ -39,6 +39,27 @@ body {
     @apply bg-gradient-to-r from-[#FF385C] to-[#E31C5F] text-white border-transparent hover:opacity-90 transition-opacity duration-200;
   }
 
+  .btn-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-shimmer::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -75%;
+    width: 50%;
+    height: 200%;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255, 255, 255, 0.35) 50%,
+      transparent 100%
+    );
+    transform: skewX(-25deg);
+    animation: shimmer-sweep 3s ease-in-out infinite;
+  }
+
   .overlay-backdrop {
     @apply fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ease-out;
   }
@@ -56,6 +77,15 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    left: -75%;
+  }
+  100% {
+    left: 125%;
   }
 }
 

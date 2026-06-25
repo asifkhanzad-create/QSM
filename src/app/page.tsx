@@ -27,13 +27,13 @@ export default async function HomePage() {
         <div className="sm:hidden flex flex-col items-center gap-3 px-6 py-6">
           <a
             href="/shop"
-            className="btn-pill w-full max-w-xs text-center py-3.5 bg-customPurple hover:bg-customPurple-hover text-white font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            className="btn-pill btn-shimmer w-full max-w-xs text-center py-3.5 bg-customPurple hover:bg-customPurple-hover text-white font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
           >
             Shop All
           </a>
           <a
             href="/shop-by-brand"
-            className="btn-pill w-full max-w-xs text-center py-3.5 bg-neutral-900 hover:bg-neutral-800 text-white font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            className="btn-pill btn-shimmer w-full max-w-xs text-center py-3.5 bg-neutral-900 hover:bg-neutral-800 text-white font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
           >
             Shop by Brand
           </a>
