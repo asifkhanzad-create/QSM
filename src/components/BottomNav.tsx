@@ -113,7 +113,7 @@ export default function BottomNav() {
                 <div className="relative flex items-center justify-center">
                   <Icon
                     className={`w-5 h-5 transition-colors duration-200 ${
-                      isTabActive ? "text-[#FF385C]" : "text-neutral-400"
+                      isTabActive ? "text-black" : "text-neutral-400"
                     }`}
                     strokeWidth={isTabActive ? 2 : 1.75}
                   />
@@ -125,7 +125,7 @@ export default function BottomNav() {
                 </div>
                 <span
                   className={`text-[10px] font-normal transition-colors duration-200 ${
-                    isTabActive ? "text-[#FF385C]" : "text-neutral-400"
+                    isTabActive ? "text-black" : "text-neutral-400"
                   }`}
                 >
                   {tab.label}
@@ -143,14 +143,14 @@ export default function BottomNav() {
               <div className="relative flex items-center justify-center">
                 <Icon
                   className={`w-5 h-5 transition-colors duration-200 ${
-                    isTabActive ? "text-[#FF385C]" : "text-neutral-400"
+                    isTabActive ? "text-black" : "text-neutral-400"
                   }`}
                   strokeWidth={isTabActive ? 2 : 1.75}
                 />
               </div>
               <span
                 className={`text-[10px] font-normal transition-colors duration-200 ${
-                  isTabActive ? "text-[#FF385C]" : "text-neutral-400"
+                  isTabActive ? "text-black" : "text-neutral-400"
                 }`}
               >
                 {tab.label}
