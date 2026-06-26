@@ -37,7 +37,22 @@ export default function CheckoutPage() {
     const orderDetails = `*New Order from QSM Website*\n\n*Customer Details:*\nName: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\n*Shipping Address:*\n${formData.address}, ${formData.city}, ${formData.zipCode}\n\n*Order Items:*\n${cart.map(item => `- ${item.product.name} (${item.selectedShade?.name || 'N/A'}) x ${item.quantity} = Rs. ${(item.product.price * item.quantity).toFixed(2)}`).join('\n')}\n\n*Order Summary:*\nSubtotal: Rs. ${cartSubtotal.toFixed(2)}\nShipping: ${isFreeShipping ? 'FREE' : `Rs. ${shippingCost.toFixed(2)}`}\n*Total: Rs. ${totalCost.toFixed(2)}*\n\n*Payment Method: Cash on Delivery*\n\n*Please confirm this order. Thank you!*`;
 
     const whatsappLink = `https://wa.me/923178517190?text=${encodeURIComponent(orderDetails)}`;
-    
+
+    // Notify Discord with full order details (works regardless of whether the customer has WhatsApp)
+    fetch("/api/discord-notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        formData,
+        cart,
+        cartSubtotal,
+        shippingCost,
+        totalCost,
+        isFreeShipping,
+      }),
+      keepalive: true, // ensures the request completes even as we navigate away below
+    }).catch((err) => console.error("Discord notify failed:", err));
+
     // Clear cart immediately
     clearCart();
     
