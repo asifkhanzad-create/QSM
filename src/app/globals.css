@@ -36,7 +36,7 @@ body {
   }
 
   .btn-gradient {
-    @apply bg-gradient-to-r from-[#FF385C] to-[#E31C5F] text-white border-transparent hover:opacity-90 transition-opacity duration-200;
+    @apply bg-[#111111] text-white border-transparent hover:bg-[#2a2a2a] transition-colors duration-200;
   }
 
   .overlay-backdrop {
@@ -52,6 +52,17 @@ body {
   from {
     opacity: 0;
     transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobile-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -101,18 +112,6 @@ body {
   will-change: opacity;
 }
 
-@media (max-width: 767px) {
-  .btn-shimmer-sweep::after {
-    background: radial-gradient(
-      ellipse at 50% 50%,
-      rgba(255, 255, 255, 0.5) 0%,
-      rgba(255, 255, 255, 0.2) 40%,
-      transparent 70%
-    );
-    animation: btn-pulse-glow-mobile 3.5s ease-in-out infinite;
-  }
-}
-
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -126,7 +125,6 @@ body {
     opacity: 0;
     animation: fade-in-up 0.45s ease-out forwards;
   }
-  
 
   .stagger-fade-in > *:nth-child(1) { animation-delay: 0ms; }
   .stagger-fade-in > *:nth-child(2) { animation-delay: 50ms; }
@@ -138,6 +136,9 @@ body {
   .stagger-fade-in > *:nth-child(8) { animation-delay: 350ms; }
   .stagger-fade-in > *:nth-child(n+9) { animation-delay: 400ms; }
 
+  .animate-mobile-slide-up {
+    animation: mobile-slide-up 1.2s ease-out both;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -149,8 +150,6 @@ body {
     animation: none !important;
     transition: none !important;
   }
-
-  
 
   .stagger-fade-in > * {
     animation: none !important;

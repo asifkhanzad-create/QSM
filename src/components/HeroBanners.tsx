@@ -62,11 +62,15 @@ export default function HeroBanners() {
       image: "/mobile-banner-1.png",
       title: "Radiance Redefined",
       subtitle: "Where elegance meets everyday beauty.",
+      linkHref: "/shop",
+      linkText: "Shop All",
     },
     {
       image: "/mobile-banner-2.jpg",
       title: "Bold. Beautiful. You.",
       subtitle: "Crafted for the modern muse.",
+      linkHref: "/shop-by-brand",
+      linkText: "Shop by Brand",
     },
   ];
 
@@ -106,6 +110,8 @@ export default function HeroBanners() {
     }
   };
 
+  const activeSlide = mobileSlides[mobileSlide];
+
   return (
     <>
       {/* ── Desktop Hero (unchanged) ── */}
@@ -119,7 +125,6 @@ export default function HeroBanners() {
                 isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
               }`}
             >
-              {/* Background image with subtle scale transition */}
               <div className="absolute inset-0 z-0">
                 <img
                   src={banner.imageSrc}
@@ -128,7 +133,6 @@ export default function HeroBanners() {
                     isActive ? "scale-105" : "scale-100"
                   }`}
                 />
-                {/* Elegant overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-r from-stone-900/60 via-stone-900/40 to-transparent" />
               </div>
 
@@ -148,7 +152,7 @@ export default function HeroBanners() {
                   <div className="pt-4">
                     <Link
                       href={banner.linkHref}
-                      className="btn-pill btn-shimmer-sweep inline-flex items-center gap-2 px-8 py-3 bg-customPurple hover:bg-customPurple-hover text-white transition-colors focus:outline-none overflow-hidden"
+                      className="btn-pill btn-shimmer-sweep inline-flex items-center gap-2 px-8 py-3 bg-[#111111] hover:bg-[#2a2a2a] text-white transition-colors focus:outline-none overflow-hidden"
                     >
                       {banner.linkText} <ArrowRight className="w-4 h-4" />
                     </Link>
@@ -199,23 +203,27 @@ export default function HeroBanners() {
         </div>
 
         {/* Text Content (below image) */}
-        <div className="px-6 py-6 text-center bg-white">
-          {mobileSlides.map((slide, index) => (
-            <div
-              key={index}
-              className={`transition-opacity duration-500 ${
-                index === mobileSlide ? "opacity-100" : "opacity-0 hidden"
-              }`}
+        <div className="px-6 py-6 text-center bg-white overflow-hidden">
+          <div key={mobileSlide}>
+            <h2
+              className="text-xl font-light font-serif text-neutral-950 tracking-tight animate-mobile-slide-up"
+              style={{ animationDelay: "800ms" }}
             >
-              <h2 className="text-xl font-light font-serif text-neutral-950 tracking-tight">
-                {slide.title}
-              </h2>
-              <p className="text-sm text-neutral-500 mt-1 font-light">
-                {slide.subtitle}
-              </p>
-              {/* Button will go here */}
-            </div>
-          ))}
+              {activeSlide.title}
+            </h2>
+            <p
+              className="text-sm text-neutral-500 mt-1 font-light animate-mobile-slide-up"
+              style={{ animationDelay: "1000ms" }}
+            >
+              {activeSlide.subtitle}
+            </p>
+            <a
+              href={activeSlide.linkHref}
+              className="btn-pill inline-block mt-4 px-8 py-3 bg-transparent border border-neutral-900 text-neutral-900 text-sm font-medium transition-all duration-200 hover:bg-neutral-900 hover:text-white active:scale-[0.98]"
+            >
+              {activeSlide.linkText}
+            </a>
+          </div>
         </div>
 
         {/* Dots Navigation */}

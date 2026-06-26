@@ -114,7 +114,7 @@ export default function BrandPageContent({
               href="/shop-by-brand"
               className={`btn-pill shrink-0 rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
                 !brandParam
-                  ? "bg-gradient-to-r from-[#FF385C] to-[#E31C5F] text-white border-transparent"
+                  ? "bg-[#111111] text-white border-transparent hover:bg-[#2a2a2a]"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
               }`}
             >
@@ -132,7 +132,7 @@ export default function BrandPageContent({
                     brand.logo ? "px-3 py-2" : "px-5 py-2.5"
                   } ${
                     isActive
-                      ? "bg-gradient-to-r from-[#FF385C] to-[#E31C5F] text-white border-transparent"
+                      ? "bg-[#111111] text-white border-transparent hover:bg-[#2a2a2a]"
                       : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
                   }`}
                 >
@@ -195,7 +195,7 @@ export default function BrandPageContent({
               router.push("/shop-by-brand", { scroll: false });
               setSortBy("featured");
             }}
-            className="btn-pill mt-4 px-5 sm:px-6 py-2 bg-[#FF385C] hover:bg-[#FF385C]/90 text-white text-xs sm:text-sm border border-transparent focus:outline-none"
+            className="btn-pill mt-4 px-5 sm:px-6 py-2 bg-[#111111] hover:bg-[#2a2a2a] text-white text-xs sm:text-sm border border-transparent focus:outline-none"
           >
             Reset Filters
           </button>
@@ -219,10 +219,16 @@ export default function BrandPageContent({
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
                   {product.originalPrice && (
-                    <span className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-brand-600 text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
-                      Sale
-                    </span>
-                  )}
+  <span className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-yellow-400 text-black text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
+    Sale
+  </span>
+)}
+
+{product.isBestSeller && (
+  <span className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-[#111111] text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
+    Best Seller
+  </span>
+)}
                   {product.shades && product.shades.length > 0 && (
                     <span className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm text-neutral-800 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm border border-neutral-100">
                       {product.shades.length} Shades

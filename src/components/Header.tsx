@@ -39,7 +39,7 @@ function NavLinks() {
     const active = isActive(href);
     return `text-xs font-normal tracking-wider uppercase px-4 py-2.5 rounded-full transition-all duration-200 ${
       active
-        ? "bg-customPurple text-white shadow-sm"
+        ? "bg-[#111111] text-white shadow-sm hover:bg-[#2a2a2a]"
         : "text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50"
     }`;
   };

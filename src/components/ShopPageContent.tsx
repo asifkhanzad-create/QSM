@@ -203,7 +203,7 @@ export default function ShopPageContent({
               router.push(`?${params.toString()}`, { scroll: false });
               setSortBy("featured");
             }}
-            className="btn-pill btn-gradient mt-4 px-5 sm:px-6 py-2 text-xs sm:text-sm focus:outline-none"
+            className="btn-pill bg-[#111111] text-white hover:bg-[#2a2a2a] mt-4 px-5 sm:px-6 py-2 text-xs sm:text-sm focus:outline-none"
           >
             Reset Filters
           </button>
@@ -230,10 +230,16 @@ export default function ShopPageContent({
                   
                   {/* Sale Tag */}
                   {product.originalPrice && (
-                    <span className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-brand-600 text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
-                      Sale
-                    </span>
-                  )}
+  <span className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-yellow-400 text-black text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
+    Sale
+  </span>
+)}
+
+{product.isBestSeller && (
+  <span className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-[#111111] text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
+    Best Seller
+  </span>
+)}
 
                   {/* Number of Shades Badge */}
                   {product.shades && product.shades.length > 0 && (
@@ -281,7 +287,7 @@ export default function ShopPageContent({
               <button
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}
-                className="px-3 sm:px-4 py-1.5 sm:py-2 border border-transparent rounded-lg text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-[#FF385C] to-[#E31C5F] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-200"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 border border-transparent rounded-lg text-xs sm:text-sm font-medium text-white bg-[#111111] hover:bg-[#2a2a2a] disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-200"
               >
                 Previous
               </button>
@@ -291,7 +297,7 @@ export default function ShopPageContent({
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className="px-3 sm:px-4 py-1.5 sm:py-2 border border-transparent rounded-lg text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-[#FF385C] to-[#E31C5F] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-200"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 border border-transparent rounded-lg text-xs sm:text-sm font-medium text-white bg-[#111111] hover:bg-[#2a2a2a] disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-200"
               >
                 Next
               </button>
