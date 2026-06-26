@@ -30,23 +30,114 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const zoom = 1.8;
 
-  // Touch swipe state
+  // Mobile tap-to-zoom state (separate from desktop hover-zoom above)
+  const [isZoomedMobile, setIsZoomedMobile] = useState(false);
+  const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 });
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+
+  // Touch swipe / tap / pan / pinch state
   const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const touchStartTime = useRef<number>(0);
+  const panStartRef = useRef<{ x: number; y: number } | null>(null);
+  const pinchStartDistRef = useRef<number | null>(null);
+
+  const getTouchDistance = (touches: React.TouchList) => {
+    const t1 = touches[0];
+    const t2 = touches[1];
+    return Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+  };
+
+  const resetMobileZoom = () => {
+    setIsZoomedMobile(false);
+    setPanOffset({ x: 0, y: 0 });
+  };
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
+    if (e.touches.length === 2) {
+      // Pinch gesture starting
+      pinchStartDistRef.current = getTouchDistance(e.touches);
+      return;
+    }
+
+    const touch = e.touches[0];
+    touchStartX.current = touch.clientX;
+    touchStartY.current = touch.clientY;
+    touchStartTime.current = Date.now();
+
+    if (isZoomedMobile) {
+      // Start panning the zoomed image from its current offset
+      panStartRef.current = { x: touch.clientX - panOffset.x, y: touch.clientY - panOffset.y };
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    // Two fingers -> pinch. Pinching inward while zoomed = zoom out.
+    if (e.touches.length === 2 && pinchStartDistRef.current) {
+      const newDist = getTouchDistance(e.touches);
+      const ratio = newDist / pinchStartDistRef.current;
+      if (isZoomedMobile && ratio < 0.85) {
+        resetMobileZoom();
+        pinchStartDistRef.current = null;
+      }
+      return;
+    }
+
+    // One finger while zoomed = pan/drag the image around
+    if (isZoomedMobile && panStartRef.current && e.touches.length === 1) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const container = imageContainerRef.current;
+      const bound = container ? container.offsetWidth * (zoom - 1) * 0.6 : 150;
+      const rawX = touch.clientX - panStartRef.current.x;
+      const rawY = touch.clientY - panStartRef.current.y;
+      setPanOffset({
+        x: Math.max(-bound, Math.min(bound, rawX)),
+        y: Math.max(-bound, Math.min(bound, rawY)),
+      });
+    }
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null || product.images.length <= 1) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) < 50) return; // minimum swipe distance
-    if (diff > 0 && activeImageIndex < product.images.length - 1) {
-      setActiveImageIndex(activeImageIndex + 1);
-    } else if (diff < 0 && activeImageIndex > 0) {
-      setActiveImageIndex(activeImageIndex - 1);
+    pinchStartDistRef.current = null;
+    panStartRef.current = null;
+
+    if (touchStartX.current === null || touchStartY.current === null) return;
+
+    const changed = e.changedTouches[0];
+    const dx = touchStartX.current - changed.clientX;
+    const dy = touchStartY.current - changed.clientY;
+    const elapsed = Date.now() - touchStartTime.current;
+    const movedDistance = Math.hypot(dx, dy);
+
+    // Quick tap with minimal movement, while not already zoomed -> zoom in at tap point
+    if (!isZoomedMobile && movedDistance < 10 && elapsed < 300) {
+      const container = imageContainerRef.current;
+      if (container) {
+        const rect = container.getBoundingClientRect();
+        setZoomOrigin({
+          x: ((changed.clientX - rect.left) / rect.width) * 100,
+          y: ((changed.clientY - rect.top) / rect.height) * 100,
+        });
+      }
+      setPanOffset({ x: 0, y: 0 });
+      setIsZoomedMobile(true);
+      touchStartX.current = null;
+      touchStartY.current = null;
+      return;
     }
+
+    // Swipe to navigate only when not zoomed in
+    if (!isZoomedMobile && product.images.length > 1 && Math.abs(dx) >= 50) {
+      if (dx > 0 && activeImageIndex < product.images.length - 1) {
+        setActiveImageIndex(activeImageIndex + 1);
+      } else if (dx < 0 && activeImageIndex > 0) {
+        setActiveImageIndex(activeImageIndex - 1);
+      }
+    }
+
     touchStartX.current = null;
+    touchStartY.current = null;
   };
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -81,11 +172,13 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
         <div className="space-y-4">
           <div
             ref={imageContainerRef}
-            className="w-full h-[500px] sm:h-[600px] bg-white rounded-[2rem] overflow-hidden relative shadow-sm border border-neutral-100 touch-pan-y"
+            className="w-full h-[500px] sm:h-[600px] bg-white rounded-[2rem] overflow-hidden relative shadow-sm border border-neutral-100"
+            style={{ touchAction: isZoomedMobile ? "none" : "pan-y" }}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             onMouseMove={handleMouseMove}
             onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
             <img
@@ -94,8 +187,14 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
               alt={product.name}
               className="w-full h-full object-cover animate-fade-in transition-transform duration-300 ease-out"
               style={{
-                transform: isHovering ? `scale(${zoom})` : "scale(1)",
-                transformOrigin: `${mousePercent.x}% ${mousePercent.y}%`,
+                transform: isHovering
+                  ? `scale(${zoom})`
+                  : isZoomedMobile
+                    ? `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoom})`
+                    : "scale(1)",
+                transformOrigin: isZoomedMobile
+                  ? `${zoomOrigin.x}% ${zoomOrigin.y}%`
+                  : `${mousePercent.x}% ${mousePercent.y}%`,
               }}
             />
           </div>
@@ -109,6 +208,7 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
                   onClick={() => {
                     setSelectedShade(null); // Clear shade override to show full gallery
                     setActiveImageIndex(idx);
+                    resetMobileZoom();
                   }}
                   className={`icon-btn w-20 h-24 rounded-full overflow-hidden bg-white border border-neutral-200 transition-all duration-200 hover:border-neutral-900 ${
                     activeImageIndex === idx && !selectedShade
