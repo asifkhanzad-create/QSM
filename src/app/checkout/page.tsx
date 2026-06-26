@@ -88,7 +88,7 @@ export default function CheckoutPage() {
   if (isSuccess) {
     return (
       <>
-        <Header />
+        
         <main className="flex-1 bg-stone-50/50 py-16 sm:py-24 px-4 flex items-center justify-center">
           <div className="max-w-md w-full bg-white border border-neutral-100 rounded-2xl shadow-xl p-8 text-center space-y-6 animate-scale-in">
             <div className="w-16 h-16 bg-brand-50 rounded-full flex items-center justify-center text-brand-600 mx-auto animate-pop">
@@ -177,7 +177,7 @@ export default function CheckoutPage() {
 
   return (
     <>
-      <Header />
+      
       <main className="flex-1 bg-stone-50/50 py-10 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           

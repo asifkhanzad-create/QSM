@@ -24,7 +24,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   if (!product) {
     return (
       <>
-        <Header />
+        
         <CartDrawer />
         <main className="flex-1 flex flex-col items-center justify-center text-center py-24 px-4 bg-stone-50">
           <h2 className="text-2xl font-light font-serif text-neutral-900">Product Not Found</h2>
@@ -45,7 +45,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
   return (
     <>
-      <Header />
+    
       <CartDrawer />
       <main className="flex-1 bg-stone-50/50">
         <ProductPageContent product={product} relatedProducts={relatedProducts} />

@@ -6,18 +6,17 @@ import Image from "next/image";
 import { X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useAnimatedPresence } from "@/hooks/useAnimatedPresence";
+import { type Category } from "@/lib/data";
 
-const categories = [
-  { name: "Lipsticks", href: "/shop?category=lipsticks" },
-  { name: "Face Washes", href: "/shop?category=face-washes" },
-  { name: "Face Serums", href: "/shop?category=face-serums" },
-  { name: "Moisturizers", href: "/shop?category=moisturizers" },
-  { name: "Hair Products", href: "/shop?category=hair-products" },
-  { name: "Nail Polishes", href: "/shop?category=nail-polishes" },
-  { name: "Eye Cosmetics", href: "/shop?category=eye-cosmetics" },
-];
-
-export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+export default function Sidebar({
+  isOpen,
+  onClose,
+  categories,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  categories: Category[];
+}) {
   const { mounted, visible } = useAnimatedPresence(isOpen);
 
   useEffect(() => {
@@ -92,16 +91,18 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
             >
               Shop All Products
             </Link>
-            {categories.map((category) => (
-              <Link
-                key={category.name}
-                href={category.href}
-                onClick={handleCategoryClick}
-                className="btn-press block px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition-colors rounded-lg"
-              >
-                {category.name}
-              </Link>
-            ))}
+            {categories
+              .filter((cat) => cat.slug)
+              .map((cat) => (
+                <Link
+                  key={cat._id}
+                  href={`/shop?category=${cat.slug}`}
+                  onClick={handleCategoryClick}
+                  className="btn-press block px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition-colors rounded-lg"
+                >
+                  {cat.name}
+                </Link>
+              ))}
           </nav>
         </div>
       </div>

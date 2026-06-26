@@ -26,6 +26,10 @@ export default defineConfig({
               .title("Brands")
               .schemaType("brand")
               .child(S.documentTypeList("brand").title("Brands")),
+            S.listItem()
+              .title("Categories")
+              .schemaType("category")
+              .child(S.documentTypeList("category").title("Categories")),
           ]),
     }),
     visionTool(),

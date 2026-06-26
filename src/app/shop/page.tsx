@@ -20,8 +20,8 @@ export default async function ShopPage({ searchParams }: PageProps) {
 
   return (
     <>
-      <Header />
-      <CartDrawer />
+    
+    <CartDrawer />
       <main className="flex-1 bg-stone-50/50">
         <Suspense fallback={<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center text-neutral-500 font-light">Loading catalog...</div>}>
           <ShopPageContent

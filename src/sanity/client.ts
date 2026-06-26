@@ -20,7 +20,7 @@ export async function getCategories(): Promise<Category[]> {
     return CATEGORIES;
   }
   try {
-    const query = `*[_type == "category"]{
+    const query = `*[_type == "category"] | order(order asc){
       _id,
       name,
       "slug": slug.current,

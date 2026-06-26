@@ -6,8 +6,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
-import { ShoppingBag, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import Sidebar from "./Sidebar";
+import { type Category } from "@/lib/data";
 
 function NavLinks() {
   const pathname = usePathname();
@@ -17,7 +18,6 @@ function NavLinks() {
     if (href === "/") return pathname === "/";
     const [p, qs] = href.split("?");
     if (pathname !== p) return false;
-    
     if (qs) {
       const params = new URLSearchParams(qs);
       const keys = Array.from(params.keys());
@@ -27,11 +27,9 @@ function NavLinks() {
       }
       return true;
     }
-
     if (href === "/shop") {
-      return !searchParams.get('isNewArrival') && !searchParams.get('isBestSeller');
+      return !searchParams.get("isNewArrival") && !searchParams.get("isBestSeller");
     }
-
     return true;
   };
 
@@ -58,11 +56,11 @@ function NavLinks() {
 function SearchBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get('search') || '');
+  const [query, setQuery] = useState(searchParams.get("search") || "");
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const url = query ? `/shop?search=${encodeURIComponent(query)}` : '/';
+    const url = query ? `/shop?search=${encodeURIComponent(query)}` : "/";
     router.push(url);
   };
 
@@ -80,20 +78,23 @@ function SearchBar() {
   );
 }
 
-export default function Header() {
+export default function Header({ categories }: { categories: Category[] }) {
   const { setIsCartOpen, cartCount } = useCart();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <>
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        categories={categories}
+      />
 
       <header className="bg-white/80 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* ── MOBILE LAYOUT ── */}
           <div className="flex flex-col md:hidden py-3 gap-2">
-            {/* Row 1: Hamburger | Logo | Cart */}
             <div className="flex items-center justify-between">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -106,7 +107,6 @@ export default function Header() {
                 </svg>
               </button>
 
-              {/* Logo center — increase h-14 to h-16/h-20 if you want it even bigger */}
               <Link href="/" className="absolute left-1/2 -translate-x-1/2">
                 <Image
                   src="/logo.png"
@@ -118,44 +118,29 @@ export default function Header() {
                 />
               </Link>
 
-              {/* Cart */}
               <button
                 onClick={() => setIsCartOpen(true)}
                 className="icon-btn relative p-2 rounded-full text-neutral-900 hover:text-neutral-950 hover:bg-neutral-100 transition-all duration-200 shrink-0"
                 aria-label="Open Cart"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-7 h-7"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7">
                   <path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
                 {cartCount > 0 && (
-                  <span
-                    key={cartCount}
-                    className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-brand-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pop"
-                  >
+                  <span key={cartCount} className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-brand-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pop">
                     {cartCount}
                   </span>
                 )}
               </button>
             </div>
 
-            {/* Row 2: Search bar full width */}
             <Suspense fallback={null}>
               <SearchBar />
             </Suspense>
           </div>
 
-          {/* ── DESKTOP LAYOUT (untouched) ── */}
+          {/* ── DESKTOP LAYOUT ── */}
           <div className="hidden md:flex items-center justify-between h-32">
-            {/* Left: Menu + Search */}
             <div className="flex items-center gap-3 sm:gap-4 flex-1 sm:flex-none min-w-0">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -172,36 +157,22 @@ export default function Header() {
               </Suspense>
             </div>
 
-            {/* Nav Links */}
             <div className="flex flex-1 justify-center">
               <Suspense fallback={null}>
                 <NavLinks />
               </Suspense>
             </div>
 
-            {/* Cart */}
             <button
               onClick={() => setIsCartOpen(true)}
               className="icon-btn relative p-2 rounded-full text-neutral-900 hover:text-neutral-950 hover:bg-neutral-100 transition-all duration-200 shrink-0"
               aria-label="Open Cart"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-7 h-7"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7">
                 <path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {cartCount > 0 && (
-                <span
-                  key={cartCount}
-                  className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-brand-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pop"
-                >
+                <span key={cartCount} className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-brand-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pop">
                   {cartCount}
                 </span>
               )}
