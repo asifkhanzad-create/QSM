@@ -147,11 +147,12 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Email Address</label>
+                    <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+                      Email Address <span className="text-neutral-400 font-normal normal-case">(Optional)</span>
+                    </label>
                     <input
                       type="email"
                       name="email"
-                      required
                       value={formData.email}
                       onChange={handleInputChange}
                       className="w-full px-5 py-2.5 text-sm bg-neutral-50 border border-neutral-200 rounded-full focus:outline-none focus:border-brand-500"
@@ -199,11 +200,12 @@ export default function CheckoutPage() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Zip Code</label>
+                      <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+                        Zip Code <span className="text-neutral-400 font-normal normal-case">(Optional)</span>
+                      </label>
                       <input
                         type="text"
                         name="zipCode"
-                        required
                         value={formData.zipCode}
                         onChange={handleInputChange}
                         className="w-full px-5 py-2.5 text-sm bg-neutral-50 border border-neutral-200 rounded-full focus:outline-none focus:border-brand-500"
