@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     }
 
     const data = await request.json();
-    const { formData, cart, cartSubtotal, shippingCost, totalCost, isFreeShipping } = data;
+    const { formData, cart, cartSubtotal, shippingCost, totalCost, isFreeShipping, orderNumber } = data;
 
     const itemsList =
       Array.isArray(cart) && cart.length > 0
@@ -28,6 +28,7 @@ export async function POST(request: Request) {
       title: "🛍️ New Order Received",
       color: 0xff385c,
       fields: [
+        { name: "Order Number", value: `QSM-${orderNumber || "N/A"}`, inline: true },
         { name: "Customer", value: `${formData.firstName} ${formData.lastName}`, inline: true },
         { name: "Phone", value: formData.phone || "N/A", inline: true },
         { name: "Email", value: formData.email || "Not provided", inline: true },

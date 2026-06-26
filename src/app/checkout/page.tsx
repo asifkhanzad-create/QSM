@@ -12,6 +12,14 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [orderSnapshot, setOrderSnapshot] = useState<{
+    items: typeof cart;
+    subtotal: number;
+    shipping: number;
+    total: number;
+    freeShipping: boolean;
+  } | null>(null);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -32,13 +40,28 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (cart.length === 0) return;
 
+    // Don't submit yet — show confirmation dialog first
+    setShowConfirmDialog(true);
+  };
+
+  const confirmOrder = () => {
+    setShowConfirmDialog(false);
     setIsSubmitting(true);
 
-    const orderDetails = `*New Order from QSM Website*\n\n*Customer Details:*\nName: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\n*Shipping Address:*\n${formData.address}, ${formData.city}, ${formData.zipCode}\n\n*Order Items:*\n${cart.map(item => `- ${item.product.name} (${item.selectedShade?.name || 'N/A'}) x ${item.quantity} = Rs. ${(item.product.price * item.quantity).toFixed(2)}`).join('\n')}\n\n*Order Summary:*\nSubtotal: Rs. ${cartSubtotal.toFixed(2)}\nShipping: ${isFreeShipping ? 'FREE' : `Rs. ${shippingCost.toFixed(2)}`}\n*Total: Rs. ${totalCost.toFixed(2)}*\n\n*Payment Method: Cash on Delivery*\n\n*Please confirm this order. Thank you!*`;
+    // Generate a simple order number for the confirmation screen
+    const newOrderNumber = `${Date.now()}`;
+    setOrderNumber(newOrderNumber);
 
-    const whatsappLink = `https://wa.me/923178517190?text=${encodeURIComponent(orderDetails)}`;
+    // Save a snapshot of the order for the Thank You screen (cart gets cleared below)
+    setOrderSnapshot({
+      items: cart,
+      subtotal: cartSubtotal,
+      shipping: shippingCost,
+      total: totalCost,
+      freeShipping: isFreeShipping,
+    });
 
-    // Notify Discord with full order details (works regardless of whether the customer has WhatsApp)
+    // Notify Discord with full order details (this stays exactly as-is)
     fetch("/api/discord-notify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -49,15 +72,15 @@ export default function CheckoutPage() {
         shippingCost,
         totalCost,
         isFreeShipping,
+        orderNumber: newOrderNumber,
       }),
-      keepalive: true, // ensures the request completes even as we navigate away below
+      keepalive: true,
     }).catch((err) => console.error("Discord notify failed:", err));
 
-    // Clear cart immediately
+    // Clear cart and show the on-site confirmation screen
     clearCart();
-    
-    // Redirect current window to WhatsApp (bypasses popup blockers)
-    window.location.href = whatsappLink;
+    setIsSubmitting(false);
+    setIsSuccess(true);
   };
 
   const totalCost = cartSubtotal + shippingCost;
@@ -73,27 +96,68 @@ export default function CheckoutPage() {
             </div>
             
             <div className="space-y-2">
-              <span className="text-xs uppercase tracking-widest text-brand-600 font-bold">Order Initiated</span>
+              <span className="text-xs uppercase tracking-widest text-brand-600 font-bold">Order Confirmed</span>
               <h2 className="text-2xl font-light font-serif text-neutral-900">Thank you for your order!</h2>
               <p className="text-sm text-neutral-500 font-light">
-                Your order has been placed successfully and details have been sent to our team via WhatsApp.
-                We will contact you shortly to confirm your Cash on Delivery order.
+                Your order has been placed successfully. Our team will contact you shortly to confirm your Cash on Delivery order.
               </p>
             </div>
 
-            <div className="bg-neutral-50 rounded-xl p-4 text-left border border-neutral-100 space-y-2.5">
+            <div className="bg-neutral-50 rounded-xl p-4 text-left border border-neutral-100 space-y-3">
+              {orderSnapshot && orderSnapshot.items.length > 0 && (
+                <>
+                  <div className="space-y-2.5 max-h-[180px] overflow-y-auto pr-1">
+                    {orderSnapshot.items.map((item, idx) => (
+                      <div key={idx} className="flex justify-between items-start text-sm gap-2">
+                        <div>
+                          <span className="text-neutral-900 font-medium">{item.product.name}</span>
+                          {item.selectedShade && (
+                            <span className="text-neutral-400 text-xs block">Shade: {item.selectedShade.name}</span>
+                          )}
+                          <span className="text-neutral-400 text-xs block">Qty: {item.quantity}</span>
+                        </div>
+                        <span className="font-semibold text-neutral-900 whitespace-nowrap">
+                          Rs. {(item.product.price * item.quantity).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <hr className="border-neutral-200" />
+                  <div className="flex justify-between text-sm">
+                    <span className="text-neutral-500">Subtotal:</span>
+                    <span className="font-semibold text-neutral-900">Rs. {orderSnapshot.subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-neutral-500">Shipping:</span>
+                    <span className="font-semibold text-neutral-900">
+                      {orderSnapshot.freeShipping ? "FREE" : `Rs. ${orderSnapshot.shipping.toFixed(2)}`}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-neutral-500">Total Amount:</span>
+                    <span className="font-bold text-neutral-950">Rs. {orderSnapshot.total.toFixed(2)}</span>
+                  </div>
+                  <hr className="border-neutral-200" />
+                </>
+              )}
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">Order Number:</span>
-                <span className="font-semibold text-neutral-900">QSM-{orderNumber.split('-')[1] || orderNumber}</span>
+                <span className="font-semibold text-neutral-900">QSM-{orderNumber}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">Delivery Estimate:</span>
-                <span className="font-semibold text-neutral-900">2-4 Business Days</span>
+                <span className="font-semibold text-neutral-900">3-5 Business Days</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-neutral-500">Notification:</span>
-                <span className="font-semibold text-brand-600">WhatsApp sent</span>
+                <span className="text-neutral-500">Payment Method:</span>
+                <span className="font-semibold text-neutral-900">Cash on Delivery</span>
               </div>
+            </div>
+
+            <div className="bg-amber-50 border border-amber-100 rounded-xl p-3.5 text-left">
+              <p className="text-xs text-amber-800 font-medium leading-relaxed">
+                📸 Kindly take a screenshot of this order confirmation or save these details — you may need them later for reference.
+              </p>
             </div>
 
             <div className="pt-4">
@@ -256,6 +320,13 @@ export default function CheckoutPage() {
                 >
                   {isSubmitting ? "Placing Order..." : `Complete Order • Rs. ${totalCost.toFixed(2)}`}
                 </button>
+
+                <Link
+                  href="/shop"
+                  className="btn-pill w-full inline-block text-center py-4 text-sm font-semibold uppercase tracking-wider bg-white hover:bg-neutral-50 text-neutral-700 border-2 border-neutral-200"
+                >
+                  Continue Shopping
+                </Link>
               </form>
             </div>
 
@@ -339,6 +410,72 @@ export default function CheckoutPage() {
         </div>
       </main>
       <Footer />
+
+      {/* Confirm Order Dialog */}
+      {showConfirmDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 animate-fade-in">
+          <div className="max-w-sm w-full bg-white rounded-2xl shadow-xl p-7 text-center space-y-5 animate-scale-in">
+            <div className="w-14 h-14 bg-brand-50 rounded-full flex items-center justify-center text-brand-600 mx-auto">
+              <ShoppingBag className="w-7 h-7" />
+            </div>
+            <div className="space-y-1.5">
+              <h3 className="text-xl font-light font-serif text-neutral-900">Confirm Your Order</h3>
+              <p className="text-sm text-neutral-500 font-light">
+                Are you sure you want to place this order for{" "}
+                <span className="font-semibold text-neutral-900">Rs. {totalCost.toFixed(2)}</span>?
+              </p>
+            </div>
+
+            <div className="bg-neutral-50 rounded-xl p-3.5 text-left border border-neutral-100 space-y-2">
+              <div className="space-y-1.5 max-h-[140px] overflow-y-auto pr-1">
+                {cart.map((item, idx) => (
+                  <div key={idx} className="flex justify-between items-start text-sm gap-2">
+                    <div>
+                      <span className="text-neutral-900 font-medium">
+                        {item.product.name}
+                        <span className="text-neutral-400 font-normal"> x{item.quantity}</span>
+                      </span>
+                      {item.selectedShade && (
+                        <span className="text-neutral-400 text-xs block">Shade: {item.selectedShade.name}</span>
+                      )}
+                    </div>
+                    <span className="font-semibold text-neutral-900 whitespace-nowrap">
+                      Rs. {(item.product.price * item.quantity).toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <hr className="border-neutral-200" />
+              <div className="flex justify-between text-sm">
+                <span className="text-neutral-500">Items:</span>
+                <span className="font-semibold text-neutral-900">{cartCount}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-neutral-500">Payment Method:</span>
+                <span className="font-semibold text-neutral-900">Cash on Delivery</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 pt-1">
+              <button
+                type="button"
+                onClick={() => setShowConfirmDialog(false)}
+                className="btn-pill py-3 text-sm font-semibold border-2 border-neutral-200 text-neutral-700 hover:bg-neutral-50"
+              >
+                No, Go Back
+              </button>
+              <button
+                type="button"
+                onClick={confirmOrder}
+                disabled={isSubmitting}
+                className="btn-pill py-3 text-sm font-semibold text-white border-2 border-neutral-950 bg-neutral-950 hover:bg-neutral-800"
+              >
+                {isSubmitting ? "Placing..." : "Yes, Confirm"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
