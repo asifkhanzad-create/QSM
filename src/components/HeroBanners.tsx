@@ -203,28 +203,28 @@ export default function HeroBanners() {
         </div>
 
         {/* Text Content (below image) */}
-        <div className="px-6 py-6 text-center bg-white overflow-hidden">
-          <div key={mobileSlide}>
-            <h2
-              className="text-xl font-light font-serif text-neutral-950 tracking-tight animate-mobile-slide-up"
-              style={{ animationDelay: "800ms" }}
-            >
-              {activeSlide.title}
-            </h2>
-            <p
-              className="text-sm text-neutral-500 mt-1 font-light animate-mobile-slide-up"
-              style={{ animationDelay: "1000ms" }}
-            >
-              {activeSlide.subtitle}
-            </p>
-            <a
-              href={activeSlide.linkHref}
-              className="btn-pill inline-block mt-4 px-8 py-3 bg-transparent border border-neutral-900 text-neutral-900 text-sm font-medium transition-all duration-200 hover:bg-neutral-900 hover:text-white active:scale-[0.98]"
-            >
-              {activeSlide.linkText}
-            </a>
-          </div>
-        </div>
+<div className="px-6 py-6 text-center bg-white overflow-hidden">
+  <div key={mobileSlide}>
+    <h2
+      className="text-2xl font-light font-serif text-neutral-950 tracking-tight animate-mobile-slide-up"
+      style={{ animationDelay: "800ms" }}
+    >
+      {activeSlide.title}
+    </h2>
+    <p
+      className="text-base text-neutral-500 mt-2 font-light animate-mobile-slide-up"
+      style={{ animationDelay: "1000ms" }}
+    >
+      {activeSlide.subtitle}
+    </p>
+    <a
+      href={activeSlide.linkHref}
+      className="btn-pill inline-block mt-4 px-8 py-3 bg-transparent border border-neutral-900 text-neutral-900 text-sm font-medium transition-all duration-200 hover:bg-neutral-900 hover:text-white active:scale-[0.98]"
+    >
+      {activeSlide.linkText}
+    </a>
+  </div>
+</div>
 
         {/* Dots Navigation */}
         <div className="flex justify-center gap-2 pb-5 bg-white">

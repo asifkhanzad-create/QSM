@@ -120,14 +120,14 @@ export default function ShopPageContent({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {/* Page Header */}
-      <div className="text-center max-w-xl mx-auto mb-10 sm:mb-10 animate-fade-in-up">
-        <h2 className="text-3xl sm:text-4xl font-light font-serif text-neutral-950 tracking-tight">
-          Beauty Catalog
-        </h2>
-        <p className="text-sm sm:text-sm text-neutral-500 mt-2 font-light">
-          Find the perfect products for your unique beauty routine. Organic formulations, premium pigments.
-        </p>
-      </div>
+<div className="text-center max-w-xl mx-auto mb-10 sm:mb-10 animate-fade-in-up">
+  <h2 className="text-3xl sm:text-4xl font-light font-serif text-neutral-950 tracking-tight">
+    Beauty Catalog
+  </h2>
+  <p className="text-base sm:text-base text-neutral-500 mt-2 font-normal">
+    Find the perfect products for your unique beauty routine. Organic formulations, premium pigments.
+  </p>
+</div>
 
       {/* Control Bar (Search, Category Filter Tabs, Sorting) */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between pb-6 sm:pb-8 border-b border-neutral-100 mb-6 sm:mb-8">
