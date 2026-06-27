@@ -115,7 +115,7 @@ export default function BrandPageContent({
               className="group relative shrink-0 flex flex-col items-center"
             >
               <div
-                className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden flex items-center justify-center border-2 transition-all duration-300 ease-out ${
+                className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden flex items-center justify-center border-2 transition-all duration-300 ease-out ${
                   !brandParam
                     ? "border-[#111111] shadow-lg shadow-neutral-900/15 scale-110"
                     : "border-neutral-200 hover:border-neutral-900 hover:shadow-xl hover:shadow-neutral-900/10 active:scale-95"
@@ -130,7 +130,7 @@ export default function BrandPageContent({
                 
                 {/* "ALL" text inside circle */}
                 <span
-                  className={`text-[9px] sm:text-[10px] font-bold tracking-widest uppercase transition-transform duration-300 ease-out ${
+                  className={`text-[10px] sm:text-xs font-bold tracking-widest uppercase transition-transform duration-300 ease-out ${
                     !brandParam ? "text-neutral-900" : "text-neutral-500 group-hover:-translate-y-0.5"
                   }`}
                 >
@@ -161,7 +161,7 @@ export default function BrandPageContent({
                 >
                   {/* Logo Circle — BIGGER with premium hover/click animation */}
                   <div
-                    className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden flex items-center justify-center border-2 transition-all duration-300 ease-out ${
+                    className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden flex items-center justify-center border-2 transition-all duration-300 ease-out ${
                       isActive
                         ? "border-[#111111] shadow-lg shadow-neutral-900/15 scale-110"
                         : "border-neutral-200 hover:border-neutral-900 hover:shadow-xl hover:shadow-neutral-900/10 active:scale-95"
@@ -180,12 +180,12 @@ export default function BrandPageContent({
                         <Image
                           src={brand.logo}
                           alt={brand.name}
-                          width={64}
-                          height={64}
-                          className="w-10 h-10 sm:w-11 sm:h-11 object-contain"
+                          width={80}
+                          height={80}
+                          className="w-11 h-11 sm:w-14 sm:h-14 object-contain"
                         />
                       ) : (
-                        <span className={`text-lg sm:text-xl font-bold ${isActive ? "text-neutral-900" : "text-neutral-400"}`}>
+                        <span className={`text-xl sm:text-2xl font-bold ${isActive ? "text-neutral-900" : "text-neutral-400"}`}>
                           {brand.name.charAt(0)}
                         </span>
                       )}
