@@ -106,56 +106,102 @@ export default function BrandPageContent({
         <div className="relative w-full md:w-auto">
           <div
             ref={brandScrollRef}
-            className="flex overflow-x-auto md:flex-wrap gap-2 w-full md:w-auto py-2 md:py-1 scrollbar-hide px-1"
+            className="flex overflow-x-auto md:flex-wrap gap-4 sm:gap-5 w-full md:w-auto pt-3 pb-10 md:pt-2 md:pb-10 scrollbar-hide px-1"
           >
 
-            {/* All Brands pill */}
+            {/* All Brands — SAME CIRCLE STYLE as brand logos */}
             <Link
               href="/shop-by-brand"
-              className={`btn-pill shrink-0 rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
-                !brandParam
-                  ? "bg-[#111111] text-white border-transparent hover:bg-[#2a2a2a]"
-                  : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
-              }`}
+              className="group relative shrink-0 flex flex-col items-center"
             >
-              All Brands
+              <div
+                className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden flex items-center justify-center border-2 transition-all duration-300 ease-out ${
+                  !brandParam
+                    ? "border-[#111111] shadow-lg shadow-neutral-900/15 scale-110"
+                    : "border-neutral-200 hover:border-neutral-900 hover:shadow-xl hover:shadow-neutral-900/10 active:scale-95"
+                }`}
+              >
+                {/* Subtle ring animation on hover */}
+                <div
+                  className={`absolute inset-0 rounded-full border-2 border-neutral-900/0 transition-all duration-500 ${
+                    brandParam && "group-hover:border-neutral-900/10 group-hover:scale-125 group-hover:opacity-0"
+                  }`}
+                />
+                
+                {/* "ALL" text inside circle */}
+                <span
+                  className={`text-[9px] sm:text-[10px] font-bold tracking-widest uppercase transition-transform duration-300 ease-out ${
+                    !brandParam ? "text-neutral-900" : "text-neutral-500 group-hover:-translate-y-0.5"
+                  }`}
+                >
+                  ALL
+                </span>
+              </div>
+
+              {/* Clean text label below */}
+              <span
+                className={`mt-2 text-[11px] sm:text-xs font-semibold tracking-wide text-neutral-900 transition-all duration-300 ease-out ${
+                  !brandParam
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
+                }`}
+              >
+                All Brands
+              </span>
             </Link>
 
-            {/* Brand pills — show logo if available, fallback to name */}
+            {/* Brand pills — BIGGER LOGO-ONLY CIRCLES with clean text tooltip */}
             {brands.map((brand) => {
               const isActive = brandParam?.toLowerCase() === brand.slug.toLowerCase();
               return (
                 <Link
                   key={brand._id}
                   href={`/shop-by-brand?brand=${brand.slug}`}
-                  className={`btn-pill shrink-0 flex items-center gap-2 rounded-full border transition-all duration-200 focus:outline-none shadow-none ${
-                    brand.logo ? "px-3 py-2" : "px-5 py-2.5"
-                  } ${
-                    isActive
-                      ? "bg-[#111111] text-white border-transparent hover:bg-[#2a2a2a]"
-                      : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
-                  }`}
+                  className="group relative shrink-0 flex flex-col items-center"
                 >
-                  {brand.logo ? (
-                    <>
-                      <div className={`w-7 h-7 rounded-full overflow-hidden flex items-center justify-center shrink-0 ${isActive ? "bg-white/20" : "bg-neutral-100"}`}>
+                  {/* Logo Circle — BIGGER with premium hover/click animation */}
+                  <div
+                    className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden flex items-center justify-center border-2 transition-all duration-300 ease-out ${
+                      isActive
+                        ? "border-[#111111] shadow-lg shadow-neutral-900/15 scale-110"
+                        : "border-neutral-200 hover:border-neutral-900 hover:shadow-xl hover:shadow-neutral-900/10 active:scale-95"
+                    }`}
+                  >
+                    {/* Subtle ring animation on hover */}
+                    <div
+                      className={`absolute inset-0 rounded-full border-2 border-neutral-900/0 transition-all duration-500 ${
+                        !isActive && "group-hover:border-neutral-900/10 group-hover:scale-125 group-hover:opacity-0"
+                      }`}
+                    />
+                    
+                    {/* Logo with subtle float on hover */}
+                    <div className={`transition-transform duration-300 ease-out ${!isActive && "group-hover:-translate-y-0.5"}`}>
+                      {brand.logo ? (
                         <Image
                           src={brand.logo}
                           alt={brand.name}
-                          width={28}
-                          height={28}
-                          className="w-full h-full object-contain p-0.5"
+                          width={64}
+                          height={64}
+                          className="w-10 h-10 sm:w-11 sm:h-11 object-contain"
                         />
-                      </div>
-                      <span className="text-xs tracking-wider uppercase">
-                        {brand.name}
-                      </span>
-                    </>
-                  ) : (
-                    <span className="text-xs tracking-wider uppercase">
-                      {brand.name}
-                    </span>
-                  )}
+                      ) : (
+                        <span className={`text-lg sm:text-xl font-bold ${isActive ? "text-neutral-900" : "text-neutral-400"}`}>
+                          {brand.name.charAt(0)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Clean text tooltip — no background, no arrow, just brand name */}
+                  <span
+                    className={`mt-2 text-[11px] sm:text-xs font-semibold tracking-wide text-neutral-900 transition-all duration-300 ease-out ${
+                      isActive
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
+                    }`}
+                  >
+                    {brand.name}
+                  </span>
                 </Link>
               );
             })}
@@ -219,16 +265,15 @@ export default function BrandPageContent({
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
                   {product.originalPrice && (
-  <span className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-yellow-400 text-black text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
-    Sale
-  </span>
-)}
-
-{product.isBestSeller && (
-  <span className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-[#111111] text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
-    Best Seller
-  </span>
-)}
+                    <span className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-yellow-400 text-black text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
+                      Sale
+                    </span>
+                  )}
+                  {product.isBestSeller && (
+                    <span className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-[#111111] text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
+                      Best Seller
+                    </span>
+                  )}
                   {product.shades && product.shades.length > 0 && (
                     <span className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm text-neutral-800 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm border border-neutral-100">
                       {product.shades.length} Shades

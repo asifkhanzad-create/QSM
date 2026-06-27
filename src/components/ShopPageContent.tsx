@@ -136,7 +136,7 @@ export default function ShopPageContent({
         <div className="relative w-full md:w-auto">
           <div
             ref={categoryScrollRef}
-            className="flex flex-nowrap gap-2 sm:gap-2 overflow-x-auto md:flex-wrap scrollbar-hide pl-4 sm:pl-0 py-2 md:py-1"
+            className="flex flex-nowrap gap-2 sm:gap-2 overflow-x-auto md:flex-wrap scrollbar-hide px-4 sm:px-4 md:px-4 py-2 md:py-1"
           >
             <Link
               href="/shop"
