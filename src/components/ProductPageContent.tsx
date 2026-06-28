@@ -227,16 +227,13 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
         <div className="space-y-6">
           
           {/* Breadcrumbs / Tag */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs uppercase tracking-wider text-brand-600 font-semibold bg-brand-50 px-3 py-1 rounded-full">
-              {product.category}
-            </span>
-            {product.isBestSeller && (
-              <span className="text-[10px] uppercase tracking-wider text-white font-bold bg-neutral-900 px-2.5 py-1 rounded-full">
-                Bestseller
-              </span>
-            )}
-          </div>
+<div className="flex items-center gap-2">
+  {product.isBestSeller && (
+    <span className="text-[10px] uppercase tracking-wider text-white font-bold bg-neutral-900 px-2.5 py-1 rounded-full">
+      Bestseller
+    </span>
+  )}
+</div>
 
           {/* Title & Price */}
           <div>
