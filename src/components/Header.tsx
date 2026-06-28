@@ -95,7 +95,7 @@ export default function Header({ categories }: { categories: Category[] }) {
 
           {/* ── MOBILE LAYOUT ── */}
           <div className="flex flex-col md:hidden py-3 gap-2">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between relative">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                 className="icon-btn p-2 rounded-full text-neutral-900 hover:text-neutral-950 hover:bg-neutral-100 transition-all duration-200 shrink-0"
@@ -108,15 +108,12 @@ export default function Header({ categories }: { categories: Category[] }) {
               </button>
 
               <Link href="/" className="absolute left-1/2 -translate-x-1/2">
-                <Image
-                  src="/logo.png"
-                  alt="Logo"
-                  width={820}
-                  height={288}
-                  className="h-72 w-auto object-contain"
-                  priority
-                />
-              </Link>
+  <img
+    src="/logo.png"
+    alt="Logo"
+    className="h-12 w-auto object-contain"
+  />
+</Link>
 
               <button
                 onClick={() => setIsCartOpen(true)}

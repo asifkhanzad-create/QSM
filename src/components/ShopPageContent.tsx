@@ -140,7 +140,7 @@ export default function ShopPageContent({
           >
             <Link
               href="/shop"
-              className={`btn-pill shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
+              className={`btn-pill shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-xs !font-normal tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
                 !searchParams.get('category')
                   ? "btn-gradient"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
@@ -152,7 +152,7 @@ export default function ShopPageContent({
               <Link
                 key={cat._id}
                 href={`/shop?category=${cat.slug}`}
-                className={`btn-pill shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
+                className={`btn-pill shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-xs !font-normal tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
                   searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
                     ? "btn-gradient"
                     : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"

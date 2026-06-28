@@ -59,51 +59,51 @@ export default function Sidebar({
           >
             <X className="w-6 h-6" />
           </button>
-          <div className="flex items-center justify-center px-6 -mt-2">
-            <Image
-              src="/logo.png"
-              alt="QSM Logo"
-              width={200}
-              height={70}
-              className="w-full h-auto max-h-48 object-contain"
-            />
-          </div>
+          <div className="flex items-center justify-center px-6 py-4 border-b border-neutral-200">
+  <Link href="/" onClick={onClose}>
+  <img
+    src="/logo.png"
+    alt="QSM Logo"
+    className="h-12 w-auto object-contain"
+  />
+  </Link>
+</div>
 
-          <nav className="flex-1 overflow-y-auto px-4 -mt-1 space-y-2 stagger-fade-in">
-            <Link
-              href="/"
-              onClick={handleCategoryClick}
-              className="btn-press block px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition-colors rounded-lg"
-            >
-              Home
-            </Link>
-            <Link
-              href="/shop-by-brand"
-              onClick={handleCategoryClick}
-              className="btn-press block px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition-colors rounded-lg"
-            >
-              Shop by Brand
-            </Link>
-            <Link
-              href="/shop"
-              onClick={handleCategoryClick}
-              className="btn-press block px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition-colors rounded-lg"
-            >
-              Shop All Products
-            </Link>
-            {categories
-              .filter((cat) => cat.slug)
-              .map((cat) => (
-                <Link
-                  key={cat._id}
-                  href={`/shop?category=${cat.slug}`}
-                  onClick={handleCategoryClick}
-                  className="btn-press block px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition-colors rounded-lg"
-                >
-                  {cat.name}
-                </Link>
-              ))}
-          </nav>
+<nav className="flex-1 overflow-y-auto px-4 pt-6 space-y-3">
+  <Link
+    href="/"
+    onClick={handleCategoryClick}
+    className="block px-5 py-3.5 text-sm font-normal text-neutral-700 rounded-full border border-neutral-200 hover:border-neutral-400 hover:bg-neutral-50 hover:text-neutral-900 transition-all duration-200"
+  >
+    Home
+  </Link>
+  <Link
+    href="/shop-by-brand"
+    onClick={handleCategoryClick}
+    className="block px-5 py-3.5 text-sm font-normal text-neutral-700 rounded-full border border-neutral-200 hover:border-neutral-400 hover:bg-neutral-50 hover:text-neutral-900 transition-all duration-200"
+  >
+    Shop by Brand
+  </Link>
+  <Link
+    href="/shop"
+    onClick={handleCategoryClick}
+    className="block px-5 py-3.5 text-sm font-normal text-neutral-700 rounded-full border border-neutral-200 hover:border-neutral-400 hover:bg-neutral-50 hover:text-neutral-900 transition-all duration-200"
+  >
+    Shop All Products
+  </Link>
+  {categories
+    .filter((cat) => cat.slug)
+    .map((cat) => (
+      <Link
+        key={cat._id}
+        href={`/shop?category=${cat.slug}`}
+        onClick={handleCategoryClick}
+        className="block px-5 py-3.5 text-sm font-normal text-neutral-700 rounded-full border border-neutral-200 hover:border-neutral-400 hover:bg-neutral-50 hover:text-neutral-900 transition-all duration-200"
+      >
+        {cat.name}
+      </Link>
+    ))}
+</nav>
         </div>
       </div>
     </>
