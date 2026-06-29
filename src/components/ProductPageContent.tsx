@@ -4,7 +4,8 @@ import React, { useState, useRef, useCallback } from "react";
 import { type Product, type Shade } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
-import { Star, ShoppingBag, Check, Truck, Sparkles, BadgeCheck, Wallet } from "lucide-react";
+import { Star, ShoppingBag, Check, Truck, Sparkles, BadgeCheck, Wallet, ZoomIn } from "lucide-react";
+import ImageZoomModal from "./ImageZoomModal";
 
 interface ProductPageContentProps {
   product: Product;
@@ -14,7 +15,6 @@ interface ProductPageContentProps {
 export default function ProductPageContent({ product, relatedProducts = [] }: ProductPageContentProps) {
   const { addToCart } = useCart();
   
-  // Set initial shade if shades are available
   const [selectedShade, setSelectedShade] = useState<Shade | null>(
     product.shades && product.shades.length > 0 ? product.shades[0] : null
   );
@@ -24,123 +24,23 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
   const [activeTab, setActiveTab] = useState<"description" | "ingredients" | "howToUse">("description");
   const [justAdded, setJustAdded] = useState(false);
 
-  // Hover zoom state
+  // Hover zoom state (desktop only)
   const [isHovering, setIsHovering] = useState(false);
   const [mousePercent, setMousePercent] = useState({ x: 50, y: 50 });
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const zoom = 1.8;
 
-  // Mobile tap-to-zoom state (separate from desktop hover-zoom above)
-  const [isZoomedMobile, setIsZoomedMobile] = useState(false);
-  const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 });
-  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+  // Mobile zoom modal state
+  const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
 
-  // Touch swipe / tap / pan / pinch state
-  const touchStartX = useRef<number | null>(null);
-  const touchStartY = useRef<number | null>(null);
-  const touchStartTime = useRef<number>(0);
-  const panStartRef = useRef<{ x: number; y: number } | null>(null);
-  const pinchStartDistRef = useRef<number | null>(null);
+  // Swipe-to-change-image state (mobile/touch only)
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isSwiping, setIsSwiping] = useState(false);
+  const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
+  const containerWidthRef = useRef(1);
 
-  const getTouchDistance = (touches: React.TouchList) => {
-    const t1 = touches[0];
-    const t2 = touches[1];
-    return Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
-  };
-
-  const resetMobileZoom = () => {
-    setIsZoomedMobile(false);
-    setPanOffset({ x: 0, y: 0 });
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length === 2) {
-      // Pinch gesture starting
-      pinchStartDistRef.current = getTouchDistance(e.touches);
-      return;
-    }
-
-    const touch = e.touches[0];
-    touchStartX.current = touch.clientX;
-    touchStartY.current = touch.clientY;
-    touchStartTime.current = Date.now();
-
-    if (isZoomedMobile) {
-      // Start panning the zoomed image from its current offset
-      panStartRef.current = { x: touch.clientX - panOffset.x, y: touch.clientY - panOffset.y };
-    }
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    // Two fingers -> pinch. Pinching inward while zoomed = zoom out.
-    if (e.touches.length === 2 && pinchStartDistRef.current) {
-      const newDist = getTouchDistance(e.touches);
-      const ratio = newDist / pinchStartDistRef.current;
-      if (isZoomedMobile && ratio < 0.85) {
-        resetMobileZoom();
-        pinchStartDistRef.current = null;
-      }
-      return;
-    }
-
-    // One finger while zoomed = pan/drag the image around
-    if (isZoomedMobile && panStartRef.current && e.touches.length === 1) {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const container = imageContainerRef.current;
-      const bound = container ? container.offsetWidth * (zoom - 1) * 0.6 : 150;
-      const rawX = touch.clientX - panStartRef.current.x;
-      const rawY = touch.clientY - panStartRef.current.y;
-      setPanOffset({
-        x: Math.max(-bound, Math.min(bound, rawX)),
-        y: Math.max(-bound, Math.min(bound, rawY)),
-      });
-    }
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    pinchStartDistRef.current = null;
-    panStartRef.current = null;
-
-    if (touchStartX.current === null || touchStartY.current === null) return;
-
-    const changed = e.changedTouches[0];
-    const dx = touchStartX.current - changed.clientX;
-    const dy = touchStartY.current - changed.clientY;
-    const elapsed = Date.now() - touchStartTime.current;
-    const movedDistance = Math.hypot(dx, dy);
-
-    // Quick tap with minimal movement, while not already zoomed -> zoom in at tap point
-    if (!isZoomedMobile && movedDistance < 10 && elapsed < 300) {
-      const container = imageContainerRef.current;
-      if (container) {
-        const rect = container.getBoundingClientRect();
-        setZoomOrigin({
-          x: ((changed.clientX - rect.left) / rect.width) * 100,
-          y: ((changed.clientY - rect.top) / rect.height) * 100,
-        });
-      }
-      setPanOffset({ x: 0, y: 0 });
-      setIsZoomedMobile(true);
-      touchStartX.current = null;
-      touchStartY.current = null;
-      return;
-    }
-
-    // Swipe to navigate only when not zoomed in
-    if (!isZoomedMobile && product.images.length > 1 && Math.abs(dx) >= 50) {
-      if (dx > 0 && activeImageIndex < product.images.length - 1) {
-        setActiveImageIndex(activeImageIndex + 1);
-      } else if (dx < 0 && activeImageIndex > 0) {
-        setActiveImageIndex(activeImageIndex - 1);
-      }
-    }
-
-    touchStartX.current = null;
-    touchStartY.current = null;
-  };
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     const container = imageContainerRef.current;
     if (!container) return;
     const rect = container.getBoundingClientRect();
@@ -148,6 +48,55 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setMousePercent({ x, y });
   }, []);
+
+  const handleImageTouchStart = (e: React.TouchEvent) => {
+    if (product.images.length <= 1) return;
+    touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+    containerWidthRef.current = imageContainerRef.current?.offsetWidth || 1;
+    setIsSwiping(true);
+  };
+
+  const handleImageTouchMove = (e: React.TouchEvent) => {
+    if (product.images.length <= 1 || !isSwiping) return;
+    const deltaX = e.touches[0].clientX - touchStartXRef.current;
+    const deltaY = e.touches[0].clientY - touchStartYRef.current;
+
+    // Only hijack the gesture when it's clearly horizontal; let vertical scroll happen otherwise
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      e.preventDefault();
+    }
+
+    // Rubber-band resistance at the first/last image instead of allowing free drag
+    let constrainedDelta = deltaX;
+    if (activeImageIndex === 0 && deltaX > 0) {
+      constrainedDelta = deltaX * 0.35;
+    } else if (activeImageIndex === product.images.length - 1 && deltaX < 0) {
+      constrainedDelta = deltaX * 0.35;
+    }
+
+    setDragOffset(constrainedDelta);
+  };
+
+  const handleImageTouchEnd = () => {
+    if (product.images.length <= 1) {
+      setIsSwiping(false);
+      return;
+    }
+    const width = containerWidthRef.current || 1;
+    const threshold = width * 0.18;
+
+    if (dragOffset <= -threshold && activeImageIndex < product.images.length - 1) {
+      setSelectedShade(null);
+      setActiveImageIndex((prev) => prev + 1);
+    } else if (dragOffset >= threshold && activeImageIndex > 0) {
+      setSelectedShade(null);
+      setActiveImageIndex((prev) => prev - 1);
+    }
+
+    setDragOffset(0);
+    setIsSwiping(false);
+  };
 
   const handleAddToCart = () => {
     if (product.shades && product.shades.length > 0 && !selectedShade) {
@@ -159,12 +108,10 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
     window.setTimeout(() => setJustAdded(false), 1800);
   };
 
-  // Determine which main image to display from the product gallery
   const displayedImage = product.images[activeImageIndex] || product.images[0];
-
   const isSelectedShadeInStock = selectedShade ? selectedShade.inStock : true;
 
-  return (
+    return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
         
@@ -173,30 +120,54 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
           <div
             ref={imageContainerRef}
             className="w-full h-[500px] sm:h-[600px] bg-white rounded-[2rem] overflow-hidden relative shadow-sm border border-neutral-100"
-            style={{ touchAction: isZoomedMobile ? "none" : "pan-y" }}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            onMouseMove={handleMouseMove}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
+            onPointerEnter={(e) => { if (e.pointerType === "mouse") setIsHovering(true); }}
+            onPointerLeave={(e) => { if (e.pointerType === "mouse") setIsHovering(false); }}
+            onPointerMove={(e) => { if (e.pointerType === "mouse") handleMouseMove(e); }}
+            onTouchStart={handleImageTouchStart}
+            onTouchMove={handleImageTouchMove}
+            onTouchEnd={handleImageTouchEnd}
           >
-            <img
-              key={displayedImage}
-              src={displayedImage}
-              alt={product.name}
-              className="w-full h-full object-cover animate-fade-in transition-transform duration-300 ease-out"
+            <div
+              className="flex h-full"
               style={{
-                transform: isHovering
-                  ? `scale(${zoom})`
-                  : isZoomedMobile
-                    ? `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoom})`
-                    : "scale(1)",
-                transformOrigin: isZoomedMobile
-                  ? `${zoomOrigin.x}% ${zoomOrigin.y}%`
-                  : `${mousePercent.x}% ${mousePercent.y}%`,
+                width: `${product.images.length * 100}%`,
+                transform: `translateX(calc(${-activeImageIndex * (100 / product.images.length)}% + ${dragOffset}px))`,
+                transition: isSwiping ? "none" : "transform 300ms ease-out",
               }}
-            />
+            >
+              {product.images.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="h-full flex-shrink-0"
+                  style={{ width: `${100 / product.images.length}%` }}
+                >
+                  <img
+                    src={img}
+                    alt={product.name}
+                    className="w-full h-full object-cover select-none"
+                    draggable={false}
+                    style={
+                      idx === activeImageIndex
+                        ? {
+                            transform: isHovering ? `scale(${zoom})` : "scale(1)",
+                            transformOrigin: `${mousePercent.x}% ${mousePercent.y}%`,
+                            transition: "transform 300ms ease-out",
+                          }
+                        : undefined
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Mobile zoom button */}
+            <button
+              onClick={() => setIsZoomModalOpen(true)}
+              className="absolute bottom-4 right-4 p-2.5 bg-white/90 backdrop-blur-sm rounded-full shadow-lg border border-neutral-100 text-neutral-700 hover:text-neutral-900 hover:bg-white transition-all md:hidden"
+              aria-label="Zoom image"
+            >
+              <ZoomIn className="w-5 h-5" />
+            </button>
           </div>
 
           {/* Image Thumbnails */}
@@ -206,9 +177,8 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
                 <button
                   key={idx}
                   onClick={() => {
-                    setSelectedShade(null); // Clear shade override to show full gallery
+                    setSelectedShade(null);
                     setActiveImageIndex(idx);
-                    resetMobileZoom();
                   }}
                   className={`icon-btn w-20 h-24 rounded-full overflow-hidden bg-white border border-neutral-200 transition-all duration-200 hover:border-neutral-900 ${
                     activeImageIndex === idx && !selectedShade
@@ -222,18 +192,17 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
             </div>
           )}
         </div>
-
-        {/* Right Column: Product Info & Purchase Actions */}
+                {/* Right Column: Product Info & Purchase Actions */}
         <div className="space-y-6">
           
           {/* Breadcrumbs / Tag */}
-<div className="flex items-center gap-2">
-  {product.isBestSeller && (
-    <span className="text-[10px] uppercase tracking-wider text-white font-bold bg-neutral-900 px-2.5 py-1 rounded-full">
-      Bestseller
-    </span>
-  )}
-</div>
+          <div className="flex items-center gap-2">
+            {product.isBestSeller && (
+              <span className="text-[10px] uppercase tracking-wider text-white font-bold bg-neutral-900 px-2.5 py-1 rounded-full">
+                Bestseller
+              </span>
+            )}
+          </div>
 
           {/* Title & Price */}
           <div>
@@ -241,7 +210,6 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
               {product.name}
             </h1>
             
-            {/* Reviews / Rating */}
             <div className="flex items-center gap-1.5 mt-2.5">
               <div className="flex items-center text-amber-400">
                 <Star className="w-4 h-4 fill-current" />
@@ -262,7 +230,7 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
 
           <hr className="border-neutral-100" />
 
-          {/* Shade/Color Selection */}
+                    {/* Shade/Color Selection */}
           {product.shades && product.shades.length > 0 && (
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
@@ -277,14 +245,11 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
                 )}
               </div>
               
-              {/* Swatch circle buttons */}
               <div className="flex flex-wrap gap-3">
                 {product.shades.map((shade, idx) => (
                   <button
                     key={idx}
-                    onClick={() => {
-                      setSelectedShade(shade);
-                    }}
+                    onClick={() => setSelectedShade(shade)}
                     className={`icon-btn relative w-9 h-9 rounded-full bg-white border border-neutral-200 transition-all duration-200 flex items-center justify-center p-0.5 hover:border-neutral-900 hover:scale-105 ${
                       selectedShade?.name === shade.name
                         ? "border-neutral-900 shadow-md scale-105 ring-2 ring-neutral-900/15"
@@ -314,10 +279,9 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
             </div>
           )}
 
-          {/* Add To Cart Form */}
+                    {/* Add To Cart Form */}
           <div className="space-y-4 pt-4">
             <div className="flex gap-4">
-              {/* Quantity selector */}
               {isSelectedShadeInStock && (
                 <div className="flex items-center border border-neutral-200 rounded-full">
                   <button
@@ -336,7 +300,6 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
                 </div>
               )}
 
-              {/* Add to Cart Button */}
               <button
                 onClick={handleAddToCart}
                 disabled={!isSelectedShadeInStock}
@@ -365,7 +328,7 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
 
           <hr className="border-neutral-100" />
 
-          {/* Informational Tabs (Description, Ingredients, How to Use) */}
+                    {/* Informational Tabs */}
           <div className="border border-neutral-100 rounded-xl overflow-hidden bg-white shadow-sm">
             <div className="flex gap-2 border-b border-neutral-100 bg-neutral-50/50 p-2">
               {(["description", "ingredients", "howToUse"] as const).map((tab) => (
@@ -405,7 +368,7 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
             </div>
           </div>
 
-          {/* Quick trust metrics */}
+                    {/* Quick trust metrics */}
           <div className="grid grid-cols-3 gap-4 pt-4 border-t border-neutral-50 text-center text-[11px] text-neutral-500 font-medium bg-neutral-50 rounded-xl p-4">
             <div className="flex flex-col items-center gap-1">
               <Truck className="w-5 h-5 text-brand-600" />
@@ -424,7 +387,7 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
         </div>
       </div>
 
-      {/* You May Also Like */}
+            {/* You May Also Like */}
       {relatedProducts.length > 0 && (
         <section className="pt-12 sm:pt-20">
           <div className="text-center max-w-xl mx-auto mb-8 sm:mb-10 animate-fade-in-up">
@@ -486,6 +449,12 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
           </div>
         </section>
       )}
+          <ImageZoomModal
+        src={displayedImage}
+        alt={product.name}
+        isOpen={isZoomModalOpen}
+        onClose={() => setIsZoomModalOpen(false)}
+      />
 
     </div>
   );
