@@ -1,5 +1,6 @@
 "use client";
 
+import SearchBar from "./SearchBar";
 import React, { Suspense, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -53,30 +54,7 @@ function NavLinks() {
   );
 }
 
-function SearchBar() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get("search") || "");
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const url = query ? `/shop?search=${encodeURIComponent(query)}` : "/";
-    router.push(url);
-  };
-
-  return (
-    <form onSubmit={handleSearch} className="relative w-full">
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search products..."
-        className="w-full sm:w-96 pl-10 pr-4 py-3.5 sm:py-3 bg-white sm:bg-neutral-50 border border-transparent rounded-full text-sm font-light text-neutral-900 placeholder-neutral-500 placeholder:font-light shadow-[0_1px_2px_0_rgba(60,64,67,0.12),0_2px_10px_2px_rgba(60,64,67,0.10)] focus:outline-none focus:border-transparent focus:bg-white hover:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12)] focus:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12),0_0_0_4px_rgba(255,56,92,0.15)] transition-shadow duration-200"
-      />
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-900" />
-    </form>
-  );
-}
 
 export default function Header({ categories }: { categories: Category[] }) {
   const { setIsCartOpen, cartCount } = useCart();
@@ -90,11 +68,11 @@ export default function Header({ categories }: { categories: Category[] }) {
         categories={categories}
       />
 
-      <header className="bg-white/80 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
+      <header className="relative z-[100] bg-white/80 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* ── MOBILE LAYOUT ── */}
-          <div className="flex flex-col md:hidden py-3 gap-2">
+          <div className="relative z-[100] flex flex-col md:hidden py-3 gap-2">
             <div className="flex items-center justify-between relative">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -137,7 +115,7 @@ export default function Header({ categories }: { categories: Category[] }) {
           </div>
 
           {/* ── DESKTOP LAYOUT ── */}
-          <div className="hidden md:flex items-center justify-between h-32">
+          <div className="relative z-[100] hidden md:flex items-center justify-between h-32">
             <div className="flex items-center gap-3 sm:gap-4 flex-1 sm:flex-none min-w-0">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
