@@ -62,7 +62,7 @@ export default function Sidebar({
       {/* Backdrop */}
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-black/40 backdrop-blur-sm",
+          "fixed inset-0 z-[1000] bg-black/40 backdrop-blur-sm",
           "transition-opacity will-change-[opacity]",
           visible ? "opacity-100" : "opacity-0 pointer-events-none"
         )}
@@ -78,7 +78,7 @@ export default function Sidebar({
       {/* Drawer */}
       <div
         className={cn(
-          "fixed left-0 top-0 z-50 bg-white w-72 h-full flex flex-col shadow-2xl rounded-r-2xl",
+          "fixed left-0 top-0 z-[1001] bg-white w-72 h-full flex flex-col shadow-2xl rounded-r-2xl",
           "transition-transform will-change-transform",
           visible ? "translate-x-0" : "-translate-x-full"
         )}
