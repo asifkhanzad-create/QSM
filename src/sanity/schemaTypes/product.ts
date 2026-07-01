@@ -1,4 +1,6 @@
 import { defineField, defineType } from "sanity";
+// If this import path fails, adjust it to your folder structure:
+import { SubcategorySelect } from "@/sanity/components/SubcategorySelect";
 
 export const productType = defineType({
   name: "product",
@@ -27,6 +29,17 @@ export const productType = defineType({
       type: "reference",
       to: [{ type: "category" }],
       validation: (Rule) => Rule.required(),
+    }),
+    // NEW: Optional subcategory dropdown
+    defineField({
+      name: "subcategory",
+      title: "Subcategory",
+      type: "string",
+      description: "Optional. Select a subcategory from the chosen category.",
+      components: {
+        input: SubcategorySelect,
+      },
+      hidden: ({ parent }) => !parent?.category,
     }),
     defineField({
       name: "brand",

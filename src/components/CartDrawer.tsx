@@ -1,11 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useCart } from "@/context/CartContext";
-import { X, Plus, Minus, ShoppingBag, Trash2 } from "lucide-react";
+import { X, Plus, Minus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { useAnimatedPresence } from "@/hooks/useAnimatedPresence";
+
+function getScrollbarWidth() {
+  return typeof window !== "undefined"
+    ? window.innerWidth - document.documentElement.clientWidth
+    : 0;
+}
 
 export default function CartDrawer() {
   const {
@@ -23,24 +29,52 @@ export default function CartDrawer() {
 
   const { mounted, visible } = useAnimatedPresence(isCartOpen);
 
+  // Lock body scroll when cart opens (same as sidebar)
+  useEffect(() => {
+    if (isCartOpen) {
+      const width = getScrollbarWidth();
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = `${width}px`;
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    };
+  }, [isCartOpen]);
+
   if (!mounted) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed inset-0 z-[110] overflow-hidden">
+      {/* Backdrop */}
       <div
         className={cn(
-          "overlay-backdrop",
-          visible ? "opacity-100" : "opacity-0"
+          "fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-500 will-change-[opacity]",
+          visible ? "opacity-100" : "opacity-0 pointer-events-none"
         )}
+        style={{
+          transitionTimingFunction: visible
+            ? "cubic-bezier(0.16, 1, 0.3, 1)"
+            : "cubic-bezier(0.7, 0, 0.84, 0)",
+        }}
         onClick={() => setIsCartOpen(false)}
       />
 
+      {/* Drawer Panel */}
       <div className="absolute inset-y-0 right-0 max-w-full flex pointer-events-none">
         <div
           className={cn(
-            "drawer-panel w-screen max-w-md bg-white shadow-2xl flex flex-col pointer-events-auto rounded-l-2xl",
+            "w-screen max-w-md bg-white shadow-2xl flex flex-col pointer-events-auto rounded-l-2xl will-change-transform transition-transform duration-500",
             visible ? "translate-x-0" : "translate-x-full"
           )}
+          style={{
+            transitionTimingFunction: visible
+              ? "cubic-bezier(0.16, 1, 0.3, 1)"
+              : "cubic-bezier(0.7, 0, 0.84, 0)",
+          }}
         >
           {/* Header */}
           <div className="px-6 py-5 border-b border-neutral-100 flex items-center justify-between animate-fade-in">

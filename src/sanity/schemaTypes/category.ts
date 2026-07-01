@@ -49,5 +49,35 @@ export const categoryType = defineType({
       },
       description: "Image representing this category on the shop page.",
     }),
+    // NEW: Subcategories array
+    defineField({
+      name: "subcategories",
+      title: "Subcategories",
+      type: "array",
+      description: "Add subcategories that belong to this main category (e.g., Serums → Vitamin C, Hyaluronic Acid)",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({
+              name: "name",
+              title: "Subcategory Name",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "slug",
+              title: "Slug",
+              type: "slug",
+              options: {
+                source: "name",
+                maxLength: 96,
+              },
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+        },
+      ],
+    }),
   ],
 });

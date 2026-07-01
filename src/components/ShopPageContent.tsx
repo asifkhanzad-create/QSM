@@ -4,23 +4,37 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { type Product, type Category } from "@/lib/data";
-import { Star, Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
+import { Star, ArrowUpDown, X } from "lucide-react";
 
 interface ShopPageContentProps {
   initialProducts: Product[];
   categories: Category[];
+  initialCategory?: string;
+  initialSubcategory?: string;
+}
+
+function getSubcategoryName(
+  categories: Category[],
+  categorySlug: string,
+  subcategorySlug: string
+): string | null {
+  const category = categories.find((c) => c.slug === categorySlug);
+  if (!category?.subcategories) return null;
+  const sub = category.subcategories.find((s) => s.slug === subcategorySlug);
+  return sub?.name || null;
 }
 
 export default function ShopPageContent({
   initialProducts,
   categories,
+  initialCategory = "",
+  initialSubcategory = "",
 }: ShopPageContentProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("featured");
-  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
 
@@ -44,14 +58,26 @@ export default function ShopPageContent({
 
   // Initialize searchQuery from URL params
   useEffect(() => {
-    const searchFromUrl = searchParams.get('search') || '';
+    const searchFromUrl = searchParams.get("search") || "";
     setSearchQuery(searchFromUrl);
   }, [searchParams]);
 
   // Get current filters from URL
-  const categoryParam = searchParams.get('category');
-  const isNewArrivalParam = searchParams.get('isNewArrival');
-  const isBestSellerParam = searchParams.get('isBestSeller');
+  const categoryParam = searchParams.get("category") || initialCategory;
+  const subcategoryParam = searchParams.get("subcategory") || initialSubcategory;
+  const isNewArrivalParam = searchParams.get("isNewArrival");
+  const isBestSellerParam = searchParams.get("isBestSeller");
+
+  // Resolve subcategory name for UI
+  const subcategoryName = useMemo(
+    () =>
+      categoryParam && subcategoryParam
+        ? getSubcategoryName(categories, categoryParam, subcategoryParam)
+        : null,
+    [categories, categoryParam, subcategoryParam]
+  );
+
+  const isSubcategoryActive = !!subcategoryParam && !!subcategoryName;
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
@@ -67,7 +93,7 @@ export default function ShopPageContent({
       );
     }
 
-    // Filter by Category
+    // Filter by Category (client-side safety net)
     if (categoryParam) {
       result = result.filter(
         (p) => p.category.toLowerCase() === categoryParam.toLowerCase()
@@ -75,12 +101,12 @@ export default function ShopPageContent({
     }
 
     // Filter by New Arrival
-    if (isNewArrivalParam === 'true') {
+    if (isNewArrivalParam === "true") {
       result = result.filter((p) => p.isNewArrival === true);
     }
 
     // Filter by Best Seller
-    if (isBestSellerParam === 'true') {
+    if (isBestSellerParam === "true") {
       result = result.filter((p) => p.isBestSeller === true);
     }
 
@@ -94,7 +120,14 @@ export default function ShopPageContent({
     }
 
     return result;
-  }, [initialProducts, searchQuery, categoryParam, isNewArrivalParam, isBestSellerParam, sortBy]);
+  }, [
+    initialProducts,
+    searchQuery,
+    categoryParam,
+    isNewArrivalParam,
+    isBestSellerParam,
+    sortBy,
+  ]);
 
   // Pagination Logic
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
@@ -107,7 +140,7 @@ export default function ShopPageContent({
   // Reset page to 1 when filters or sorting change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, categoryParam, isNewArrivalParam, isBestSellerParam, sortBy]);
+  }, [searchQuery, categoryParam, subcategoryParam, isNewArrivalParam, isBestSellerParam, sortBy]);
 
   const handlePreviousPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -117,21 +150,99 @@ export default function ShopPageContent({
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
 
+  const activeCategoryName = categories.find(
+    (c) => c.slug.toLowerCase() === (categoryParam || "").toLowerCase()
+  )?.name;
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      {/* Page Header */}
-<div className="text-center max-w-xl mx-auto mb-10 sm:mb-10 animate-fade-in-up">
-  <h2 className="text-3xl sm:text-4xl font-light font-serif text-neutral-950 tracking-tight">
-    Beauty Catalog
-  </h2>
-  <p className="text-base sm:text-base text-neutral-500 mt-2 font-normal">
-    Find the perfect products for your unique beauty routine. Organic formulations, premium pigments.
-  </p>
-</div>
+      {/* ─── Breadcrumb & Heading ─── */}
+      <div className="mb-6 sm:mb-8">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-xs sm:text-sm text-neutral-500 mb-3">
+          <Link href="/shop" className="hover:text-neutral-900 transition-colors">
+            Shop
+          </Link>
+          {categoryParam && (
+            <>
+              <span className="text-neutral-300">/</span>
+              <Link
+                href={`/shop?category=${categoryParam}`}
+                className="hover:text-neutral-900 transition-colors capitalize"
+              >
+                {activeCategoryName || categoryParam}
+              </Link>
+            </>
+          )}
+          {isSubcategoryActive && (
+            <>
+              <span className="text-neutral-300">/</span>
+              <span className="text-neutral-900 font-medium">{subcategoryName}</span>
+            </>
+          )}
+        </nav>
+
+        {/* Title + Active Filters */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <h1 className="text-2xl sm:text-3xl font-light font-serif text-neutral-950 tracking-tight">
+            {isSubcategoryActive
+              ? subcategoryName
+              : activeCategoryName || "Beauty Catalog"}
+          </h1>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* Category Filter Tag */}
+            {categoryParam && !isSubcategoryActive && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 text-neutral-700 rounded-full text-xs font-medium">
+                {activeCategoryName}
+                <Link
+                  href="/shop"
+                  className="hover:text-neutral-900 p-0.5 rounded-full hover:bg-neutral-200 transition-colors"
+                  aria-label="Clear category filter"
+                >
+                  <X className="w-3 h-3" />
+                </Link>
+              </span>
+            )}
+
+            {/* Subcategory Filter Tag */}
+            {isSubcategoryActive && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-900 text-white rounded-full text-xs font-medium">
+                {subcategoryName}
+                <Link
+                  href={`/shop?category=${categoryParam}`}
+                  className="hover:bg-neutral-700 p-0.5 rounded-full transition-colors"
+                  aria-label="Clear subcategory filter"
+                >
+                  <X className="w-3 h-3" />
+                </Link>
+              </span>
+            )}
+
+            {/* Search Tag */}
+            {searchQuery && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 text-brand-700 rounded-full text-xs font-medium">
+                &ldquo;{searchQuery}&rdquo;
+                <button
+                  onClick={() => {
+                    const params = new URLSearchParams(searchParams.toString());
+                    params.delete("search");
+                    router.push(`?${params.toString()}`, { scroll: false });
+                    setSearchQuery("");
+                  }}
+                  className="hover:text-brand-900 p-0.5 rounded-full transition-colors"
+                  aria-label="Clear search"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* Control Bar (Search, Category Filter Tabs, Sorting) */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between pb-6 sm:pb-8 border-b border-neutral-100 mb-6 sm:mb-8">
-
         {/* Categories Fast Filter */}
         <div className="relative w-full md:w-auto">
           <div
@@ -141,7 +252,7 @@ export default function ShopPageContent({
             <Link
               href="/shop"
               className={`btn-pill shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-xs !font-normal tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
-                !searchParams.get('category')
+                !searchParams.get("category")
                   ? "btn-gradient"
                   : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
               }`}
@@ -153,7 +264,7 @@ export default function ShopPageContent({
                 key={cat._id}
                 href={`/shop?category=${cat.slug}`}
                 className={`btn-pill shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-xs !font-normal tracking-wider uppercase border transition-all duration-200 focus:outline-none shadow-none ${
-                  searchParams.get('category')?.toLowerCase() === cat.slug.toLowerCase()
+                  searchParams.get("category")?.toLowerCase() === cat.slug.toLowerCase()
                     ? "btn-gradient"
                     : "bg-white text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300 border-neutral-200"
                 }`}
@@ -186,27 +297,67 @@ export default function ShopPageContent({
 
       {/* Grid Content */}
       {paginatedProducts.length === 0 ? (
-        <div className="text-center py-16 sm:py-24 bg-white rounded-2xl border border-neutral-100 shadow-sm animate-scale-in">
-          <p className="text-sm sm:text-base text-neutral-600">
-            {searchQuery
+        <div className="flex flex-col items-center justify-center py-16 sm:py-24 bg-white rounded-2xl border border-neutral-100 shadow-sm animate-scale-in text-center">
+          {/* Icon */}
+          <div className="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mb-5">
+            <svg
+              className="w-8 h-8 text-neutral-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+              />
+            </svg>
+          </div>
+
+          {/* Message */}
+          <h2 className="text-lg font-medium text-neutral-900 mb-2">
+            {isSubcategoryActive
+              ? `No products in ${subcategoryName} yet`
+              : searchQuery
               ? `No products found matching "${searchQuery}"`
-              : 'No products found matching your criteria.'
-            }
+              : "No products found matching your criteria"}
+          </h2>
+          <p className="text-sm text-neutral-500 mb-6 max-w-sm">
+            {isSubcategoryActive
+              ? `We're adding products to ${subcategoryName} soon. Browse all ${activeCategoryName} products instead.`
+              : searchQuery
+              ? "Try a different search term or browse our categories."
+              : "Try adjusting your filters or check back later."}
           </p>
-          <button
-            onClick={() => {
-              const params = new URLSearchParams(searchParams.toString());
-              params.delete('category');
-              params.delete('isNewArrival');
-              params.delete('isBestSeller');
-              params.delete('search');
-              router.push(`?${params.toString()}`, { scroll: false });
-              setSortBy("featured");
-            }}
-            className="btn-pill bg-[#111111] text-white hover:bg-[#2a2a2a] mt-4 px-5 sm:px-6 py-2 text-xs sm:text-sm focus:outline-none"
-          >
-            Reset Filters
-          </button>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            {isSubcategoryActive && (
+              <Link
+                href={`/shop?category=${categoryParam}`}
+                className="inline-flex items-center px-6 py-3 bg-neutral-900 text-white rounded-full text-sm font-medium hover:bg-neutral-800 transition-colors"
+              >
+                View all {activeCategoryName}
+              </Link>
+            )}
+            <button
+              onClick={() => {
+                const params = new URLSearchParams(searchParams.toString());
+                params.delete("category");
+                params.delete("subcategory");
+                params.delete("isNewArrival");
+                params.delete("isBestSeller");
+                params.delete("search");
+                router.push(`?${params.toString()}`, { scroll: false });
+                setSearchQuery("");
+                setSortBy("featured");
+              }}
+              className="btn-pill bg-[#111111] text-white hover:bg-[#2a2a2a] px-5 sm:px-6 py-2 text-xs sm:text-sm focus:outline-none"
+            >
+              Reset All Filters
+            </button>
+          </div>
         </div>
       ) : (
         <>
@@ -227,19 +378,19 @@ export default function ShopPageContent({
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
-                  
+
                   {/* Sale Tag */}
                   {product.originalPrice && (
-  <span className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-yellow-400 text-black text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
-    Sale
-  </span>
-)}
+                    <span className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-yellow-400 text-black text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
+                      Sale
+                    </span>
+                  )}
 
-{product.isBestSeller && (
-  <span className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-[#111111] text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
-    Best Seller
-  </span>
-)}
+                  {product.isBestSeller && (
+                    <span className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-[#111111] text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
+                      Best Seller
+                    </span>
+                  )}
 
                   {/* Number of Shades Badge */}
                   {product.shades && product.shades.length > 0 && (
@@ -257,8 +408,12 @@ export default function ShopPageContent({
                       <div className="flex items-center text-amber-400">
                         <Star className="w-3 sm:w-3.5 h-3 sm:h-3.5 fill-current" />
                       </div>
-                      <span className="text-[10px] sm:text-xs font-bold text-neutral-800">{product.rating}</span>
-                      <span className="text-[10px] sm:text-xs text-neutral-400">({product.reviewsCount})</span>
+                      <span className="text-[10px] sm:text-xs font-bold text-neutral-800">
+                        {product.rating}
+                      </span>
+                      <span className="text-[10px] sm:text-xs text-neutral-400">
+                        ({product.reviewsCount})
+                      </span>
                     </div>
 
                     {/* Title */}
@@ -269,7 +424,9 @@ export default function ShopPageContent({
 
                   {/* Price Display */}
                   <div className="mt-1 sm:mt-2 flex flex-wrap items-center gap-1.5 sm:gap-2">
-                    <span className="text-xs sm:text-base font-semibold text-neutral-950">Rs. {product.price.toFixed(2)}</span>
+                    <span className="text-xs sm:text-base font-semibold text-neutral-950">
+                      Rs. {product.price.toFixed(2)}
+                    </span>
                     {product.originalPrice && (
                       <span className="text-[10px] sm:text-sm text-neutral-400 line-through">
                         Rs. {product.originalPrice.toFixed(2)}

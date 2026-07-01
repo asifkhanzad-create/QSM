@@ -1,7 +1,6 @@
 import { createClient } from "@sanity/client";
 import { CATEGORIES, BRANDS, type Product, type Category, type Brand } from "@/lib/data";
 
-// Sanity configurations
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "";
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
 const apiVersion = "2024-06-19";
@@ -25,7 +24,8 @@ export async function getCategories(): Promise<Category[]> {
       name,
       "slug": slug.current,
       description,
-      "image": image.asset->url
+      "image": image.asset->url,
+      subcategories[]{ name, "slug": slug.current }
     }`;
     return await client.fetch(query);
   } catch (error) {
@@ -52,13 +52,18 @@ export async function getBrands(): Promise<Brand[]> {
   }
 }
 
-export async function getProducts(categorySlug?: string, brandSlug?: string): Promise<Product[]> {
+export async function getProducts(
+  categorySlug?: string,
+  brandSlug?: string,
+  subcategorySlug?: string
+): Promise<Product[]> {
   if (!client) {
     return [];
   }
   const filters: string[] = [];
   if (categorySlug) filters.push("category->slug.current == $categorySlug");
   if (brandSlug) filters.push("brand->slug.current == $brandSlug");
+  if (subcategorySlug) filters.push("subcategory == $subcategorySlug");
   const filterClause = filters.length > 0 ? ` && ${filters.join(" && ")}` : "";
   const query = `*[_type == "product"${filterClause}]{
       _id,
@@ -80,11 +85,13 @@ export async function getProducts(categorySlug?: string, brandSlug?: string): Pr
       ingredients,
       howToUse,
       "category": category->slug.current,
-      "brand": brand->slug.current
+      "brand": brand->slug.current,
+      subcategory
     }`;
   const params: Record<string, string> = {};
   if (categorySlug) params.categorySlug = categorySlug;
   if (brandSlug) params.brandSlug = brandSlug;
+  if (subcategorySlug) params.subcategorySlug = subcategorySlug;
   return await client.fetch(query, params);
 }
 
@@ -107,7 +114,8 @@ export async function getRelatedProducts(
     isBestSeller,
     isNewArrival,
     "category": category->slug.current,
-    "brand": brand->slug.current
+    "brand": brand->slug.current,
+    subcategory
   }`;
   return await client.fetch(query, { categorySlug, currentSlug: currentProductSlug });
 }
@@ -136,7 +144,8 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       ingredients,
       howToUse,
       "category": category->slug.current,
-      "brand": brand->slug.current
+      "brand": brand->slug.current,
+      subcategory
     }`;
   return await client.fetch(query, { slug }) ?? null;
 }
