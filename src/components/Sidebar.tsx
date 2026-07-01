@@ -62,7 +62,7 @@ export default function Sidebar({
       {/* Backdrop */}
       <div
         className={cn(
-          "fixed inset-0 z-[1000] bg-black/40 backdrop-blur-sm",
+          "fixed inset-0 z-[1000] bg-black/30 backdrop-blur-sm",
           "transition-opacity will-change-[opacity]",
           visible ? "opacity-100" : "opacity-0 pointer-events-none"
         )}
@@ -75,10 +75,10 @@ export default function Sidebar({
         onClick={onClose}
       />
 
-      {/* Drawer */}
+      {/* Drawer — LIQUID GLASS: frosted translucent panel, saturation boost, soft edge highlight */}
       <div
         className={cn(
-          "fixed left-0 top-0 z-[1001] bg-white w-72 h-full flex flex-col shadow-2xl rounded-r-2xl",
+          "fixed left-0 top-0 z-[1001] bg-white/90 backdrop-blur-2xl backdrop-saturate-150 border-r border-white/60 w-72 h-full flex flex-col shadow-[1px_0_0_0_rgba(255,255,255,0.8)_inset,0_8px_40px_rgba(0,0,0,0.15)] rounded-r-2xl",
           "transition-transform will-change-transform",
           visible ? "translate-x-0" : "-translate-x-full"
         )}
@@ -92,12 +92,12 @@ export default function Sidebar({
         <div className="h-full flex flex-col">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50 rounded-full transition-colors duration-200 z-10"
+            className="absolute top-4 right-4 p-2 text-neutral-500 hover:text-neutral-800 hover:bg-white/50 hover:backdrop-blur-md rounded-full transition-colors duration-200 z-10"
           >
             <X className="w-6 h-6" />
           </button>
 
-          <div className="flex items-center justify-center px-6 py-4 border-b border-neutral-200">
+          <div className="flex items-center justify-center px-6 py-4 border-b border-white/50">
             <Link href="/" onClick={onClose}>
               <img
                 src="/logo.png"
@@ -114,7 +114,7 @@ export default function Sidebar({
                 key={item.href}
                 href={item.href}
                 onClick={handleCategoryClick}
-                className="block px-5 py-3.5 text-sm font-normal text-neutral-700 rounded-full border border-neutral-200 hover:border-neutral-400 hover:bg-neutral-50 hover:text-neutral-900 transition-all duration-200"
+                className="block px-5 py-3.5 text-sm font-normal text-neutral-700 rounded-full border border-white/70 bg-gradient-to-b from-white/80 to-white/40 backdrop-blur-md shadow-[0_1px_0_0_rgba(255,255,255,0.9)_inset,0_1px_3px_rgba(0,0,0,0.06)] hover:from-white hover:to-white/60 hover:border-white/90 hover:text-neutral-900 hover:shadow-[0_1px_0_0_rgba(255,255,255,1)_inset,0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200"
               >
                 {item.label}
               </Link>
@@ -136,10 +136,10 @@ export default function Sidebar({
                         <button
                           onClick={(e) => toggleExpand(e, cat._id)}
                           className={cn(
-                            "w-full flex items-center justify-between px-5 py-3.5 text-sm font-normal text-neutral-700 rounded-full border border-neutral-200 transition-all duration-200 text-left",
-                            "hover:border-neutral-400 hover:bg-neutral-50 hover:text-neutral-900",
+                            "w-full flex items-center justify-between px-5 py-3.5 text-sm font-normal text-neutral-700 rounded-full border border-white/70 bg-gradient-to-b from-white/80 to-white/40 backdrop-blur-md shadow-[0_1px_0_0_rgba(255,255,255,0.9)_inset,0_1px_3px_rgba(0,0,0,0.06)] transition-all duration-200 text-left",
+                            "hover:from-white hover:to-white/60 hover:border-white/90 hover:text-neutral-900 hover:shadow-[0_1px_0_0_rgba(255,255,255,1)_inset,0_2px_8px_rgba(0,0,0,0.08)]",
                             isExpanded &&
-                              "border-neutral-400 bg-neutral-50 text-neutral-900"
+                              "from-white hover:to-white/60 border-white/90 text-neutral-900 shadow-[0_1px_0_0_rgba(255,255,255,1)_inset,0_2px_8px_rgba(0,0,0,0.08)]"
                           )}
                         >
                           <span className="font-normal">{cat.name}</span>
@@ -195,7 +195,7 @@ export default function Sidebar({
                                 href={`/shop?category=${cat.slug}&subcategory=${sub.slug}`}
                                 onClick={handleCategoryClick}
                                 className={cn(
-                                  "block px-4 py-2.5 text-sm font-normal text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 rounded-lg transition-all duration-500",
+                                  "block px-4 py-2.5 text-sm font-normal text-neutral-600 hover:text-neutral-900 hover:bg-white/40 hover:backdrop-blur-md rounded-lg transition-all duration-500",
                                   isExpanded
                                     ? "translate-y-0 opacity-100"
                                     : "-translate-y-2 opacity-0"
@@ -219,7 +219,7 @@ export default function Sidebar({
                       <Link
                         href={`/shop?category=${cat.slug}`}
                         onClick={handleCategoryClick}
-                        className="block px-5 py-3.5 text-sm font-normal text-neutral-700 rounded-full border border-neutral-200 hover:border-neutral-400 hover:bg-neutral-50 hover:text-neutral-900 transition-all duration-200"
+                        className="block px-5 py-3.5 text-sm font-normal text-neutral-700 rounded-full border border-white/70 bg-gradient-to-b from-white/80 to-white/40 backdrop-blur-md shadow-[0_1px_0_0_rgba(255,255,255,0.9)_inset,0_1px_3px_rgba(0,0,0,0.06)] hover:from-white hover:to-white/60 hover:border-white/90 hover:text-neutral-900 hover:shadow-[0_1px_0_0_rgba(255,255,255,1)_inset,0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200"
                       >
                         {cat.name}
                       </Link>

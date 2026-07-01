@@ -93,12 +93,13 @@ export default function BottomNav() {
   ];
 
   return (
+    // LIQUID GLASS BOTTOM NAV: frosted translucent bar, saturation boost, soft top highlight border
     <nav
-      className={`md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-neutral-100 shadow-[0_-2px_10px_rgba(0,0,0,0.04)] transition-transform duration-300 ease-in-out ${
+      className={`md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/40 backdrop-blur-3xl backdrop-saturate-200 shadow-[0_1px_0_0_rgba(255,255,255,0.9)_inset,0_-4px_28px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-in-out ${
         visible ? "translate-y-0" : "translate-y-full"
       }`}
     >
-      <div className="flex items-center justify-around h-14 px-2">
+      <div className="flex items-center justify-around h-[68px] px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isTabActive = tab.isActive;
@@ -112,13 +113,13 @@ export default function BottomNav() {
               >
                 <div className="relative flex items-center justify-center">
                   <Icon
-                    className={`w-5 h-5 transition-colors duration-200 ${
+                    className={`w-[22px] h-[22px] transition-colors duration-200 ${
                       isTabActive ? "text-black" : "text-neutral-400"
                     }`}
                     strokeWidth={isTabActive ? 2 : 1.75}
                   />
                   {"badge" in tab && tab.badge && tab.badge > 0 && (
-                    <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 bg-[#FF385C] text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1">
+                    <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 bg-[#FF385C]/90 backdrop-blur-sm text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1 shadow-[0_0_0_1px_rgba(255,255,255,0.5)_inset]">
                       {tab.badge}
                     </span>
                   )}
@@ -142,7 +143,7 @@ export default function BottomNav() {
             >
               <div className="relative flex items-center justify-center">
                 <Icon
-                  className={`w-5 h-5 transition-colors duration-200 ${
+                  className={`w-[22px] h-[22px] transition-colors duration-200 ${
                     isTabActive ? "text-black" : "text-neutral-400"
                   }`}
                   strokeWidth={isTabActive ? 2 : 1.75}
