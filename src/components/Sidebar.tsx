@@ -129,7 +129,7 @@ export default function Sidebar({
                 const isExpanded = expandedId === cat._id;
 
                 return (
-                  <div key={cat._id} className="space-y-2">
+                  <div key={cat._id}>
                     {hasSubs ? (
                       <>
                         {/* Accordion Header — FIX: text-left added, base styling matches Link exactly */}
