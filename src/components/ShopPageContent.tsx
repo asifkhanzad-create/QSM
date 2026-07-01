@@ -183,14 +183,14 @@ export default function ShopPageContent({
         </nav>
 
         {/* Title + Active Filters */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <h1 className="text-2xl sm:text-3xl font-light font-serif text-neutral-950 tracking-tight">
-            {isSubcategoryActive
-              ? subcategoryName
-              : activeCategoryName || "Beauty Catalog"}
-          </h1>
+<div className="flex flex-col items-center text-center sm:flex-row sm:items-center sm:justify-between gap-3">
+  <h1 className="text-2xl sm:text-3xl font-light font-serif text-neutral-950 tracking-tight">
+    {isSubcategoryActive
+      ? subcategoryName
+      : activeCategoryName || "Beauty Catalog"}
+  </h1>
 
-          <div className="flex items-center gap-2 flex-wrap">
+  <div className="flex items-center justify-center gap-2 flex-wrap sm:justify-start">
             {/* Category Filter Tag */}
             {categoryParam && !isSubcategoryActive && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 text-neutral-700 rounded-full text-xs font-medium">
