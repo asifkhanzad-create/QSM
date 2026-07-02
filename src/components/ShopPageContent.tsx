@@ -156,41 +156,17 @@ export default function ShopPageContent({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      {/* ─── Breadcrumb & Heading ─── */}
+      {/* ─── Heading ─── */}
       <div className="mb-6 sm:mb-8">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs sm:text-sm text-neutral-500 mb-3">
-          <Link href="/shop" className="hover:text-neutral-900 transition-colors">
-            Shop
-          </Link>
-          {categoryParam && (
-            <>
-              <span className="text-neutral-300">/</span>
-              <Link
-                href={`/shop?category=${categoryParam}`}
-                className="hover:text-neutral-900 transition-colors capitalize"
-              >
-                {activeCategoryName || categoryParam}
-              </Link>
-            </>
-          )}
-          {isSubcategoryActive && (
-            <>
-              <span className="text-neutral-300">/</span>
-              <span className="text-neutral-900 font-medium">{subcategoryName}</span>
-            </>
-          )}
-        </nav>
-
         {/* Title + Active Filters */}
-<div className="flex flex-col items-center text-center sm:flex-row sm:items-center sm:justify-between gap-3">
-  <h1 className="text-2xl sm:text-3xl font-light font-serif text-neutral-950 tracking-tight">
-    {isSubcategoryActive
-      ? subcategoryName
-      : activeCategoryName || "Beauty Catalog"}
-  </h1>
+        <div className="flex flex-col items-center text-center sm:flex-row sm:items-center sm:justify-between gap-3">
+          <h1 className="text-2xl sm:text-3xl font-light font-serif text-neutral-950 tracking-tight">
+            {isSubcategoryActive
+              ? subcategoryName
+              : activeCategoryName || "Beauty Catalog"}
+          </h1>
 
-  <div className="flex items-center justify-center gap-2 flex-wrap sm:justify-start">
+          <div className="flex items-center justify-center gap-2 flex-wrap sm:justify-start">
             {/* Category Filter Tag */}
             {categoryParam && !isSubcategoryActive && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 text-neutral-700 rounded-full text-xs font-medium">

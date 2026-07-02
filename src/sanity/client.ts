@@ -52,6 +52,50 @@ export async function getBrands(): Promise<Brand[]> {
   }
 }
 
+export async function getHeroBanners(): Promise<any[]> {
+  if (!client) {
+    return [];
+  }
+  try {
+    const query = `*[_type == "heroBanner" && active == true] | order(order asc){
+      _id,
+      title,
+      tagline,
+      description,
+      linkText,
+      linkHref,
+      "image": image.asset->url,
+      altText,
+      order
+    }`;
+    return await client.fetch(query);
+  } catch (error) {
+    console.error("Sanity fetch error (hero banners):", error);
+    return [];
+  }
+}
+
+export async function getMobileHeroBanners(): Promise<any[]> {
+  if (!client) {
+    return [];
+  }
+  try {
+    const query = `*[_type == "mobileHeroBanner" && active == true] | order(order asc){
+      _id,
+      title,
+      subtitle,
+      linkText,
+      linkHref,
+      "image": image.asset->url,
+      order
+    }`;
+    return await client.fetch(query);
+  } catch (error) {
+    console.error("Sanity fetch error (mobile hero banners):", error);
+    return [];
+  }
+}
+
 export async function getProducts(
   categorySlug?: string,
   brandSlug?: string,

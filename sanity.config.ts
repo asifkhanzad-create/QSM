@@ -19,6 +19,14 @@ export default defineConfig({
           .title("Content")
           .items([
             S.listItem()
+              .title("Hero Banners")
+              .schemaType("heroBanner")
+              .child(S.documentTypeList("heroBanner").title("Hero Banners")),
+            S.listItem()
+              .title("Mobile Hero Banners")
+              .schemaType("mobileHeroBanner")
+              .child(S.documentTypeList("mobileHeroBanner").title("Mobile Hero Banners")),
+            S.listItem()
               .title("Products")
               .schemaType("product")
               .child(S.documentTypeList("product").title("Products")),
