@@ -148,7 +148,7 @@ export default function HeroBannersClient({ banners, mobileSlides }: HeroBanners
   return (
     <>
       {/* ── Desktop Hero ── */}
-      <section className="hidden md:block relative h-[85vh] bg-stone-100 overflow-hidden mt-6 rounded-2xl">
+      <section className="hidden md:block relative h-[85vh] bg-stone-100 overflow-hidden rounded-2xl">
         {banners.map((banner, index) => {
           const isActive = index === currentBannerIndex;
           return (

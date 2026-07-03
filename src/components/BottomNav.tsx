@@ -95,7 +95,7 @@ export default function BottomNav() {
   return (
     // LIQUID GLASS BOTTOM NAV: frosted translucent bar, saturation boost, soft top highlight border
     <nav
-      className={`md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/40 backdrop-blur-3xl backdrop-saturate-200 shadow-[0_1px_0_0_rgba(255,255,255,0.9)_inset,0_-4px_28px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-in-out ${
+      className={`md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/40 backdrop-blur-3xl backdrop-saturate-200 shadow-[0_-4px_28px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-in-out ${
         visible ? "translate-y-0" : "translate-y-full"
       }`}
     >
