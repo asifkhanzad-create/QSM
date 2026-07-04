@@ -103,7 +103,6 @@ export default function SearchBar() {
     }
   };
 
-  // Click outside to close
   React.useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -123,6 +122,7 @@ export default function SearchBar() {
 
   return (
     <form onSubmit={handleSubmit} className="relative w-full z-[999]">
+      {/* MOBILE: Your original style completely unchanged */}
       <input
         ref={inputRef}
         type="text"
@@ -131,9 +131,22 @@ export default function SearchBar() {
         onFocus={handleFocus}
         placeholder="Search products..."
         enterKeyHint="search"
-        className="w-full sm:w-96 pl-10 pr-4 py-3.5 sm:py-3 bg-white sm:bg-neutral-50 border border-transparent rounded-full text-sm font-light text-neutral-900 placeholder-neutral-500 placeholder:font-light shadow-[0_1px_2px_0_rgba(60,64,67,0.12),0_2px_10px_2px_rgba(60,64,67,0.10)] focus:outline-none focus:border-transparent focus:bg-white hover:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12)] focus:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12),0_0_0_4px_rgba(255,56,92,0.15)] transition-shadow duration-200"
+        className="block md:hidden w-full sm:w-96 pl-10 pr-4 py-3.5 sm:py-3 bg-white sm:bg-neutral-50 border border-transparent rounded-full text-sm font-light text-neutral-900 placeholder-neutral-500 placeholder:font-light shadow-[0_1px_2px_0_rgba(60,64,67,0.12),0_2px_10px_2px_rgba(60,64,67,0.10)] focus:outline-none focus:border-transparent focus:bg-white hover:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12)] focus:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12),0_0_0_4px_rgba(255,56,92,0.15)] transition-shadow duration-200"
       />
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-900" />
+      <Search className="block md:hidden absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-900" />
+
+      {/* DESKTOP: Same shadow-glow effect as mobile */}
+      <input
+        ref={inputRef}
+        type="text"
+        defaultValue=""
+        onInput={handleInput}
+        onFocus={handleFocus}
+        placeholder="Search products..."
+        enterKeyHint="search"
+        className="hidden md:block w-full pl-9 pr-3 py-2.5 bg-neutral-50 border border-transparent rounded-full text-xs font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-transparent focus:bg-white hover:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12)] focus:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12),0_0_0_4px_rgba(255,56,92,0.15)] transition-shadow duration-200"
+      />
+      <Search className="hidden md:block absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400" />
 
       {loading && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-lg border border-neutral-100 p-4 z-50">

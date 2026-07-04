@@ -148,7 +148,8 @@ export default function HeroBannersClient({ banners, mobileSlides }: HeroBanners
   return (
     <>
       {/* ── Desktop Hero ── */}
-      <section className="hidden md:block relative h-[85vh] bg-stone-100 overflow-hidden rounded-2xl">
+      <div className="hidden md:block max-w-[1200px] mx-auto pb-6">
+        <section className="relative h-[480px] lg:h-[520px] bg-stone-100 overflow-hidden rounded-[32px] shadow-[0_2px_20px_rgba(0,0,0,0.08)] border border-neutral-100/80">
         {banners.map((banner, index) => {
           const isActive = index === currentBannerIndex;
           return (
@@ -169,7 +170,7 @@ export default function HeroBannersClient({ banners, mobileSlides }: HeroBanners
                 <div className="absolute inset-0 bg-gradient-to-r from-stone-900/60 via-stone-900/40 to-transparent" />
               </div>
 
-              <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+              <div className="relative z-10 w-full h-full flex items-center px-12 lg:px-16">
                 <div className="max-w-xl text-white space-y-6">
                   {banner.tagline && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/25 text-xs tracking-wider uppercase font-medium text-accentGold-200">
@@ -209,7 +210,8 @@ export default function HeroBannersClient({ banners, mobileSlides }: HeroBanners
             />
           ))}
         </div>
-      </section>
+        </section>
+      </div>
 
       {/* ── Mobile Hero Slider ── */}
       <section
