@@ -88,7 +88,8 @@ export default function BrandPageContent({
   }, [searchQuery, brandParam, sortBy]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div className="max-w-[1200px] mx-auto py-8 sm:py-12">
+      <div className="md:bg-white md:rounded-[32px] md:shadow-[0_2px_20px_rgba(0,0,0,0.08)] md:border md:border-neutral-100/80 md:px-8 md:py-8">
       {/* Page Header */}
       <div className="text-center max-w-xl mx-auto mb-10 sm:mb-10 animate-fade-in-up">
         <h2 className="text-3xl sm:text-4xl font-light font-serif text-neutral-950 tracking-tight">
@@ -329,6 +330,7 @@ export default function BrandPageContent({
           )}
         </>
       )}
+      </div>
     </div>
   );
 }

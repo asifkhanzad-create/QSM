@@ -155,7 +155,8 @@ export default function ShopPageContent({
   )?.name;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div className="max-w-[1200px] mx-auto py-8 sm:py-12">
+      <div className="md:bg-white md:rounded-[32px] md:shadow-[0_2px_20px_rgba(0,0,0,0.08)] md:border md:border-neutral-100/80 md:px-8 md:py-8">
       {/* ─── Heading ─── */}
       <div className="mb-6 sm:mb-8">
         {/* Title + Active Filters */}
@@ -341,7 +342,7 @@ export default function ShopPageContent({
             {paginatedProducts.map((product, index) => (
               <div
                 key={product._id}
-                className="group relative flex flex-col bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.04)] overflow-hidden animate-fade-in-up"
+                className="group relative flex flex-col bg-white rounded-lg md:rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] overflow-hidden animate-fade-in-up"
                 style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
               >
                 {/* Product Card Image Container */}
@@ -438,6 +439,7 @@ export default function ShopPageContent({
           )}
         </>
       )}
+      </div>
     </div>
   );
 }

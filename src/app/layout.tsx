@@ -27,7 +27,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`font-sans antialiased text-neutral-800 bg-white md:bg-[#f0f0f2] min-h-screen flex flex-col pb-14 md:pb-0 ${outfit.variable}`}>
+      <body className={`font-sans antialiased text-neutral-800 bg-neutral-50 md:bg-stone-100 min-h-screen flex flex-col pb-14 md:pb-0 ${outfit.variable}`}>
         <CartProvider>
           <Header categories={categories} />
           <PageTransition>
