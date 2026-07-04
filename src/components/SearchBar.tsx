@@ -24,7 +24,9 @@ interface SearchCategory {
 
 export default function SearchBar() {
   const router = useRouter();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [query, setQuery] = useState("");
+  const mobileInputRef = useRef<HTMLInputElement>(null);
+  const desktopInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [products, setProducts] = useState<SearchProduct[]>([]);
   const [categories, setCategories] = useState<SearchCategory[]>([]);
@@ -68,8 +70,8 @@ export default function SearchBar() {
     }
   }, []);
 
-  const handleInput = () => {
-    const value = inputRef.current?.value || "";
+  const handleInput = (value: string) => {
+    setQuery(value);
 
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
@@ -90,15 +92,14 @@ export default function SearchBar() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setOpen(false);
-    inputRef.current?.blur();
-    const value = inputRef.current?.value || "";
-    const url = value.trim() ? `/shop?search=${encodeURIComponent(value.trim())}` : "/";
+    mobileInputRef.current?.blur();
+    desktopInputRef.current?.blur();
+    const url = query.trim() ? `/shop?search=${encodeURIComponent(query.trim())}` : "/";
     router.push(url);
   };
 
   const handleFocus = () => {
-    const value = inputRef.current?.value || "";
-    if ((products.length > 0 || categories.length > 0) && value.trim()) {
+    if ((products.length > 0 || categories.length > 0) && query.trim()) {
       setOpen(true);
     }
   };
@@ -108,8 +109,8 @@ export default function SearchBar() {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node) &&
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node)
+        !mobileInputRef.current?.contains(event.target as Node) &&
+        !desktopInputRef.current?.contains(event.target as Node)
       ) {
         setOpen(false);
       }
@@ -122,12 +123,12 @@ export default function SearchBar() {
 
   return (
     <form onSubmit={handleSubmit} className="relative w-full z-[999]">
-      {/* MOBILE: Your original style completely unchanged */}
+      {/* MOBILE: separate ref + controlled value */}
       <input
-        ref={inputRef}
+        ref={mobileInputRef}
         type="text"
-        defaultValue=""
-        onInput={handleInput}
+        value={query}
+        onChange={(e) => handleInput(e.target.value)}
         onFocus={handleFocus}
         placeholder="Search products..."
         enterKeyHint="search"
@@ -135,12 +136,12 @@ export default function SearchBar() {
       />
       <Search className="block md:hidden absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-900" />
 
-      {/* DESKTOP: Same shadow-glow effect as mobile */}
+      {/* DESKTOP: separate ref + controlled value */}
       <input
-        ref={inputRef}
+        ref={desktopInputRef}
         type="text"
-        defaultValue=""
-        onInput={handleInput}
+        value={query}
+        onChange={(e) => handleInput(e.target.value)}
         onFocus={handleFocus}
         placeholder="Search products..."
         enterKeyHint="search"
@@ -180,7 +181,7 @@ export default function SearchBar() {
                       onClick={() => {
                         router.push(`/shop?category=${cat.slug}`);
                         setOpen(false);
-                        if (inputRef.current) inputRef.current.value = "";
+                        setQuery("");
                       }}
                       className="w-full text-left px-4 py-2.5 flex items-center gap-3 hover:bg-neutral-50 transition-colors"
                     >
@@ -214,7 +215,7 @@ export default function SearchBar() {
                       onClick={() => {
                         router.push(`/product/${prod.slug}`);
                         setOpen(false);
-                        if (inputRef.current) inputRef.current.value = "";
+                        setQuery("");
                       }}
                       className="w-full text-left px-4 py-2.5 flex items-center gap-3 hover:bg-neutral-50 transition-colors"
                     >
