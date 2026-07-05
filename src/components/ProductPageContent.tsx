@@ -62,12 +62,10 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
     const deltaX = e.touches[0].clientX - touchStartXRef.current;
     const deltaY = e.touches[0].clientY - touchStartYRef.current;
 
-    // Only hijack the gesture when it's clearly horizontal; let vertical scroll happen otherwise
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
       e.preventDefault();
     }
 
-    // Rubber-band resistance at the first/last image instead of allowing free drag
     let constrainedDelta = deltaX;
     if (activeImageIndex === 0 && deltaX > 0) {
       constrainedDelta = deltaX * 0.35;
@@ -110,6 +108,10 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
 
   const displayedImage = product.images[activeImageIndex] || product.images[0];
   const isSelectedShadeInStock = selectedShade ? selectedShade.inStock : true;
+
+  // Stock logic
+  const isProductInStock = typeof product.quantity !== "number" || product.quantity > 0;
+  const isLowStock = product.quantity !== undefined && product.quantity > 0 && product.quantity <= 5;
 
     return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
@@ -226,6 +228,65 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
                 </span>
               )}
             </div>
+
+            {/* Stock Status with Progress Bar */}
+            {typeof product.quantity === "number" && product.quantity > 0 && (
+              <div className="mt-5 space-y-2.5">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium text-neutral-700">
+                    {product.quantity <= 3 
+                      ? "Low Stock" 
+                      : product.quantity <= 10 
+                        ? "Selling Fast" 
+                        : "In Stock"}
+                  </span>
+                  <span className={`font-bold ${
+                    product.quantity <= 3 
+                      ? "text-red-500" 
+                      : product.quantity <= 10 
+                        ? "text-amber-600" 
+                        : "text-green-600"
+                  }`}>
+                    {product.quantity} units available
+                  </span>
+                </div>
+                
+                {/* Progress Bar */}
+                <div className="w-full h-2.5 bg-neutral-200 rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full rounded-full transition-all duration-700 ease-out ${
+                      product.quantity <= 3 
+                        ? "bg-red-500" 
+                        : product.quantity <= 10 
+                          ? "bg-amber-500" 
+                          : "bg-green-500"
+                    }`}
+                    style={{ width: `${Math.min((product.quantity / 20) * 100, 100)}%` }}
+                  />
+                </div>
+                
+                {product.quantity <= 3 && (
+                  <p className="text-xs text-red-500 font-medium flex items-center gap-1.5">
+                    <span className="inline-block w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                    Only {product.quantity} left — order soon before it's gone
+                  </p>
+                )}
+                {product.quantity > 3 && product.quantity <= 10 && (
+                  <p className="text-xs text-amber-600 font-medium">
+                    Selling fast! {product.quantity} units remaining
+                  </p>
+                )}
+              </div>
+            )}
+
+            {typeof product.quantity === "number" && product.quantity === 0 && (
+              <div className="mt-5 flex items-center gap-2 text-red-500">
+                <span className="inline-block w-2 h-2 bg-red-500 rounded-full" />
+                <p className="text-sm font-medium">
+                  Currently out of stock
+                </p>
+              </div>
+            )}
           </div>
 
           <hr className="border-neutral-100" />
@@ -282,7 +343,7 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
                     {/* Add To Cart Form */}
           <div className="space-y-4 pt-4">
             <div className="flex gap-4">
-              {isSelectedShadeInStock && (
+              {isSelectedShadeInStock && isProductInStock && (
                 <div className="flex items-center border border-neutral-200 rounded-full">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -292,7 +353,7 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
                   </button>
                   <span className="px-4 font-medium text-neutral-900 text-sm">{quantity}</span>
                   <button
-                    onClick={() => setQuantity(quantity + 1)}
+                    onClick={() => setQuantity(Math.min(quantity + 1, product.quantity || 99))}
                     className="icon-btn px-3.5 py-2.5 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50 border border-neutral-200 rounded-full"
                   >
                     +
@@ -302,13 +363,15 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
 
               <button
                 onClick={handleAddToCart}
-                disabled={!isSelectedShadeInStock}
+                disabled={!isSelectedShadeInStock || !isProductInStock}
                 className={`btn-pill flex-1 flex items-center justify-center gap-2 py-3.5 border ${
                   justAdded
                     ? "bg-green-600 text-white border-green-600 scale-[1.02]"
-                    : isSelectedShadeInStock
-                      ? "btn-gradient focus:outline-none"
-                      : "bg-white text-neutral-400 cursor-not-allowed border-neutral-200"
+                    : !isProductInStock
+                      ? "bg-white text-neutral-400 cursor-not-allowed border-neutral-200"
+                      : isSelectedShadeInStock
+                        ? "btn-gradient focus:outline-none"
+                        : "bg-white text-neutral-400 cursor-not-allowed border-neutral-200"
                 }`}
               >
                 {justAdded ? (
@@ -319,7 +382,11 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
                 ) : (
                   <>
                     <ShoppingBag className="w-5 h-5" />
-                    {isSelectedShadeInStock ? "Add to Shopping Bag" : "Selected Shade Out of Stock"}
+                    {!isProductInStock
+                      ? "Out of Stock"
+                      : isSelectedShadeInStock
+                        ? "Add to Shopping Bag"
+                        : "Selected Shade Out of Stock"}
                   </>
                 )}
               </button>

@@ -155,8 +155,7 @@ export default function ShopPageContent({
   )?.name;
 
   return (
-    <div className="max-w-[1200px] mx-auto py-8 sm:py-12">
-      <div className="md:bg-white md:rounded-[32px] md:shadow-[0_2px_20px_rgba(0,0,0,0.08)] md:border md:border-neutral-100/80 md:px-8 md:py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {/* ─── Heading ─── */}
       <div className="mb-6 sm:mb-8">
         {/* Title + Active Filters */}
@@ -342,40 +341,57 @@ export default function ShopPageContent({
             {paginatedProducts.map((product, index) => (
               <div
                 key={product._id}
-                className="group relative flex flex-col bg-white rounded-lg md:rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] overflow-hidden animate-fade-in-up"
+                className="group relative flex flex-col bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.04)] overflow-hidden animate-fade-in-up"
                 style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
               >
                 {/* Product Card Image Container */}
-                <Link
-                  href={`/product/${product.slug}`}
-                  className="w-full h-[220px] sm:h-[380px] bg-neutral-100 overflow-hidden relative block transition-transform duration-300 group-hover:shadow-md"
-                >
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                  />
+<Link
+  href={`/product/${product.slug}`}
+  className="w-full h-[220px] sm:h-[380px] bg-neutral-100 overflow-hidden relative block transition-transform duration-300 group-hover:shadow-md"
+>
+  <img
+    src={product.images[0]}
+    alt={product.name}
+    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+  />
 
-                  {/* Sale Tag */}
-                  {product.originalPrice && (
-                    <span className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-yellow-400 text-black text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
-                      Sale
-                    </span>
-                  )}
+  {/* Sale Tag - top left */}
+  {product.originalPrice && (
+    <span className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-yellow-400 text-black text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
+      Sale
+    </span>
+  )}
 
-                  {product.isBestSeller && (
-                    <span className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-[#111111] text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
-                      Best Seller
-                    </span>
-                  )}
+  {/* Best Seller - top right */}
+  {product.isBestSeller && (
+    <span className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-[#111111] text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
+      Best Seller
+    </span>
+  )}
 
-                  {/* Number of Shades Badge */}
-                  {product.shades && product.shades.length > 0 && (
-                    <span className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm text-neutral-800 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm border border-neutral-100">
-                      {product.shades.length} Shades
-                    </span>
-                  )}
-                </Link>
+  {/* Stock Badge - bottom left (moved from right) */}
+  {typeof product.quantity === "number" && product.quantity > 0 && product.quantity <= 5 && (
+    <span className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-red-500 text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm">
+      Only {product.quantity} left
+    </span>
+  )}
+  {typeof product.quantity === "number" && product.quantity === 0 && (
+    <span className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-neutral-800 text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm">
+      Out of Stock
+    </span>
+  )}
+
+  {/* Number of Shades Badge - stacked above stock on bottom left, or just bottom left if no stock */}
+  {product.shades && product.shades.length > 0 && (
+    <span className={`absolute bg-white/90 backdrop-blur-sm text-neutral-800 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm border border-neutral-100 ${
+      product.quantity !== undefined && product.quantity <= 5 
+        ? "bottom-7 sm:bottom-10 left-2 sm:left-4" 
+        : "bottom-2 sm:bottom-4 left-2 sm:left-4"
+    }`}>
+      {product.shades.length} Shades
+    </span>
+  )}
+</Link>
 
                 {/* Card Details */}
                 <div className="px-4 sm:px-5 py-3 sm:py-4 flex-1 flex flex-col justify-between">
@@ -439,7 +455,6 @@ export default function ShopPageContent({
           )}
         </>
       )}
-      </div>
     </div>
   );
 }

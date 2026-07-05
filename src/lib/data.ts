@@ -30,6 +30,7 @@ export interface Product {
   name: string;
   slug: string;
   price: number;
+  quantity?: number;
   originalPrice?: number;
   images: string[];
   shades?: Shade[];

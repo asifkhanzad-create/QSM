@@ -52,6 +52,107 @@ export async function getBrands(): Promise<Brand[]> {
   }
 }
 
+export async function getProducts(
+  categorySlug?: string,
+  brandSlug?: string,
+  subcategorySlug?: string
+): Promise<Product[]> {
+  if (!client) {
+    return [];
+  }
+  const filters: string[] = [];
+  if (categorySlug) filters.push("category->slug.current == $categorySlug");
+  if (brandSlug) filters.push("brand->slug.current == $brandSlug");
+  if (subcategorySlug) filters.push("subcategory == $subcategorySlug");
+  const filterClause = filters.length > 0 ? ` && ${filters.join(" && ")}` : "";
+  const query = `*[_type == "product"${filterClause}]{
+      _id,
+      name,
+      "slug": slug.current,
+      price,
+      originalPrice,
+      "images": images[].asset->url,
+      shades[]{
+        name,
+        colorCode,
+        inStock
+      },
+      description,
+      rating,
+      reviewsCount,
+      isBestSeller,
+      isNewArrival,
+      ingredients,
+      howToUse,
+      "category": category->slug.current,
+      "brand": brand->slug.current,
+      subcategory,
+      quantity
+    }`;
+  const params: Record<string, string> = {};
+  if (categorySlug) params.categorySlug = categorySlug;
+  if (brandSlug) params.brandSlug = brandSlug;
+  if (subcategorySlug) params.subcategorySlug = subcategorySlug;
+  return await client.fetch(query, params);
+}
+
+export async function getRelatedProducts(
+  currentProductSlug: string,
+  categorySlug: string
+): Promise<Product[]> {
+  if (!client) return [];
+  const query = `*[_type == "product" && category->slug.current == $categorySlug && slug.current != $currentSlug] | order(rating desc) [0...4]{
+    _id,
+    name,
+    "slug": slug.current,
+    price,
+    originalPrice,
+    "images": images[].asset->url,
+    shades[]{ name, colorCode, inStock },
+    description,
+    rating,
+    reviewsCount,
+    isBestSeller,
+    isNewArrival,
+    "category": category->slug.current,
+    "brand": brand->slug.current,
+    subcategory,
+    quantity
+  }`;
+  return await client.fetch(query, { categorySlug, currentSlug: currentProductSlug });
+}
+
+export async function getProductBySlug(slug: string): Promise<Product | null> {
+  if (!client) {
+    return null;
+  }
+  const query = `*[_type == "product" && slug.current == $slug][0]{
+      _id,
+      name,
+      "slug": slug.current,
+      price,
+      originalPrice,
+      "images": images[].asset->url,
+      shades[]{
+        name,
+        colorCode,
+        inStock
+      },
+      description,
+      rating,
+      reviewsCount,
+      isBestSeller,
+      isNewArrival,
+      ingredients,
+      howToUse,
+      "category": category->slug.current,
+      "brand": brand->slug.current,
+      subcategory,
+      quantity
+    }`;
+  return await client.fetch(query, { slug }) ?? null;
+}
+
 export async function getHeroBanners(): Promise<any[]> {
   if (!client) {
     return [];
@@ -94,102 +195,4 @@ export async function getMobileHeroBanners(): Promise<any[]> {
     console.error("Sanity fetch error (mobile hero banners):", error);
     return [];
   }
-}
-
-export async function getProducts(
-  categorySlug?: string,
-  brandSlug?: string,
-  subcategorySlug?: string
-): Promise<Product[]> {
-  if (!client) {
-    return [];
-  }
-  const filters: string[] = [];
-  if (categorySlug) filters.push("category->slug.current == $categorySlug");
-  if (brandSlug) filters.push("brand->slug.current == $brandSlug");
-  if (subcategorySlug) filters.push("subcategory == $subcategorySlug");
-  const filterClause = filters.length > 0 ? ` && ${filters.join(" && ")}` : "";
-  const query = `*[_type == "product"${filterClause}]{
-      _id,
-      name,
-      "slug": slug.current,
-      price,
-      originalPrice,
-      "images": images[].asset->url,
-      shades[]{
-        name,
-        colorCode,
-        inStock
-      },
-      description,
-      rating,
-      reviewsCount,
-      isBestSeller,
-      isNewArrival,
-      ingredients,
-      howToUse,
-      "category": category->slug.current,
-      "brand": brand->slug.current,
-      subcategory
-    }`;
-  const params: Record<string, string> = {};
-  if (categorySlug) params.categorySlug = categorySlug;
-  if (brandSlug) params.brandSlug = brandSlug;
-  if (subcategorySlug) params.subcategorySlug = subcategorySlug;
-  return await client.fetch(query, params);
-}
-
-export async function getRelatedProducts(
-  currentProductSlug: string,
-  categorySlug: string
-): Promise<Product[]> {
-  if (!client) return [];
-  const query = `*[_type == "product" && category->slug.current == $categorySlug && slug.current != $currentSlug] | order(rating desc) [0...4]{
-    _id,
-    name,
-    "slug": slug.current,
-    price,
-    originalPrice,
-    "images": images[].asset->url,
-    shades[]{ name, colorCode, inStock },
-    description,
-    rating,
-    reviewsCount,
-    isBestSeller,
-    isNewArrival,
-    "category": category->slug.current,
-    "brand": brand->slug.current,
-    subcategory
-  }`;
-  return await client.fetch(query, { categorySlug, currentSlug: currentProductSlug });
-}
-
-export async function getProductBySlug(slug: string): Promise<Product | null> {
-  if (!client) {
-    return null;
-  }
-  const query = `*[_type == "product" && slug.current == $slug][0]{
-      _id,
-      name,
-      "slug": slug.current,
-      price,
-      originalPrice,
-      "images": images[].asset->url,
-      shades[]{
-        name,
-        colorCode,
-        inStock
-      },
-      description,
-      rating,
-      reviewsCount,
-      isBestSeller,
-      isNewArrival,
-      ingredients,
-      howToUse,
-      "category": category->slug.current,
-      "brand": brand->slug.current,
-      subcategory
-    }`;
-  return await client.fetch(query, { slug }) ?? null;
 }

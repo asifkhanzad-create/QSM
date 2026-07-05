@@ -42,7 +42,7 @@ export default function CheckoutPage() {
     setShowConfirmDialog(true);
   };
 
-  const confirmOrder = () => {
+    const confirmOrder = async () => {
     setShowConfirmDialog(false);
     setIsSubmitting(true);
 
@@ -57,6 +57,23 @@ export default function CheckoutPage() {
       freeShipping: isFreeShipping,
     });
 
+    // 1. Decrease stock in Sanity
+    try {
+      await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: cart.map((item) => ({
+            productId: item.product._id,
+            quantity: item.quantity,
+          })),
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to update stock:", err);
+    }
+
+    // 2. Send Discord notification
     fetch("/api/discord-notify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -72,6 +89,7 @@ export default function CheckoutPage() {
       keepalive: true,
     }).catch((err) => console.error("Discord notify failed:", err));
 
+    // 3. Clear cart and show success
     clearCart();
     setIsSubmitting(false);
     setIsSuccess(true);
