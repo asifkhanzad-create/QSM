@@ -3,6 +3,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 
 interface SearchProduct {
   _id: string;
@@ -137,17 +138,25 @@ export default function SearchBar() {
       <Search className="block md:hidden absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-900" />
 
       {/* DESKTOP: separate ref + controlled value */}
-      <input
-        ref={desktopInputRef}
-        type="text"
-        value={query}
-        onChange={(e) => handleInput(e.target.value)}
-        onFocus={handleFocus}
-        placeholder="Search products..."
-        enterKeyHint="search"
-        className="hidden md:block w-full pl-9 pr-3 py-2.5 bg-neutral-50 border border-transparent rounded-full text-xs font-medium text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-transparent focus:bg-white hover:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12)] focus:shadow-[0_1px_3px_0_rgba(60,64,67,0.15),0_4px_14px_3px_rgba(60,64,67,0.12),0_0_0_4px_rgba(255,56,92,0.15)] transition-shadow duration-200"
-      />
-      <Search className="hidden md:block absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400" />
+      <div className="hidden md:block relative w-full">
+        <input
+          ref={desktopInputRef}
+          type="text"
+          value={query}
+          onChange={(e) => handleInput(e.target.value)}
+          onFocus={handleFocus}
+          placeholder="Search products..."
+          enterKeyHint="search"
+          className="w-full pl-4 pr-11 py-2.5 bg-white border-[1px] border-neutral-100 rounded-full text-sm font-light text-neutral-900 placeholder-neutral-400 shadow-[0_1px_4px_rgba(0,0,0,0.06)] focus:outline-none focus:border-neutral-300 hover:shadow-[0_2px_10px_rgba(0,0,0,0.08)] focus:shadow-[0_2px_10px_rgba(0,0,0,0.08),0_0_0_4px_rgba(255,56,92,0.15)] transition-shadow duration-200"
+        />
+        <button
+          type="submit"
+          aria-label="Search"
+          className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-neutral-900 text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all duration-150"
+        >
+          <MagnifyingGlass className="w-3.5 h-3.5" weight="bold" />
+        </button>
+      </div>
 
       {loading && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-lg border border-neutral-100 p-4 z-50">

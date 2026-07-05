@@ -5,15 +5,8 @@ import React, { Suspense, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
-import {
-  Home,
-  Sparkles,
-  Flame,
-  LayoutGrid,
-  Tag,
-  ShoppingBag,
-  GripVertical,
-} from "lucide-react";
+import { Home, Sparkles, Flame, LayoutGrid, Tag, ShoppingBag } from "lucide-react";
+import { DotsSixVerticalIcon } from "@phosphor-icons/react";
 import Sidebar from "./Sidebar";
 import { type Category } from "@/lib/data";
 
@@ -141,7 +134,7 @@ export default function Header({ categories }: { categories: Category[] }) {
               className="p-2 rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-all duration-200 shrink-0"
               aria-label="Open Menu"
             >
-              <GripVertical className="w-[18px] h-[18px]" strokeWidth={1.8} />
+              <DotsSixVerticalIcon className="w-6 h-6" weight="bold" />
             </button>
 
             {/* Divider */}
@@ -170,7 +163,7 @@ export default function Header({ categories }: { categories: Category[] }) {
             {/* Right: Cart */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2 rounded-full text-neutral-900 hover:bg-neutral-100 transition-all flex-shrink-0"
+              className="relative w-10 h-10 rounded-full bg-white text-neutral-900 shadow-[0_1px_4px_rgba(0,0,0,0.08)] border border-neutral-100 flex items-center justify-center hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] active:scale-95 transition-all duration-150 flex-shrink-0"
               aria-label="Open Cart"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
