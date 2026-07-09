@@ -4,7 +4,7 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 import { type Product, type Shade } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
-import { Star, ShoppingBag, Check, Truck, Sparkles, BadgeCheck, Wallet, ZoomIn, Eye } from "lucide-react";
+import { Star, ShoppingBag, Check, Truck, Sparkles, BadgeCheck, Wallet, ZoomIn, } from "lucide-react";
 import ImageZoomModal from "./ImageZoomModal";
 
 interface ProductPageContentProps {
@@ -24,10 +24,6 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
   const [activeTab, setActiveTab] = useState<"description" | "ingredients" | "howToUse">("description");
   const [justAdded, setJustAdded] = useState(false);
 
-  // Live viewer counter state (fake, max 14)
-  const [viewerCount, setViewerCount] = useState<number | null>(null);
-  const [showViewerCounter] = useState(() => Math.random() > 0.35);
-
   // Hover zoom state (desktop only)
   const [isHovering, setIsHovering] = useState(false);
   const [mousePercent, setMousePercent] = useState({ x: 50, y: 50 });
@@ -44,51 +40,7 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
   const touchStartYRef = useRef(0);
   const containerWidthRef = useRef(1);
 
-  // Live viewer counter effect
-  useEffect(() => {
-  let timeoutId: ReturnType<typeof setTimeout>;
-  let trend = Math.random() > 0.5 ? 1 : -1; // start with up or down trend
-  let trendSteps = Math.floor(Math.random() * 3) + 2; // keep trend for 2–4 steps
-
-  const updateViewerCount = () => {
-    setViewerCount((prev) => {
-      if (prev === null) return Math.floor(Math.random() * 12) + 3;
-
-      // Decrease trend steps
-      trendSteps--;
-      
-      // Maybe flip trend when steps run out (70% chance to keep, 30% to flip)
-      if (trendSteps <= 0) {
-        trend = Math.random() > 0.3 ? trend : -trend;
-        trendSteps = Math.floor(Math.random() * 3) + 2;
-      }
-
-      let next = prev + trend;
-      
-      // Bounce off walls instead of sticking
-      if (next < 3) {
-        next = 4;
-        trend = 1;
-        trendSteps = Math.floor(Math.random() * 3) + 2;
-      }
-      if (next > 14) {
-        next = 13;
-        trend = -1;
-        trendSteps = Math.floor(Math.random() * 3) + 2;
-      }
-
-      return next;
-    });
-
-    const nextDelay = Math.random() * 7000 + 5000;
-    timeoutId = setTimeout(updateViewerCount, nextDelay);
-  };
-
-  updateViewerCount();
-
-  return () => clearTimeout(timeoutId);
-}, []);
-
+ 
   const handleMouseMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     const container = imageContainerRef.current;
     if (!container) return;
@@ -162,7 +114,13 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
   const isProductInStock = typeof product.quantity !== "number" || product.quantity > 0;
   const isLowStock = product.quantity !== undefined && product.quantity > 0 && product.quantity <= 5;
 
-    return (
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      window.scrollTo({ top: window.innerHeight * 0.30, behavior: 'smooth' });
+    }
+  }, []);  
+  
+  return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
         
@@ -289,18 +247,6 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
               )}
             </div>
 
-            {/* Live Viewer Counter — ADDED HERE */}
-            {showViewerCounter && viewerCount !== null && (
-            <div className="mt-3 flex items-center gap-2 text-sm text-neutral-600">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-              </span>
-              <Eye className="w-4 h-4 text-neutral-400" />
-              <span className="font-semibold text-neutral-800">{viewerCount} {viewerCount === 1 ? 'person' : 'people'}</span>
-              <span className="text-neutral-500">viewing this right now</span>
-            </div>
-            )}
 
             {/* Stock Status with Progress Bar */}
             {typeof product.quantity === "number" && product.quantity > 0 && (
