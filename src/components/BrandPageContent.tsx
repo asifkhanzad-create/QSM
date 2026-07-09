@@ -24,6 +24,7 @@ export default function BrandPageContent({
   const productsPerPage = 12;
 
   const brandScrollRef = useRef<HTMLDivElement>(null);
+  const productsGridRef = useRef<HTMLDivElement>(null);
 
   // Scroll hint on mount — mobile only
   useEffect(() => {
@@ -249,7 +250,7 @@ export default function BrandPageContent({
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
+          <div ref={productsGridRef} className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
             {paginatedProducts.map((product, index) => (
               <div
                 key={product._id}
@@ -310,22 +311,28 @@ export default function BrandPageContent({
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-4 sm:gap-6 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-neutral-100">
               <button
-                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                disabled={currentPage === 1}
-                className="px-3 sm:px-4 py-1.5 sm:py-2 border border-neutral-200 rounded-lg text-xs sm:text-sm font-medium text-neutral-700 bg-white hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
-              >
-                Previous
-              </button>
+  onClick={() => {
+    productsGridRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
+    setCurrentPage((p) => Math.max(p - 1, 1));
+  }}
+  disabled={currentPage === 1}
+  className="px-3 sm:px-4 py-1.5 sm:py-2 border border-neutral-200 rounded-lg text-xs sm:text-sm font-medium text-neutral-700 bg-white hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+>
+  Previous
+</button>
               <span className="text-xs sm:text-sm text-neutral-600 font-medium">
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                disabled={currentPage === totalPages}
-                className="px-3 sm:px-4 py-1.5 sm:py-2 border border-neutral-200 rounded-lg text-xs sm:text-sm font-medium text-neutral-700 bg-white hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
-              >
-                Next
-              </button>
+  onClick={() => {
+    productsGridRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
+    setCurrentPage((p) => Math.min(p + 1, totalPages));
+  }}
+  disabled={currentPage === totalPages}
+  className="px-3 sm:px-4 py-1.5 sm:py-2 border border-neutral-200 rounded-lg text-xs sm:text-sm font-medium text-neutral-700 bg-white hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+>
+  Next
+</button>
             </div>
           )}
         </>

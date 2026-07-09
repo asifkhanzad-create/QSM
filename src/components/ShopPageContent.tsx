@@ -39,6 +39,7 @@ export default function ShopPageContent({
   const productsPerPage = 12;
 
   const categoryScrollRef = useRef<HTMLDivElement>(null);
+  const productsGridRef = useRef<HTMLDivElement>(null);
 
   // Scroll hint on mount — mobile only
   useEffect(() => {
@@ -143,12 +144,14 @@ export default function ShopPageContent({
   }, [searchQuery, categoryParam, subcategoryParam, isNewArrivalParam, isBestSellerParam, sortBy]);
 
   const handlePreviousPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
+  productsGridRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
+  setCurrentPage((prev) => Math.max(prev - 1, 1));
+};
 
-  const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
+const handleNextPage = () => {
+  productsGridRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
+  setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+};
 
   const activeCategoryName = categories.find(
     (c) => c.slug.toLowerCase() === (categoryParam || "").toLowerCase()
@@ -337,7 +340,7 @@ export default function ShopPageContent({
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
+          <div ref={productsGridRef} className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
             {paginatedProducts.map((product, index) => (
               <div
                 key={product._id}
