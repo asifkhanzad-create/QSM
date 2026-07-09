@@ -39,6 +39,7 @@ export interface Product {
   reviewsCount: number;
   isBestSeller?: boolean;
   isNewArrival?: boolean;
+  isHotSelling?: boolean;
   ingredients?: string[];
   howToUse?: string;
   category: string;

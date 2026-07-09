@@ -105,6 +105,13 @@ export const productType = defineType({
       initialValue: false,
     }),
     defineField({
+      name: "isHotSelling",
+      title: "Hot Selling",
+      type: "boolean",
+      initialValue: false,
+      description: "Mark this product as Hot Selling to show a flame badge",
+   }),
+    defineField({
       name: "ingredients",
       title: "Key Ingredients",
       type: "array",

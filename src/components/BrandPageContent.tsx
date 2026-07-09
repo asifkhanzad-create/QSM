@@ -272,10 +272,21 @@ export default function BrandPageContent({
                     </span>
                   )}
                   {product.isBestSeller && (
-                    <span className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-[#111111] text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
-                      Best Seller
-                    </span>
-                  )}
+  <span className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-[#111111] text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full">
+    Best Seller
+  </span>
+)}
+{product.isHotSelling && (
+  <span className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-orange-500 text-white text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 uppercase tracking-wider rounded-full flex items-center gap-1">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Outer flame: greyish white */}
+      <path d="M4.84 10.71C3.08 3.9 7.03 0.4 14.47 0C9.86 4.43 18.32 9.23 18.79 14.01C19.88 12.6 20.5 10.74 20.62 7.63C26.19 14.19 21.6 24.93 9.35 23.15C8.22 23.01 7.14 22.74 6.15 22.32C2.67 21.27 0 16.97 0 13.63C0 10.46 1.35 7.78 3.1 6.06C3.34 7.71 3.84 9.27 4.84 10.71z" fill="#fc3b3b"/>
+      {/* Inner flame: pure white */}
+      <path d="M8.8 18.05C7.54 15.56 7.72 11.61 11.25 10.22C11.28 14.76 17.24 15.38 16.12 20.27C17.14 19.4 17.65 18.02 17.74 16.63C19.36 19.4 18.09 21.63 15.78 22.82C8.77 26.27 2.73 19.2 6.77 15.38C6.77 16.59 8.16 17.92 8.8 18.05z" fill="#f5b70d"/>
+    </svg>
+    Hot Selling
+  </span>
+)}
                   {product.shades && product.shades.length > 0 && (
                     <span className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm text-neutral-800 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm border border-neutral-100">
                       {product.shades.length} Shades
