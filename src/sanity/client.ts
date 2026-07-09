@@ -86,6 +86,7 @@ export async function getProducts(
       howToUse,
       "category": category->slug.current,
       "brand": brand->slug.current,
+      "brandName": brand->name,
       subcategory,
       quantity
     }`;
@@ -116,6 +117,7 @@ export async function getRelatedProducts(
     isNewArrival,
     "category": category->slug.current,
     "brand": brand->slug.current,
+    "brandName": brand->name,
     subcategory,
     quantity
   }`;
@@ -147,6 +149,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       howToUse,
       "category": category->slug.current,
       "brand": brand->slug.current,
+      "brandName": brand->name,
       subcategory,
       quantity
     }`;

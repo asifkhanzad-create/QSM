@@ -414,7 +414,16 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
             </div>
 
             <div key={activeTab} className="p-5 text-sm text-neutral-600 leading-relaxed min-h-[120px] animate-fade-in-up">
-              {activeTab === "description" && <p>{product.description}</p>}
+              {activeTab === "description" && (
+  <div className="space-y-3">
+    {product.brandName && (
+      <p className="text-sm font-medium text-neutral-800">
+        Brand: <span className="text-brand-600">{product.brandName}</span>
+      </p>
+    )}
+    <p>{product.description}</p>
+  </div>
+)}
               {activeTab === "ingredients" && (
                 <div className="space-y-2">
                   <p className="text-xs text-neutral-400 font-medium mb-1">KEY SKIN-LOVING INGREDIENTS:</p>

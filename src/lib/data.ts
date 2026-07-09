@@ -43,6 +43,7 @@ export interface Product {
   howToUse?: string;
   category: string;
   brand?: string;
+  brandName?: string;
   subcategory?: string;
 }
 
