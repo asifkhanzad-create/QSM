@@ -16,7 +16,11 @@ export default function BottomNav() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY < 10) {
+      const nearBottom =
+        window.innerHeight + currentScrollY >=
+        document.documentElement.scrollHeight - 20;
+
+      if (currentScrollY < 10 || nearBottom) {
         setVisible(true);
       } else if (currentScrollY > lastScrollY) {
         setVisible(false);
