@@ -121,7 +121,7 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
   }, []);  
   
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 pb-28 md:pb-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
         
         {/* Left Column: Image Gallery */}
@@ -359,8 +359,8 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
             </div>
           )}
 
-                    {/* Add To Cart Form */}
-          <div className="space-y-4 pt-4">
+                    {/* Add To Cart Form (hidden on mobile, shown on md+) */}
+          <div className="hidden md:block space-y-4 pt-4">
             <div className="flex gap-4">
               {isSelectedShadeInStock && isProductInStock && (
                 <div className="flex items-center border border-neutral-200 rounded-full">
@@ -550,6 +550,71 @@ export default function ProductPageContent({ product, relatedProducts = [] }: Pr
         isOpen={isZoomModalOpen}
         onClose={() => setIsZoomModalOpen(false)}
       />
+
+      {/* Sticky Mobile Bottom Bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 backdrop-blur-md border-t border-neutral-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+        <div className="flex items-center gap-3 px-4 py-3">
+          {/* Price */}
+          <div className="flex-shrink-0">
+            <span className="text-base font-bold text-neutral-950">Rs. {product.price.toFixed(2)}</span>
+            {product.originalPrice && (
+              <span className="block text-[10px] text-neutral-400 line-through">
+                Rs. {product.originalPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
+
+          {/* Quantity Selector */}
+          {isSelectedShadeInStock && isProductInStock && (
+            <div className="flex items-center border border-neutral-200 rounded-full">
+              <button
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="icon-btn px-3 py-2 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50 border border-neutral-200 rounded-full text-sm"
+              >
+                -
+              </button>
+              <span className="px-3 font-medium text-neutral-900 text-sm">{quantity}</span>
+              <button
+                onClick={() => setQuantity(Math.min(quantity + 1, product.quantity || 99))}
+                className="icon-btn px-3 py-2 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50 border border-neutral-200 rounded-full text-sm"
+              >
+                +
+              </button>
+            </div>
+          )}
+
+          {/* Add to Cart Button */}
+          <button
+            onClick={handleAddToCart}
+            disabled={!isSelectedShadeInStock || !isProductInStock}
+            className={`btn-pill flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold border ${
+              justAdded
+                ? "bg-green-600 text-white border-green-600"
+                : !isProductInStock
+                  ? "bg-white text-neutral-400 cursor-not-allowed border-neutral-200"
+                  : isSelectedShadeInStock
+                    ? "btn-gradient focus:outline-none"
+                    : "bg-white text-neutral-400 cursor-not-allowed border-neutral-200"
+            }`}
+          >
+            {justAdded ? (
+              <>
+                <Check className="w-4 h-4 animate-pop" />
+                Added
+              </>
+            ) : (
+              <>
+                <ShoppingBag className="w-4 h-4" />
+                {!isProductInStock
+                  ? "Out of Stock"
+                  : isSelectedShadeInStock
+                    ? "Add to Bag"
+                    : "Shade Unavailable"}
+              </>
+            )}
+          </button>
+        </div>
+      </div>
 
     </div>
   );
