@@ -6,6 +6,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { getCategories } from "@/sanity/client";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default async function RootLayout({
             {children}
           </PageTransition>
           <BottomNav />
+          <WhatsAppFloat />
         </CartProvider>
       </body>
     </html>
